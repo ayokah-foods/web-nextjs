@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Roboto, Montserrat } from "next/font/google";
+import { Instrument_Sans } from "next/font/google";
 import "./globals.css";
 import SplashScreen from "./components/SplashScreen";
 import TopHeader from "./components/TopHeader";
@@ -11,22 +11,17 @@ import { CartProvider } from "@/context/CartContext";
 import { Toaster } from "react-hot-toast";
 import Script from "next/script";
 
-const roboto = Roboto({
+const instrumentSans = Instrument_Sans({
   subsets: ["latin"],
-  weight: ["400", "500", "700"],
-  variable: "--font-roboto",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-instrument-sans",
 });
 
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
-  variable: "--font-montserrat",
-});
+
 
 export const metadata: Metadata = {
   title: "Ayokah Foods and Services",
   manifest: "/site.webmanifest",
-
   description:
     "Buy authentic African groceries, clothes, and the best African foods online. Ayokah Foods and Services brings you fresh ingredients, fashion, and essentials from Africa — all in one trusted online marketplace.",
   keywords: [
@@ -43,11 +38,11 @@ export const metadata: Metadata = {
     title: "Ayokah Foods and Services | African Groceries, Clothes & Foods",
     description:
       "Buy authentic African groceries, clothes, and foods online. Ayokah Foods and Services delivers Africa’s best — fresh ingredients, fashion & essentials — right to your door.",
-    url: "https://afrovending.com",
-    siteName: "Afrovending",
+    url: "https://ayokah.co.uk",
+    siteName: "Ayokah Foods and Services",
     images: [
       {
-        url: "https://afrovending.com/og-image.jpg",
+        url: "https://ayokah.co.uk/OpenGraph.png",
         width: 1200,
         height: 630,
         alt: "Ayokah Foods and Services - African Online Market",
@@ -61,7 +56,7 @@ export const metadata: Metadata = {
     title: "Ayokah Foods and Services | African Groceries, Clothes & Foods",
     description:
       "Shop authentic African groceries, clothes & foods online. Ayokah Foods and Services delivers Africa’s best directly to your home.",
-    images: ["https://afrovending.com/og-image.jpg"],
+    images: ["https://ayokah.co.uk/Twitter.png"],
   },
 };
 
@@ -73,7 +68,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${roboto.variable} ${montserrat.variable} font-sans antialiased bg-green-50 h-full`}
+        className={`${instrumentSans.variable} font-sans antialiased bg-green-50 h-full`}
       >
         <Providers>
           <CartProvider>
