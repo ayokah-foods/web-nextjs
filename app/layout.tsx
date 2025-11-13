@@ -13,22 +13,22 @@ import Script from "next/script";
 
 const roboto = Roboto({
   subsets: ["latin"],
-  weight: ["400", "500", "700"], 
+  weight: ["400", "500", "700"],
   variable: "--font-roboto",
 });
 
 const montserrat = Montserrat({
   subsets: ["latin"],
-  weight: ["500", "600", "700"], 
+  weight: ["500", "600", "700"],
   variable: "--font-montserrat",
 });
 
 export const metadata: Metadata = {
-  title: "El Veep Online Market",
-  manifest: "/site.webmanifest", 
-  
+  title: "Ayokah Foods and Services",
+  manifest: "/site.webmanifest",
+
   description:
-    "Buy authentic African groceries, clothes, and the best African foods online. El Veep brings you fresh ingredients, fashion, and essentials from Africa — all in one trusted online marketplace.",
+    "Buy authentic African groceries, clothes, and the best African foods online. Ayokah Foods and Services brings you fresh ingredients, fashion, and essentials from Africa — all in one trusted online marketplace.",
   keywords: [
     "African groceries",
     "African clothes",
@@ -40,9 +40,9 @@ export const metadata: Metadata = {
     "Afrovending",
   ],
   openGraph: {
-    title: "El Veep Online Market | African Groceries, Clothes & Foods",
+    title: "Ayokah Foods and Services | African Groceries, Clothes & Foods",
     description:
-      "Buy authentic African groceries, clothes, and foods online. El Veep delivers Africa’s best — fresh ingredients, fashion & essentials — right to your door.",
+      "Buy authentic African groceries, clothes, and foods online. Ayokah Foods and Services delivers Africa’s best — fresh ingredients, fashion & essentials — right to your door.",
     url: "https://afrovending.com",
     siteName: "Afrovending",
     images: [
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
         url: "https://afrovending.com/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "El Veep - African Online Market",
+        alt: "Ayokah Foods and Services - African Online Market",
       },
     ],
     locale: "en_US",
@@ -58,9 +58,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "El Veep Online Market | African Groceries, Clothes & Foods",
+    title: "Ayokah Foods and Services | African Groceries, Clothes & Foods",
     description:
-      "Shop authentic African groceries, clothes & foods online. El Veep delivers Africa’s best directly to your home.",
+      "Shop authentic African groceries, clothes & foods online. Ayokah Foods and Services delivers Africa’s best directly to your home.",
     images: ["https://afrovending.com/og-image.jpg"],
   },
 };

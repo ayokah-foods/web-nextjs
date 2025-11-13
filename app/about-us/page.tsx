@@ -80,7 +80,7 @@ const COMPANY_DATA: CompanyData = {
   ],
   businesses: [
     {
-      name: "EL-VEEP SUPERMARKET",
+      name: "Ayokah Foods and Services SUPERMARKET",
       icon: FaShoppingCart,
       description:
         "Our supermarket division offers a modern, seamless, and affordable shopping experience. We provide a wide array of essential groceries, household items, and lifestyle products at competitive prices.",
@@ -91,7 +91,7 @@ const COMPANY_DATA: CompanyData = {
       ],
     },
     {
-      name: "EL-VEEP EVENT CENTER",
+      name: "Ayokah Foods and Services EVENT CENTER",
       icon: FaCalendarAlt,
       description:
         "Our state-of-the-art event venue is designed to accommodate both private and corporate gatherings from weddings and birthdays to conferences and seminars, buffet and tradeshows. With flexible space and professional support, we make every event unforgettable.",
@@ -113,7 +113,7 @@ const COMPANY_DATA: CompanyData = {
       ],
     },
     {
-      name: "EL-VEEP WATER FACTORY",
+      name: "Ayokah Foods and Services WATER FACTORY",
       icon: FaTint,
       description:
         "We produce and distribute premium, hygienic drinking water that meets international quality standards. Our goal is to ensure every household and business has access to safe and affordable water.",
