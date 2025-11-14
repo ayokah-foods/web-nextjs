@@ -9,13 +9,15 @@ import {
 } from "@heroicons/react/24/outline";
 import { useCart } from "@/context/CartContext";
 import { useState } from "react";
-import Modal from "../components/common/Modal";
+import Modal from "../components/common/Modal"; 
 import verifyCoupon from "@/lib/api/coupon";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import Coupon from "@/interfaces/coupon";
 import { ClipLoader } from "react-spinners";
 import { formatAmount } from "@/utils/formatCurrency";
+ 
+type CartItem = any;
 
 export default function CartPage() {
   const { cart, updateQty, removeFromCart } = useCart();
@@ -25,6 +27,8 @@ export default function CartPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState<Coupon>();
+ 
+  const [itemToDelete, setItemToDelete] = useState<number | null>(null);
 
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
   const total = Math.max(0, subtotal - discount);
@@ -63,6 +67,7 @@ export default function CartPage() {
       setLoading(false);
     }
   };
+
   const router = useRouter();
 
   const handleProceedToShipping = async () => {
@@ -76,6 +81,13 @@ export default function CartPage() {
       setLoading(false);
     }
   };
+ 
+  const handleConfirmRemove = () => {
+    if (itemToDelete) {
+      removeFromCart(itemToDelete);
+      setItemToDelete(null);
+    }
+  };
 
   return (
     <div className="bg-gray-50 min-h-screen py-8">
@@ -84,9 +96,9 @@ export default function CartPage() {
         <div className="flex-1 space-y-4">
           <h2 className="text-xl font-semibold text-gray-800 mb-4 bg-white p-4 rounded-xl shadow">
             Your Cart ({cart.length})
-          </h2>
-
-          {cart.map((item) => (
+          </h2> 
+          
+          {cart.map((item: CartItem) => (
             <div
               key={item.id}
               className="bg-white rounded-lg shadow-sm flex items-center justify-between p-4"
@@ -101,7 +113,6 @@ export default function CartPage() {
                 />
                 <div>
                   <h3 className="font-medium text-gray-800">{item.title}</h3>
-                  <p className="text-sm text-gray-500">{item.description}</p>
                   <span
                     className={`text-xs font-medium ${
                       item.stock ? "text-orange-600" : "text-orange-500"
@@ -137,8 +148,9 @@ export default function CartPage() {
                   <button className="p-2 hover:text-orange-500">
                     <HeartIcon className="h-5 w-5 cursor-pointer text-gray-500" />
                   </button>
-                  <button
-                    onClick={() => removeFromCart(item.id)}
+
+                   <button
+                    onClick={() => setItemToDelete(item.id)} 
                     className="p-2 hover:text-orange-500"
                   >
                     <TrashIcon className="h-5 w-5 cursor-pointer text-gray-500" />
@@ -152,7 +164,6 @@ export default function CartPage() {
         {/* Summary */}
         <div className="w-full lg:w-1/3 bg-white rounded-lg shadow-md p-6 h-fit">
           <h3 className="text-lg font-semibold text-gray-800 mb-4">Summary</h3>
-
           <div className="space-y-3 text-sm text-gray-600">
             <div className="flex justify-between">
               <span>Subtotal</span>
@@ -184,7 +195,6 @@ export default function CartPage() {
               <span>{formatAmount(total)}</span>
             </div>
           </div>
-
           <button
             onClick={handleProceedToShipping}
             disabled={loading}
@@ -205,8 +215,7 @@ export default function CartPage() {
           </button>
         </div>
       </div>
-
-      {/* Coupon Modal */}
+ 
       <Modal
         isOpen={showCouponModal}
         onClose={() => setShowCouponModal(false)}
@@ -236,6 +245,28 @@ export default function CartPage() {
             className="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 cursor-pointer disabled:opacity-50"
           >
             {loading ? "Applying..." : "Apply"}
+          </button>
+        </div>
+      </Modal>
+ 
+      <Modal
+        isOpen={itemToDelete !== null}
+        onClose={() => setItemToDelete(null)} 
+        title="Remove Item?"
+        description="Are you sure you want to remove this item from your cart?"
+      >
+        <div className="flex justify-end gap-3 mt-4">
+          <button
+            onClick={() => setItemToDelete(null)}
+            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 cursor-pointer"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleConfirmRemove}
+            className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 cursor-pointer"
+          >
+            Remove
           </button>
         </div>
       </Modal>
