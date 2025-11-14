@@ -94,11 +94,19 @@ export default function OrderSummary({
       <div className="mt-4 flex items-start gap-2">
         <span className="text-xs text-gray-500">
           I have read and agreed to the website{" "}
-          <Link href="/terms" className="text-orange-500 font-semibold">
+          <Link
+            href="/terms"
+            target="_blank"
+            className="text-orange-500 font-semibold"
+          >
             terms{" "}
           </Link>{" "}
           and{" "}
-          <Link href="/privacy" className="text-orange-500 font-semibold">
+          <Link
+            href="/privacy"
+            target="_blank"
+            className="text-orange-500 font-semibold"
+          >
             privacy{" "}
           </Link>
         </span>

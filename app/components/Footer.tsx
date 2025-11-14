@@ -18,8 +18,8 @@ export default function Footer() {
                 src="/images/logo.svg"
                 alt="African Market Hub"
                 className="cursor-pointer"
-                width={120}
-                height={120}
+                width={140}
+                height={30}
               />
             </div>
             <span className="text-sm">

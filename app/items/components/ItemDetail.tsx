@@ -1,8 +1,7 @@
 "use client";
 import { useState, useMemo } from "react";
 import Image from "next/image";
-import {
-  StarIcon,
+import { 
   MinusIcon,
   PlusIcon,
   CheckIcon,

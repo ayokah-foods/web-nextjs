@@ -153,7 +153,7 @@ export default function CartPage() {
                     onClick={() => setItemToDelete(item.id)} 
                     className="p-2 hover:text-orange-500"
                   >
-                    <TrashIcon className="h-5 w-5 cursor-pointer text-gray-500" />
+                    <TrashIcon className="h-5 w-5 cursor-pointer text-gray-500 hover:text-red-500 " />
                   </button>
                 </div>
               </div>

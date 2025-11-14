@@ -103,7 +103,7 @@ function CategoryList() {
                             transition={{ type: "spring", stiffness: 200, damping: 15 }}
                         >
                             <Link
-                                href={`/items?category=${cat.id}&type=products`}
+                                href={`/items?category=${cat.slug}&type=products`}
                                 className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-yellow-50 hover:text-yellow-700 rounded-md transition-all duration-200"
                             >
                                 {icon}
@@ -224,7 +224,7 @@ function DesktopNavLinks() {
                         {/* Animated underline */}
                         <motion.span
                             layoutId="underline"
-                            className={`absolute left-0 -bottom-1 h-[2px] rounded-full ${isActive ? "bg-yellow-400 w-full" : "bg-yellow-400 w-0"
+                            className={`absolute left-0 -bottom-1 h-0.5 rounded-full ${isActive ? "bg-yellow-400 w-full" : "bg-yellow-400 w-0"
                                 } group-hover:w-full transition-all duration-300`}
                         />
                     </motion.li>
