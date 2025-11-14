@@ -15,6 +15,8 @@ import Dropdown from "../common/Dropdown";
 import { ClipLoader } from "react-spinners";
 import { motion } from "framer-motion";
 import { formatAmount } from "@/utils/formatCurrency";
+import type { CartItem as CartItemType } from "@/context/CartContext";
+
 
 type CartButtonProps = {
   onClick: () => void;
@@ -107,8 +109,16 @@ export default function CartDropdown() {
   );
 }
 
+
+type CartItemProps = {
+  item: CartItemType;
+  updateQty: (id: number, qty: number) => void;
+  removeFromCart: (id: number) => void;
+};
+
+
 // Sub-component for the Cart Item
-function CartItem({ item, updateQty, removeFromCart }: any) {
+function CartItem({ item, updateQty, removeFromCart }: CartItemProps) {
   return (
     <div className="flex gap-3 border-b pb-4 last:border-b-0">
       <Image

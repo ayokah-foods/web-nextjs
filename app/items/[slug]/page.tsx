@@ -3,7 +3,7 @@ import ItemDetail from "../components/ItemDetail";
 import { getItemDetail } from "@/lib/api/items"; 
 
 
-export async function generateMetadata({ params }: any): Promise<Metadata> {
+export async function generateMetadata({ params }: PageParams): Promise<Metadata> {
   const { slug } = params;
 
   try {
@@ -35,16 +35,22 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
         images: product.images?.[0] ? [product.images[0]] : [],
       },
     };
-  } catch (e) {
+  } catch {
     return {
       title: "Product not found",
       description: "This product does not exist.",
     };
   }
 }
+type PageParams = {
+  params: {
+    slug: string;
+  };
+};
 
 
-export default async function ItemDetailPage({ params }: any) {
+
+export default async function ItemDetailPage({ params }: PageParams) {
   const { slug } = params;
 
   try {
@@ -98,7 +104,7 @@ export default async function ItemDetailPage({ params }: any) {
         <ItemDetail product={product} />
       </>
     );
-  } catch (error) {
+  } catch  {
     return (
       <div className="p-10 text-center text-red-500 font-medium">
         Failed to load product.

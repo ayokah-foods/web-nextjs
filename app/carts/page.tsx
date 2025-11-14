@@ -7,7 +7,7 @@ import {
   MinusIcon,
   PlusIcon,
 } from "@heroicons/react/24/outline";
-import { useCart } from "@/context/CartContext";
+import { CartItem, useCart } from "@/context/CartContext";
 import { useState } from "react";
 import Modal from "../components/common/Modal"; 
 import verifyCoupon from "@/lib/api/coupon";
@@ -17,7 +17,6 @@ import Coupon from "@/interfaces/coupon";
 import { ClipLoader } from "react-spinners";
 import { formatAmount } from "@/utils/formatCurrency";
  
-type CartItem = any;
 
 export default function CartPage() {
   const { cart, updateQty, removeFromCart } = useCart();

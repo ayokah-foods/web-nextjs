@@ -12,7 +12,6 @@ import Item from "@/interfaces/items";
 import { useRouter } from "next/navigation";
 import Skeleton from "react-loading-skeleton";
 import { formatAmount } from "@/utils/formatCurrency";
-import Category from "@/interfaces/category";
 
 const RecommendedProducts: FC = () => {
   const [products, setProducts] = useState<Item[]>([]);
