@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
@@ -8,7 +7,6 @@ import Image from "next/image";
 import Link from "next/link";
 import Skeleton from "react-loading-skeleton";
 import { useSearchParams } from "next/navigation";
-
 
 export default function CategoriesPageContent() {
   const searchParams = useSearchParams();
@@ -21,7 +19,7 @@ export default function CategoriesPageContent() {
   });
 
   return (
-    <div className="px-4 py-10 bg-green-50 h-screen">
+    <div className="px-4 py-10 bg-orange-50 h-screen">
       <h2 className="text-2xl font-bold mb-6 text-gray-800 capitalize">
         Our Categories
       </h2>

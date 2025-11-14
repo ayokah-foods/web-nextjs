@@ -35,7 +35,7 @@ export const OrderStatusTracker: React.FC<OrderStatusTrackerProps> = ({
         <h3 className="text-lg font-semibold text-gray-800">
           Order #{order.id}
         </h3>
-        <span className="bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full capitalize">
+        <span className="bg-orange-100 text-orange-700 text-xs font-semibold px-3 py-1 rounded-full capitalize">
           {order.shipping_status}
         </span>
       </div>

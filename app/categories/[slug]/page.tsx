@@ -21,7 +21,6 @@ export default function CategoryProductList() {
 
     const fetchProduct = async () => {
       try {
-        
         const response = await getCategoryItems(String(category_slug));
         setProduct(response.data.product);
       } catch {
@@ -35,7 +34,7 @@ export default function CategoryProductList() {
   }, [category_slug]);
 
   if (loading) return <ItemDetailSkeleton />;
-  if (error) return <p className="p-6 text-green-500">{error}</p>;
+  if (error) return <p className="p-6 text-orange-500">{error}</p>;
   if (!product) return <p className="p-6 text-gray-500">No product found.</p>;
 
   return <ItemDetail product={product} />;

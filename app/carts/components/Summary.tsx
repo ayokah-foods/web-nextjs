@@ -78,7 +78,7 @@ export default function OrderSummary({
         )}
 
         {discount > 0 && (
-          <div className="flex justify-between text-green-600 font-medium">
+          <div className="flex justify-between text-orange-600 font-medium">
             <span>Discount</span>
             <span>- {formatAmount(discount)}</span>
           </div>
@@ -100,7 +100,7 @@ export default function OrderSummary({
       {shippingFee > 0 && (
         <button
           onClick={handleCheckout}
-          className="mt-6 w-full bg-[#1B412C] hover:bg-green-600 text-white py-3 rounded-full font-medium cursor-pointer"
+          className="mt-6 w-full bg-[#1B412C] hover:bg-orange-600 text-white py-3 rounded-full font-medium cursor-pointer"
         >
           Checkout
         </button>

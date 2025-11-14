@@ -2,10 +2,7 @@
 
 import { useEffect, useState, FC } from "react";
 import Image from "next/image";
-import {
-  ShoppingBagIcon,
-  HeartIcon,
-} from "@heroicons/react/24/outline";
+import { ShoppingBagIcon, HeartIcon } from "@heroicons/react/24/outline";
 import Product, { Category } from "@/interfaces/items";
 import { useRouter, useSearchParams } from "next/navigation";
 import Skeleton from "react-loading-skeleton";
@@ -28,7 +25,7 @@ interface ApiResponse {
   stats: Record<string, number>;
 }
 
-const Items: FC<ItemsProps> = ({ }) => {
+const Items: FC<ItemsProps> = ({}) => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -89,7 +86,6 @@ const Items: FC<ItemsProps> = ({ }) => {
     }));
   }, [queryType, queryCategory]);
 
-
   // debounce search updates by 500ms
   const debouncedSetSearch = useMemo(
     () =>
@@ -105,11 +101,13 @@ const Items: FC<ItemsProps> = ({ }) => {
     };
   }, [debouncedSetSearch]);
 
-
   // Skeleton UI while loading
   const renderSkeletons = () =>
     Array.from({ length: 12 }).map((_, idx) => (
-      <div key={idx} className="bg-white rounded-xl overflow-hidden shadow relative">
+      <div
+        key={idx}
+        className="bg-white rounded-xl overflow-hidden shadow relative"
+      >
         <Skeleton height={224} className="w-full h-56" />
         <div className="p-3">
           <Skeleton width={80} height={16} className="mb-2" />
@@ -120,8 +118,7 @@ const Items: FC<ItemsProps> = ({ }) => {
     ));
 
   return (
-    <div className="p-4 bg-green-50 h-full">
-
+    <div className="p-4 bg-orange-50 h-full">
       {loading ? (
         // Skeleton for the header
         <div className="mb-6 bg-white p-6 rounded-lg shadow-md">
@@ -129,28 +126,30 @@ const Items: FC<ItemsProps> = ({ }) => {
           <Skeleton height={36} width={250} className="mb-2" />
           <Skeleton count={2} />
         </div>
-      ) : categoryInfo && (
-        // The actual header content
-        <div className="mb-6 bg-white p-6 rounded-lg shadow-md flex flex-col md:flex-row items-center gap-6">
-          {categoryInfo.image && (
-            <Image
-              src={categoryInfo.image}
-              alt={categoryInfo.name}
-              width={150}
-              height={150}
-              className="w-36 h-36 rounded-full object-cover border-4 border-green-100 flex-shrink-0"
-            />
-          )}
-          <div className="text-center md:text-left">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              {categoryInfo.name}
-            </h1>
-            <div
-              className="text-gray-600 prose"
-              dangerouslySetInnerHTML={{ __html: categoryInfo.description }}
-            />
+      ) : (
+        categoryInfo && (
+          // The actual header content
+          <div className="mb-6 bg-white p-6 rounded-lg shadow-md flex flex-col md:flex-row items-center gap-6">
+            {categoryInfo.image && (
+              <Image
+                src={categoryInfo.image}
+                alt={categoryInfo.name}
+                width={150}
+                height={150}
+                className="w-36 h-36 rounded-full object-cover border-4 border-orange-100 flex-shrink-0"
+              />
+            )}
+            <div className="text-center md:text-left">
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                {categoryInfo.name}
+              </h1>
+              <div
+                className="text-gray-600 prose"
+                dangerouslySetInnerHTML={{ __html: categoryInfo.description }}
+              />
+            </div>
           </div>
-        </div>
+        )
       )}
       <main className="col-span-12 lg:col-span-9">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
@@ -173,10 +172,10 @@ const Items: FC<ItemsProps> = ({ }) => {
                     className="w-full h-56 object-cover"
                   />
                   <div className="absolute top-2 right-2 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition">
-                    <button className="bg-white rounded-full p-2 shadow hover:bg-green-100">
+                    <button className="bg-white rounded-full p-2 shadow hover:bg-orange-100">
                       <ShoppingBagIcon className="w-5 h-5 text-black cursor-pointer" />
                     </button>
-                    <button className="bg-white rounded-full p-2 shadow hover:bg-green-100">
+                    <button className="bg-white rounded-full p-2 shadow hover:bg-orange-100">
                       <HeartIcon className="w-5 h-5 text-black cursor-pointer" />
                     </button>
                   </div>
@@ -208,9 +207,7 @@ const Items: FC<ItemsProps> = ({ }) => {
             </div>
           )}
         </div>
-
       </main>
-
     </div>
   );
 };

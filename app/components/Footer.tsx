@@ -1,18 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import {
-  FaFacebookF,
-  FaEnvelope,
-} from 'react-icons/fa';
+import { FaFacebookF, FaEnvelope } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 
 import Image from "next/image";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#1B412C] text-white py-10">
-      <div className="max-w-7xl mx-auto px-4 md:px-8">
+    <footer className="bg-orange-50 text-orange-900 py-5">
+      <div className="max-w-1xl mx-auto px-4 md:px-8">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
           {/* Logo */}
           <div className="col-span-2 flex flex-col gap-4">
@@ -25,28 +22,28 @@ export default function Footer() {
                 height={120}
               />
             </div>
-            <span className="text-sm text-white">
+            <span className="text-sm">
               Your No 1 African marketplace online platform.
             </span>
           </div>
 
           {/* About */}
           <div className="flex flex-col gap-2">
-            <span className="font-extrabold mb-2 text-white">About</span>
+            <span className="font-extrabold mb-2 ">About</span>
             <Link href="/about-us">About Us</Link>
             <Link href="/contact-us">Contact Us</Link>
           </div>
 
           {/* Privacy */}
           <div className="flex flex-col gap-2">
-            <span className="font-extrabold mb-2 text-white">Privacy</span>
+            <span className="font-extrabold mb-2 ">Privacy</span>
             <Link href="#">Terms of Privacy</Link>
             <Link href="#">Privacy Policy</Link>
           </div>
 
           {/* FAQ */}
           <div className="flex flex-col gap-2">
-            <span className="font-extrabold mb-2 text-white">FAQ</span>
+            <span className="font-extrabold mb-2 ">FAQ</span>
             <Link href="#">FAQs</Link>
             <Link href="#">Shipping</Link>
           </div>
@@ -54,7 +51,7 @@ export default function Footer() {
 
         <div className="mt-8 flex gap-4 justify-end text-xl">
           <Link
-            href="https://www.facebook.com/share/176FuM9jr2/"
+            href="https://www.facebook.com/ayokah_foods"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-blue-600 transition duration-150 cursor-pointer"
@@ -62,8 +59,9 @@ export default function Footer() {
           >
             <FaFacebookF className="w-6 h-6" />
           </Link>
+
           <Link
-            href="https://www.facebook.com/share/1ADHQxfRV6/"
+            href="https://www.twitter.com/ayokah_foods"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-gray-900 transition duration-150 cursor-pointer"
@@ -71,8 +69,9 @@ export default function Footer() {
           >
             <FaXTwitter className="w-6 h-6" />
           </Link>
+
           <Link
-            href="mailto:youremail@example.com"
+            href="mailto:support@ayokah.co.ke"
             className="hover:text-red-500 transition duration-150 cursor-pointer"
             aria-label="Email link"
           >

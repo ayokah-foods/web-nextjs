@@ -17,8 +17,6 @@ const instrumentSans = Instrument_Sans({
   variable: "--font-instrument-sans",
 });
 
-
-
 export const metadata: Metadata = {
   title: "Ayokah Foods and Services",
   manifest: "/site.webmanifest",
@@ -68,7 +66,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${instrumentSans.variable} font-sans antialiased bg-green-50 h-full`}
+        className={`${instrumentSans.variable}  antialiased bg-orange-50 h-full`}
       >
         <Providers>
           <CartProvider>

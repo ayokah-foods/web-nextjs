@@ -12,19 +12,19 @@ import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 
 const iconMap: Record<string, JSX.Element> = {
-    chair: <HomeModernIcon className="w-5 h-5 text-green-600" />,
-    table: <CubeIcon className="w-5 h-5 text-green-600" />,
-    decor: <SparklesIcon className="w-5 h-5 text-green-600" />,
-    gift: <GiftIcon className="w-5 h-5 text-green-600" />,
-    default: <TagIcon className="w-5 h-5 text-green-600" />,
+    chair: <HomeModernIcon className="w-5 h-5 text-yellow-600" />,
+    table: <CubeIcon className="w-5 h-5 text-yellow-600" />,
+    decor: <SparklesIcon className="w-5 h-5 text-yellow-600" />,
+    gift: <GiftIcon className="w-5 h-5 text-yellow-600" />,
+    default: <TagIcon className="w-5 h-5 text-yellow-600" />,
 };
 
 export default function NavBar() {
     return (
-      <nav className="bg-[#1B412C] text-white">
+      <nav className="bg-orange-900 text-white">
         <div className="container mx-auto flex items-center justify-between px-2">
           <Menu as="div" className="relative">
-            <MenuButton className="flex items-center gap-2 bg-[#337763] text-white px-4 py-3 text-sm font-medium rounded-full hover:bg-green-700 active:scale-95 transition-all duration-200 shadow-md focus:outline-none cursor-pointer">
+            <MenuButton className="flex items-center gap-2 bg-yellow-700 text-white px-3 py-3 text-sm font-medium rounded-full hover:bg-yellow-600 active:scale-95 transition-all duration-200 shadow-md focus:outline-none cursor-pointer">
               <Bars3Icon className="w-5 h-5 block lg:hidden" />
               <div className="hidden lg:flex items-center gap-2">
                 <Bars3Icon className="w-5 h-5" />
@@ -41,16 +41,16 @@ export default function NavBar() {
               leaveFrom="transform opacity-100 translate-y-0 scale-100"
               leaveTo="transform opacity-0 translate-y-1 scale-95"
             >
-              <MenuItems className="absolute left-0 mt-2 w-56 origin-top-left border border-green-100 bg-white/95 backdrop-blur-md text-gray-700 shadow-xl rounded-xl focus:outline-none z-50 overflow-hidden">
+              <MenuItems className="absolute left-0 mt-2 w-56 origin-top-left border border-yellow-100 bg-white/95 backdrop-blur-md text-gray-700 shadow-xl rounded-xl focus:outline-none z-50 overflow-hidden">
                 <div className="border-t border-gray-100  ">
                   <CategoryList />
                 </div>
 
                 {/* Footer link */}
-                <div className="border-t border-gray-100 bg-green-50/80 px-4 py-2 text-center">
+                <div className="border-t border-gray-100 bg-yellow-50/80 px-4 py-2 text-center">
                   <Link
                     href="/categories"
-                    className="text-green-700 text-sm font-medium hover:underline flex justify-center items-center gap-1"
+                    className="text-yellow-700 text-sm font-medium hover:underline flex justify-center items-center gap-1"
                   >
                     See all categories
                     <ChevronRightIcon className="w-4 h-4" />
@@ -104,7 +104,7 @@ function CategoryList() {
                         >
                             <Link
                                 href={`/items?category=${cat.id}&type=products`}
-                                className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-md transition-all duration-200"
+                                className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-yellow-50 hover:text-yellow-700 rounded-md transition-all duration-200"
                             >
                                 {icon}
                                 <span className="truncate">{cat.name}</span>
@@ -129,17 +129,17 @@ function MobileNavLinks() {
         {
             label: "Products",
             href: "/items?type=products",
-            icon: <CubeIcon className="w-4 h-4 text-green-500" />,
+            icon: <CubeIcon className="w-4 h-4 text-yellow-500" />,
         },
         {
             label: "Categories",
             href: "/categories",
-            icon: <Squares2X2Icon className="w-4 h-4 text-green-500" />,
+            icon: <Squares2X2Icon className="w-4 h-4 text-yellow-500" />,
         },
         {
             label: "Order to Call",
             href: "/contact-us",
-            icon: <PhoneIcon className="w-4 h-4 text-green-500" />,
+            icon: <PhoneIcon className="w-4 h-4 text-yellow-500" />,
         },
     ];
 
@@ -160,7 +160,7 @@ function MobileNavLinks() {
                     <Link
                         href={link.href}
                         title={link.label}
-                        className="flex items-center gap-1.5 text-xs text-gray-100 hover:text-green-200 transition-all duration-200"
+                        className="flex items-center gap-1.5 text-xs text-gray-100 hover:text-yellow-200 transition-all duration-200"
                     >
                         {link.icon}
                         <span>{link.label}</span>
@@ -213,18 +213,18 @@ function DesktopNavLinks() {
                             href={link.href}
                             title={link.label}
                             className={`flex items-center gap-1.5 transition-colors duration-200 ${isActive
-                                ? "text-green-400"
-                                : "text-gray-100 hover:text-green-200"
+                                ? "text-yellow-400"
+                                : "text-gray-100 hover:text-yellow-200"
                                 }`}
                         >
-                            <span className="text-green-300">{link.icon}</span>
+                            <span className="text-yellow-300">{link.icon}</span>
                             {link.label}
                         </Link>
 
                         {/* Animated underline */}
                         <motion.span
                             layoutId="underline"
-                            className={`absolute left-0 -bottom-1 h-[2px] rounded-full ${isActive ? "bg-green-400 w-full" : "bg-green-400 w-0"
+                            className={`absolute left-0 -bottom-1 h-[2px] rounded-full ${isActive ? "bg-yellow-400 w-full" : "bg-yellow-400 w-0"
                                 } group-hover:w-full transition-all duration-300`}
                         />
                     </motion.li>

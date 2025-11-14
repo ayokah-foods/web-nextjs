@@ -204,7 +204,7 @@ export default function CheckoutPage() {
               className={`mt-2 w-full py-3 rounded-full font-medium md:col-span-2 transition ${
                 loading
                   ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-[#1B412C] hover:bg-green-600 text-white"
+                  : "bg-[#1B412C] hover:bg-orange-600 text-white"
               }`}
             >
               {loading
