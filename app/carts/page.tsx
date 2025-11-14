@@ -111,17 +111,17 @@ export default function CartPage() {
                   </span>
 
                   {/* Quantity */}
-                  <div className="flex items-center gap-2 mt-2 text-gray-400">
+                  <div className="flex items-center gap-2 mt-2 text-orange-600">
                     <button
                       onClick={() => updateQty(item.id, item.qty - 1)}
-                      className="w-5 h-5 flex items-center justify-center rounded-full cursor-pointer bg-gray-200 text-gray-500"
+                      className="w-5 h-5 flex items-center justify-center rounded-full cursor-pointer bg-orange-100 text-orange-500"
                     >
                       <MinusIcon className="w-3 h-3" />
                     </button>
                     <span className="text-sm font-medium">{item.qty}</span>
                     <button
                       onClick={() => updateQty(item.id, item.qty + 1)}
-                      className="w-5 h-5 flex items-center justify-center rounded-full cursor-pointer bg-gray-200 text-gray-500"
+                      className="w-5 h-5 flex items-center justify-center rounded-full cursor-pointer bg-orange-100 text-orange-500"
                     >
                       <PlusIcon className="w-3 h-3" />
                     </button>
@@ -191,7 +191,7 @@ export default function CartPage() {
             className={`mt-6 w-full py-3 rounded-full font-medium transition ${
               loading
                 ? "bg-gray-400 cursor-not-allowed"
-                : "bg-[#1B412C] hover:bg-orange-600 text-white cursor-pointer"
+                : "bg-orange-500 hover:bg-orange-600 text-white cursor-pointer"
             }`}
           >
             {loading ? (
@@ -233,7 +233,7 @@ export default function CartPage() {
           <button
             onClick={handleApplyCoupon}
             disabled={loading || !couponCode}
-            className="px-4 py-2 bg-[#1B412C] text-white rounded-md hover:bg-orange-600 cursor-pointer disabled:opacity-50"
+            className="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 cursor-pointer disabled:opacity-50"
           >
             {loading ? "Applying..." : "Apply"}
           </button>

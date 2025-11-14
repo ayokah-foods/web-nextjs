@@ -16,5 +16,5 @@ export const checkoutStripe = async (
   params.append("total", String(total));
 
   const res = await api.get(`/checkout/stripe?${params.toString()}`);
-  return res.data; // expects { checkout_url: "https://checkout.stripe.com/..." }
+  return res.data;
 };

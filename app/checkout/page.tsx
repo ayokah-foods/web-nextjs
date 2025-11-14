@@ -99,7 +99,7 @@ export default function CheckoutPage() {
           </h2>
 
           <form
-            className="grid grid-cols-1 md:grid-cols-2 gap-4 !text-gray-500"
+            className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-500!"
             onSubmit={handleSubmit}
           >
             {/* Customer Info */}
@@ -109,7 +109,7 @@ export default function CheckoutPage() {
               value={firstname}
               onChange={(e) => setFirstname(e.target.value)}
               required
-              className="border border-gray-200 p-3 rounded focus:ring-[#1B412C] focus:border-[#1B412C] transition duration-150"
+              className="border border-gray-200 p-3 rounded focus:ring-orange-500 focus:border-orange-500 transition duration-150 focus:outline-none"
             />
             <input
               type="text"
@@ -117,7 +117,7 @@ export default function CheckoutPage() {
               value={lastname}
               onChange={(e) => setLastname(e.target.value)}
               required
-              className="border border-gray-200 p-3 rounded focus:ring-[#1B412C] focus:border-[#1B412C] transition duration-150"
+              className="border border-gray-200 p-3 rounded focus:ring-orange-500 focus:border-orange-500 transition duration-150 focus:outline-none"
             />
             <input
               type="email"
@@ -125,7 +125,7 @@ export default function CheckoutPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="border border-gray-200 p-3 rounded focus:ring-[#1B412C] focus:border-[#1B412C] transition duration-150"
+              className="border border-gray-200 p-3 rounded focus:ring-orange-500 focus:border-orange-500 transition duration-150 focus:outline-none"
             />
             <input
               type="text"
@@ -133,7 +133,7 @@ export default function CheckoutPage() {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               required
-              className="border border-gray-200 p-3 rounded focus:ring-[#1B412C] focus:border-[#1B412C] transition duration-150"
+              className="border border-gray-200 p-3 rounded focus:ring-orange-500 focus:border-orange-500 transition duration-150 focus:outline-none"
             />
 
             {/* 👇 Conditional Fields */}
@@ -153,28 +153,28 @@ export default function CheckoutPage() {
                   onChange={(e) =>
                     handleAddressChange("street", e.target.value)
                   }
-                  className="border border-gray-200 p-3 rounded md:col-span-2 focus:ring-[#1B412C] focus:border-[#1B412C]"
+                  className="border border-gray-200 p-3 rounded md:col-span-2 focus:ring-orange-500 focus:border-orange-500 focus:outline-none duration-150 transition"
                 />
                 <input
                   type="text"
                   placeholder="City"
                   value={address.city}
                   onChange={(e) => handleAddressChange("city", e.target.value)}
-                  className="border border-gray-200 p-3 rounded focus:ring-[#1B412C] focus:border-[#1B412C]"
+                  className="border border-gray-200 p-3 rounded focus:ring-orange-500 focus:border-orange-500 focus:outline-none transition duration-150"
                 />
                 <input
                   type="text"
                   placeholder="State"
                   value={address.state}
                   onChange={(e) => handleAddressChange("state", e.target.value)}
-                  className="border border-gray-200 p-3 rounded focus:ring-[#1B412C] focus:border-[#1B412C]"
+                  className="border border-gray-200 p-3 rounded focus:ring-orange-500 focus:border-orange-500 focus:outline-none transition duration-150"
                 />
                 <input
                   type="text"
                   placeholder="Zip Code"
                   value={address.zip}
                   onChange={(e) => handleAddressChange("zip", e.target.value)}
-                  className="border border-gray-200 p-3 rounded focus:ring-[#1B412C] focus:border-[#1B412C]"
+                  className="border border-gray-200 p-3 rounded focus:ring-orange-500 focus:border-orange-500 focus:outline-none transition duration-150"
                 />
               </>
             ) : (
@@ -184,14 +184,14 @@ export default function CheckoutPage() {
                   value={serviceNote}
                   onChange={(e) => setServiceNote(e.target.value)}
                   rows={4}
-                  className="border border-gray-200 p-3 rounded md:col-span-2 focus:ring-[#1B412C] focus:border-[#1B412C]"
+                  className="border border-gray-200 p-3 rounded md:col-span-2 focus:ring-orange-500 focus:border-orange-500 focus:outline-none transition duration-150"
                   required
                 />
                 <input
                   type="datetime-local"
                   value={preferredDate}
                   onChange={(e) => setPreferredDate(e.target.value)}
-                  className="border border-gray-200 p-3 rounded md:col-span-2 focus:ring-[#1B412C] focus:border-[#1B412C]"
+                  className="border border-gray-200 p-3 rounded md:col-span-2 focus:ring-orange-500 focus:border-orange-500 focus:outline-none transition duration-150"
                   required
                 />
               </>
@@ -204,7 +204,7 @@ export default function CheckoutPage() {
               className={`mt-2 w-full py-3 rounded-full font-medium md:col-span-2 transition ${
                 loading
                   ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-[#1B412C] hover:bg-orange-600 text-white"
+                  : "bg-orange-500 hover:bg-orange-600 text-white cursor-pointer"
               }`}
             >
               {loading

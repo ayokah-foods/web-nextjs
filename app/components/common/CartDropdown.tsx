@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useTransition } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -11,9 +11,18 @@ import {
   TrashIcon,
 } from "@heroicons/react/24/outline";
 import { useCart } from "@/context/CartContext";
-import Dropdown from "../common/Dropdown"; // Assuming path
+import Dropdown from "../common/Dropdown";
 import { ClipLoader } from "react-spinners";
 import { motion } from "framer-motion";
+import { formatAmount } from "@/utils/formatCurrency";
+
+type CartButtonProps = {
+  onClick: () => void;
+  disabled: boolean;
+  isLoading: boolean;
+  variant: "primary" | "secondary";
+  children: React.ReactNode;
+};
 
 export default function CartDropdown() {
   const { cart, updateQty, removeFromCart } = useCart();
@@ -27,7 +36,7 @@ export default function CartDropdown() {
     });
   };
 
-  const totalItems = cart.reduce((acc, item) => acc + item.qty, 0);
+  const totalItems = cart.length;
   const subtotal = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
 
   return (
@@ -71,7 +80,7 @@ export default function CartDropdown() {
           <div className="flex justify-between items-center mb-4">
             <span className="text-gray-600 font-medium">Subtotal:</span>
             <span className="text-gray-900 font-bold text-lg">
-              ${subtotal.toFixed(2)}
+              {formatAmount(subtotal)}
             </span>
           </div>
           <div className="flex justify-between gap-3 text-sm">
@@ -135,7 +144,7 @@ function CartItem({ item, updateQty, removeFromCart }: any) {
       </div>
       <div className="flex flex-col items-end justify-between text-gray-500">
         <span className="text-sm text-gray-700 font-semibold">
-          ${(item.price * item.qty).toFixed(2)}
+          {formatAmount(item.price * item.qty)}
         </span>
         <button onClick={() => removeFromCart(item.id)}>
           <TrashIcon
@@ -149,11 +158,18 @@ function CartItem({ item, updateQty, removeFromCart }: any) {
 }
 
 // Sub-component for the Cart Button
-function CartButton({ onClick, disabled, isLoading, variant, children }: any) {
+function CartButton({
+  onClick,
+  disabled,
+  isLoading,
+  variant,
+  children,
+}: CartButtonProps) {
   const baseClasses =
     "w-full py-2.5 rounded-full font-medium transition disabled:bg-gray-400 disabled:cursor-not-allowed";
+
   const variants = {
-    primary: "bg-[#1B412C] hover:bg-orange-600 text-white",
+    primary: "bg-orange-500 hover:bg-orange-600 text-white",
     secondary: "bg-gray-500 hover:bg-gray-600 text-white",
   };
 

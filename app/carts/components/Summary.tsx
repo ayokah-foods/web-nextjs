@@ -4,6 +4,7 @@ import CartItem from "@/interfaces/cart";
 import { checkoutStripe } from "@/lib/api/checkout";
 import { formatAmount } from "@/utils/formatCurrency";
 import Image from "next/image";
+import Link from "next/link";
 
 interface OrderSummaryProps {
   email: string;
@@ -91,16 +92,22 @@ export default function OrderSummary({
       </div>
 
       <div className="mt-4 flex items-start gap-2">
-        <input type="checkbox" required />
         <span className="text-xs text-gray-500">
-          I have read and agree to the website terms and conditions
+          I have read and agreed to the website{" "}
+          <Link href="/terms" className="text-orange-500 font-semibold">
+            terms{" "}
+          </Link>{" "}
+          and{" "}
+          <Link href="/privacy" className="text-orange-500 font-semibold">
+            privacy{" "}
+          </Link>
         </span>
       </div>
 
       {shippingFee > 0 && (
         <button
           onClick={handleCheckout}
-          className="mt-6 w-full bg-[#1B412C] hover:bg-orange-600 text-white py-3 rounded-full font-medium cursor-pointer"
+          className="mt-6 w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-full font-medium cursor-pointer"
         >
           Checkout
         </button>
