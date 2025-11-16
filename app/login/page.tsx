@@ -3,6 +3,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import { ContinueWithGoogle } from "@/lib/api/auth/login";
+import router from "next/router";
+import toast from "react-hot-toast";
 
 const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -25,58 +28,77 @@ const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
   </svg>
 );
 declare global {
-    interface Window {
-        google?: {
-            accounts: {
-                id: {
-                    initialize: (options: {
-                        client_id: string;
-                        callback: (response: CredentialResponse) => void;
-                        auto_select?: boolean;
-                        cancel_on_tap_outside?: boolean;
-                    }) => void;
-                    prompt: () => void;
-                };
-            };
+  interface Window {
+    google?: {
+      accounts: {
+        id: {
+          initialize: (options: {
+            client_id: string;
+            callback: (response: CredentialResponse) => void;
+            auto_select?: boolean;
+            cancel_on_tap_outside?: boolean;
+          }) => void;
+          prompt: () => void;
         };
-    }
+      };
+    };
+  }
 }
 
 type CredentialResponse = {
-    credential?: string;
-    select_by?: string;
-    clientId?: string;
+  credential?: string;
+  select_by?: string;
+  clientId?: string;
 };
-export default function LoginPage() { 
+export default function LoginPage() {
   const [loading] = useState(false);
 
-  
-const handleGoogleSignIn = () => {
-  console.log("Google Sign-In button clicked");
-  if (window.google?.accounts.id) {
-    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-    if (!clientId) {
-      console.error("CLIENT_ID is missing from environment variables.");
+  // Define the function that processes the Google response
+  const handleCredentialResponse = async (response: {
+    credential?: string;
+  }) => {
+    const id_token = response.credential;
+
+    if (!id_token) {
+      console.error("Google response missing credential (ID Token).");
       return;
     }
+    const payload = {
+      id_token: id_token,
+      device_name: "Web Browser Login",
+    };
 
-    // Re-initialize (or confirm initialization) right before prompting
-    window.google.accounts.id.initialize({
-      client_id: clientId,
-      callback: (response) => {
-        // Keep the same callback as in your GoogleOneTap component
-        console.log("Credential:", response.credential);
-      },
-      auto_select: false,
-      cancel_on_tap_outside: true,
-    });
-    // --- END ADDED SAFEGUARD ---
+    try {
+      const result = await ContinueWithGoogle(payload);
+      console.log("Login successful! Token:", result.token);
+      router.push("/dashboard");
+    } catch (error) {
+      console.error("Authentication failed on the server:", error);
+      toast.error("Login failed. Please try again.");
+    }
+  };
 
-    window.google.accounts.id.prompt();
-  } else {
-    console.error("Google Identity Services not initialized.");
-  }
-};
+  const handleGoogleSignIn = () => {
+    console.log("Google Sign-In button clicked");
+    if (window.google?.accounts.id) {
+      const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+      if (!clientId) {
+        console.error("CLIENT_ID is missing from environment variables.");
+        return;
+      }
+
+      window.google.accounts.id.initialize({
+        client_id: clientId,
+        callback: handleCredentialResponse,
+        auto_select: false,
+        cancel_on_tap_outside: true,
+      });
+
+      window.google.accounts.id.prompt();
+    } else {
+      console.error("Google Identity Services not initialized.");
+    }
+  };
 
   return (
     <div className="min-h-screen flex">
@@ -131,8 +153,8 @@ const handleGoogleSignIn = () => {
               disabled={loading}
               className="w-full cursor-pointer flex justify-center items-center gap-3 py-3 px-4 border border-gray-300 rounded-full shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-60"
             >
-                            <GoogleIcon className="w-5 h-5" />             
-              Google            {" "}
+              <GoogleIcon className="w-5 h-5" />
+              Google{" "}
             </button>
           </div>
         </div>

@@ -1,10 +1,9 @@
-// lib/providers.tsx
-
 "use client";
 
 import { useEffect } from "react";
-import { GoogleCredentialResponse } from "./api/auth/login";
-
+import { ContinueWithGoogle } from "./api/auth/login";
+import toast from "react-hot-toast";
+import router from "next/router";
 
 declare global {
   interface Window {
@@ -32,26 +31,49 @@ type CredentialResponse = {
 
 export default function GoogleOneTap() {
   useEffect(() => {
-    const handleLoad = () => {
-      if (!window.google?.accounts?.id) {
-        console.error("Google SDK loaded but google.accounts.id missing");
-        return;
-      }
-      const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-      if (!clientId) {
-        console.error("CLIENT_ID is undefined");
-        return;
-      }
+    const handleCredentialResponse = async (response: {
+      credential?: string;
+    }) => {
+      const id_token = response.credential;
 
-      window.google.accounts.id.initialize({
-        client_id: clientId,
-        callback: (response) => {
-          console.log("Credential:", response.credential);
-        },
-        auto_select: false,
-        cancel_on_tap_outside: true,
-      });
- 
+      if (!id_token) {
+        console.error("Google response missing credential (ID Token).");
+        return;
+      }
+      const payload = {
+        id_token: id_token,
+        device_name: "Web Browser Login",
+      };
+
+      try {
+        const result = await ContinueWithGoogle(payload);
+        console.log("Login successful! Token:", result.token);
+        toast.success("Welcome back!");
+        router.push("/dashboard");
+      } catch (error) {
+        console.error("Authentication failed on the server:", error);
+        toast.error("Login failed. Please try again.");
+      }
+    };
+    const handleLoad = () => {
+      if (window.google?.accounts.id) {
+        const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+        if (!clientId) {
+          console.error("CLIENT_ID is missing from environment variables.");
+          return;
+        }
+
+        window.google.accounts.id.initialize({
+          client_id: clientId,
+          callback: handleCredentialResponse,
+          auto_select: false,
+          cancel_on_tap_outside: true,
+        });
+
+        window.google.accounts.id.prompt();
+      } else {
+        console.error("Google Identity Services not initialized.");
+      }
     };
 
     window.addEventListener("google-script-loaded", handleLoad);
