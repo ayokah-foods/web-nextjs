@@ -3,8 +3,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import GoogleOneTap from "@/lib/providers";
-
 
 const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -26,9 +24,6 @@ const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
     />
   </svg>
 );
-
-
-
 declare global {
     interface Window {
         google?: {
@@ -53,15 +48,12 @@ type CredentialResponse = {
     clientId?: string;
 };
 export default function LoginPage() { 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [loading] = useState(false);
 
   
 const handleGoogleSignIn = () => {
-  // Only proceed if the google object is available
   console.log("Google Sign-In button clicked");
   if (window.google?.accounts.id) {
-    // --- ADDED SAFEGUARD INITIALIZATION HERE ---
     const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
     if (!clientId) {
       console.error("CLIENT_ID is missing from environment variables.");
@@ -88,14 +80,14 @@ const handleGoogleSignIn = () => {
 
   return (
     <div className="min-h-screen flex">
-      <GoogleOneTap />
-      {/* Left Column: Image (Hidden on small screens) */}
       <div className="relative hidden lg:block h-full">
-        {/* Replaced Next/Image with standard <img> */}
-        <img
+        <Image
+          width={1200}
+          height={1600}
           src="https://placehold.co/1200x1600/FDE8C7/333333?text=African+Market+Hub"
           alt="A woman in traditional African attire"
           className="w-full h-full object-cover"
+          unoptimized
         />
         <div className="absolute inset-0 bg-black opacity-10"></div>
       </div>

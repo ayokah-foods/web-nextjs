@@ -3,6 +3,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { GoogleCredentialResponse } from "./api/auth/login";
 
 
 declare global {
@@ -44,7 +45,7 @@ export default function GoogleOneTap() {
 
       window.google.accounts.id.initialize({
         client_id: clientId,
-        callback: (response: any) => {
+        callback: (response) => {
           console.log("Credential:", response.credential);
         },
         auto_select: false,
