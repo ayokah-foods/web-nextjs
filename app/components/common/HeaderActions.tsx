@@ -24,7 +24,7 @@ export default function HeaderActions() {
 
       {/* User Icon for auth screen */}
       <motion.button
-        onClick={() => router.push("/track-order")}
+        onClick={() => router.push("/login")}
         whileTap={{ scale: 0.95 }}
         whileHover={{ scale: 1.05 }}
         transition={{ type: "spring", stiffness: 300, damping: 15 }}

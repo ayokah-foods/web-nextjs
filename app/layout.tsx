@@ -68,6 +68,12 @@ export default function RootLayout({
       <body
         className={`${instrumentSans.variable}  antialiased bg-orange-50 h-full`}
       >
+        <Script
+          src="https://accounts.google.com/gsi/client"
+          strategy="afterInteractive" 
+          
+        />
+
         <Providers>
           <CartProvider>
             <TopHeader />
@@ -78,12 +84,6 @@ export default function RootLayout({
           </CartProvider>
           <GoogleOneTap />
         </Providers>
-
-        <script
-          src="https://accounts.google.com/gsi/client"
-          async
-          defer
-        ></script>
 
         <Script
           src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`}

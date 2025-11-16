@@ -1,47 +1,64 @@
+// lib/providers.tsx
+
 "use client";
 
 import { useEffect } from "react";
 
+
 declare global {
-    interface Window {
-        google?: {
-            accounts: {
-                id: {
-                    initialize: (options: {
-                        client_id: string;
-                        callback: (response: CredentialResponse) => void;
-                        auto_select?: boolean;
-                        cancel_on_tap_outside?: boolean;
-                    }) => void;
-                    prompt: () => void;
-                };
-            };
+  interface Window {
+    google?: {
+      accounts: {
+        id: {
+          initialize: (options: {
+            client_id: string;
+            callback: (response: CredentialResponse) => void;
+            auto_select?: boolean;
+            cancel_on_tap_outside?: boolean;
+          }) => void;
+          prompt: () => void;
         };
-    }
+      };
+    };
+  }
 }
 
 type CredentialResponse = {
-    credential?: string;
-    select_by?: string;
-    clientId?: string;
+  credential?: string;
+  select_by?: string;
+  clientId?: string;
 };
 
 export default function GoogleOneTap() {
-    useEffect(() => {
-        window.google?.accounts.id.initialize({
-            client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
-            callback: (response: CredentialResponse) => {
-                if (response.credential) {
-                    console.log("Credential:", response.credential);
-                    // send to your API for verification
-                }
-            },
-            auto_select: false,
-            cancel_on_tap_outside: true,
-        });
+  useEffect(() => {
+    const handleLoad = () => {
+      if (!window.google?.accounts?.id) {
+        console.error("Google SDK loaded but google.accounts.id missing");
+        return;
+      }
+      const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+      if (!clientId) {
+        console.error("CLIENT_ID is undefined");
+        return;
+      }
 
-        window.google?.accounts.id.prompt();
-    }, []);
+      window.google.accounts.id.initialize({
+        client_id: clientId,
+        callback: (response: any) => {
+          console.log("Credential:", response.credential);
+        },
+        auto_select: false,
+        cancel_on_tap_outside: true,
+      });
+ 
+    };
 
-    return null;
+    window.addEventListener("google-script-loaded", handleLoad);
+
+    return () => {
+      window.removeEventListener("google-script-loaded", handleLoad);
+    };
+  }, []);
+
+  return null;
 }
