@@ -3,6 +3,7 @@ export interface User {
   name: string;
   email: string;
   last_name: string;
+  role: string;
   email_verified_at: string;
   phone_verified_at: string;
   is_active: string;

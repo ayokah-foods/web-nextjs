@@ -14,6 +14,7 @@ import {
   Squares2X2Icon,
   InformationCircleIcon,
   HomeIcon,
+  BuildingStorefrontIcon,
 } from "@heroicons/react/24/outline";
 import { listCategories } from "@/lib/api/category";
 import { useQuery } from "@tanstack/react-query";
@@ -146,21 +147,19 @@ function MobileNavLinks() {
       icon: <CubeIcon className="w-4 h-4 text-yellow-500" />,
     },
     {
-      label: "Categories",
-      href: "/categories",
-      icon: <Squares2X2Icon className="w-4 h-4 text-yellow-500" />,
-    },
-    {
       label: "Order to Call",
       href: "/contact-us",
       icon: <PhoneIcon className="w-4 h-4 text-yellow-500" />,
     },
-    ...(user
+    // ⭐ Add Become a Seller only if logged in and if role is customer
+    ...(user?.role === "customer"
       ? [
           {
             label: "Become a Seller",
             href: "/seller/onboarding",
-            icon: <SparklesIcon className="w-4 h-4 text-yellow-500" />,
+            icon: (
+              <BuildingStorefrontIcon className="w-4 h-4 text-yellow-500" />
+            ),
           },
         ]
       : []),
@@ -219,13 +218,13 @@ function DesktopNavLinks() {
       href: "/contact-us",
       icon: <PhoneIcon className="w-4 h-4" />,
     },
-    // ⭐ Add Become a Seller only if logged in
-    ...(user
+    // ⭐ Add Become a Seller only if logged in and if role is customer
+    ...(user?.role === "customer"
       ? [
           {
             label: "Become a Seller",
             href: "/seller/onboarding",
-            icon: <SparklesIcon className="w-4 h-4" />,
+            icon: <BuildingStorefrontIcon className="w-4 h-4" />,
           },
         ]
       : []),

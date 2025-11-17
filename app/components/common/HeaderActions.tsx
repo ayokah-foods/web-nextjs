@@ -8,7 +8,6 @@ import { useAuthStore } from "@/store/useAuthStore";
 export default function HeaderActions() {
   const router = useRouter();
   const { user } = useAuthStore();
-  console.log("HeaderActions user:", user);
   const firstName = user?.name;
 
   return (
