@@ -47,9 +47,7 @@ export default function GoogleSignInButton() {
   const router = useRouter(); // Initialize router
   const [isSdkLoaded, setIsSdkLoaded] = useState(false);
   const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-
-  // 1. Define the handler inside the component to access router, toast, and API.
-  // We use the basic object structure to avoid strict type conflicts (Error 2322)
+ 
   const handleCredentialResponse = async (response: {
     credential?: string; // Using optional string for safety
     select_by: string; // Other fields as needed
