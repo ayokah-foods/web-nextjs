@@ -1,34 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
-import { useState } from "react";
-import { ContinueWithGoogle } from "@/lib/api/auth/login";
-import router from "next/router";
-import toast from "react-hot-toast";
-import GoogleSignInButton from "../components/common/GoogleSignInButton";
-import { useAuthStore } from "@/store/useAuthStore";
+import Image from "next/image"; 
+import GoogleSignInButton from "../components/common/GoogleSignInButton"; 
 
-const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <path
-      fill="#FFC107"
-      d="M43.611 20.083H42V20H24v8h11.303c-1.659 5.591-6.08 9.421-11.303 9.421-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"
-    />
-    <path
-      fill="#FF3D00"
-      d="m6.306 14.691 6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"
-    />
-    <path
-      fill="#4CAF50"
-      d="m24 44c5.166 0 9.86-1.977 13.214-5.192l-5.657-5.657C30.046 35.66 27.268 37 24 37c-5.218 0-9.641-3.421-11.303-8.181l-6.571 4.819C9.656 40.063 16.318 44 24 44z"
-    />
-    <path
-      fill="#1976D2"
-      d="M43.611 20.083H42V20H24v8h11.303c-.792 2.237-2.191 4.196-4.01 5.613l6.571 4.819C40.098 34.69 43.13 29.58 43.611 20.083z"
-    />
-  </svg>
-);
+ 
 declare global {
   interface Window {
     google?: {
@@ -53,56 +29,6 @@ type CredentialResponse = {
   clientId?: string;
 };
 export default function LoginPage() {
-  const [loading] = useState(false);
-
-  // Define the function that processes the Google response
-  const handleCredentialResponse = async (response: {
-    credential?: string;
-  }) => {
-    const id_token = response.credential;
-
-    if (!id_token) {
-      console.error("Google response missing credential (ID Token).");
-      return;
-    }
-    const payload = {
-      id_token: id_token,
-      device_name: "Web Browser Login",
-    };
-
-    try {
-      const result = await ContinueWithGoogle(payload);
-      console.log("Login successful! Token:", result.token);
-      useAuthStore.getState().setAuth(result.token, result.user);
-      router.push("/dashboard");
-    } catch (error) {
-      console.error("Authentication failed on the server:", error);
-      toast.error("Login failed. Please try again.");
-    }
-  };
-
-  const handleGoogleSignIn = () => {
-    console.log("Google Sign-In button clicked");
-    if (window.google?.accounts.id) {
-      const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-      if (!clientId) {
-        console.error("CLIENT_ID is missing from environment variables.");
-        return;
-      }
-
-      window.google.accounts.id.initialize({
-        client_id: clientId,
-        callback: handleCredentialResponse,
-        auto_select: false,
-        cancel_on_tap_outside: true,
-      });
-
-      window.google.accounts.id.prompt();
-    } else {
-      console.error("Google Identity Services not initialized.");
-    }
-  };
-
   return (
     <div className="min-h-screen flex">
       <div className="relative hidden lg:block h-full">
@@ -148,17 +74,7 @@ export default function LoginPage() {
           </div>
 
           {/* Google Button */}
-          <div>
-            {/* <button
-              type="button"
-              // Remove id="signInDiv" as it's no longer needed for rendering
-              onClick={handleGoogleSignIn} // Re-attach click handler
-              disabled={loading}
-              className="w-full cursor-pointer flex justify-center items-center gap-3 py-3 px-4 border border-gray-300 rounded-full shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-60"
-            >
-              <GoogleIcon className="w-5 h-5" />
-              Google{" "}
-            </button> */}
+          <div> 
             <GoogleSignInButton />
           </div>
         </div>

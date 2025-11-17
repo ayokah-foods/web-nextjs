@@ -3,9 +3,13 @@
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { MapPinIcon, UserIcon } from "@heroicons/react/24/outline";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export default function HeaderActions() {
   const router = useRouter();
+  const { user } = useAuthStore();
+  console.log("HeaderActions user:", user);
+  const firstName = user?.name;
 
   return (
     <div className="flex items-center gap-3 sm:gap-4">
@@ -22,9 +26,9 @@ export default function HeaderActions() {
         <span className="hidden sm:inline ml-1">Track Order</span>
       </motion.button>
 
-      {/* User Icon for auth screen */}
+      {/* User Icon / Greeting */}
       <motion.button
-        onClick={() => router.push("/login")}
+        onClick={() => router.push(user ? "/dashboard" : "/login")}
         whileTap={{ scale: 0.95 }}
         whileHover={{ scale: 1.05 }}
         transition={{ type: "spring", stiffness: 300, damping: 15 }}
@@ -33,7 +37,9 @@ export default function HeaderActions() {
                    focus:outline-none focus:ring-2 focus:ring-orange-400"
       >
         <UserIcon className="w-4 h-4 lg:w-5 lg:h-5" />
-        <span className="hidden sm:inline ml-1">My Account</span>
+        <span className="hidden sm:inline ml-1">
+          {firstName ? `Hi, ${firstName}` : "My Account"}
+        </span>
       </motion.button>
     </div>
   );

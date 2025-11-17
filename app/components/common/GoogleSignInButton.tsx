@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { ArrowRightCircleIcon } from "@heroicons/react/24/outline";
 import toast from "react-hot-toast"; // Assuming you use react-hot-toast
 import { ContinueWithGoogle } from "@/lib/api/auth/login"; // Ensure this path is correct
+import { useAuthStore } from "@/store/useAuthStore";
 
 // Import the official GSI type for the callback response from the global window object.
 // We are using 'any' for the window object below, but we define the type structure here for clarity.
@@ -47,7 +48,7 @@ export default function GoogleSignInButton() {
   const router = useRouter(); // Initialize router
   const [isSdkLoaded, setIsSdkLoaded] = useState(false);
   const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
- 
+
   const handleCredentialResponse = async (response: {
     credential?: string; // Using optional string for safety
     select_by: string; // Other fields as needed
@@ -66,24 +67,19 @@ export default function GoogleSignInButton() {
     };
 
     try {
-      
       const responsePayload = decodeJWT(id_token);
       if (responsePayload) {
         console.log("Decoded JWT Email:", responsePayload.email);
-      console.log("Login successful! Token:", payload);
-
       }
 
       // API Call
       const result = await ContinueWithGoogle(payload);
-      console.log("Login successful! Token:", result.token);
+      useAuthStore.getState().setAuth(result.token, result.user);
       toast.success("Login successful!");
       router.push("/dashboard");
-
     } catch (error) {
       console.error("Authentication failed on the server:", error);
       toast.error("Login failed. Please try again.");
-      
     }
   };
 
