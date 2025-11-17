@@ -16,9 +16,10 @@ export default function TopHeader() {
           <Image
             src="/images/logo.svg"
             alt="African Market Hub"
-            width={140}
-            height={30}
+            width={150}
+            height={40}
             priority
+            unoptimized
           />
         </Link>
       </div>

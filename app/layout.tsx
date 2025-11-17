@@ -82,7 +82,7 @@ export default function RootLayout({
             <SplashScreen />
             <Footer />
           </CartProvider>
-          <GoogleOneTap />
+          {/* <GoogleOneTap /> */}
         </Providers>
 
         <Script

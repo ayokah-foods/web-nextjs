@@ -6,7 +6,6 @@ import { useState } from "react";
 import { ContinueWithGoogle } from "@/lib/api/auth/login";
 import router from "next/router";
 import toast from "react-hot-toast";
-import GoogleSignInButton from "../components/common/GoogleSignInButton";
 
 const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -147,7 +146,7 @@ export default function LoginPage() {
 
           {/* Google Button */}
           <div>
-            {/* <button
+            <button
               type="button"
               // Remove id="signInDiv" as it's no longer needed for rendering
               onClick={handleGoogleSignIn} // Re-attach click handler
@@ -156,8 +155,7 @@ export default function LoginPage() {
             >
               <GoogleIcon className="w-5 h-5" />
               Google{" "}
-            </button> */}
-            <GoogleSignInButton />
+            </button>
           </div>
         </div>
       </div>
