@@ -1,17 +1,12 @@
-// app/components/common/GoogleSignInButton.tsx
 "use client";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRightCircleIcon } from "@heroicons/react/24/outline";
-import toast from "react-hot-toast"; // Assuming you use react-hot-toast
-import { ContinueWithGoogle } from "@/lib/api/auth/login"; // Ensure this path is correct
+import toast from "react-hot-toast";
+import { ContinueWithGoogle } from "@/lib/api/auth/login";
 import { useAuthStore } from "@/store/useAuthStore";
 
-// Import the official GSI type for the callback response from the global window object.
-// We are using 'any' for the window object below, but we define the type structure here for clarity.
-// The GSI library provides 'CredentialResponse', which has 'credential: string | undefined'.
-// We don't redefine the interface as GoogleCredentialResponse, we use the property structure directly.
 interface GoogleUserPayload {
   name: string;
   given_name: string;
@@ -20,9 +15,6 @@ interface GoogleUserPayload {
   picture: string;
   email: string;
 }
-
-// NOTE: We don't define GoogleCredentialResponse anymore to fix the type mismatch (Error 2322).
-// We'll rely on the runtime check inside the handler.
 
 const decodeJWT = (token: string): GoogleUserPayload | null => {
   try {
@@ -45,13 +37,13 @@ const decodeJWT = (token: string): GoogleUserPayload | null => {
 
 // --- REACT COMPONENT ---
 export default function GoogleSignInButton() {
-  const router = useRouter(); // Initialize router
+  const router = useRouter();
   const [isSdkLoaded, setIsSdkLoaded] = useState(false);
   const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 
   const handleCredentialResponse = async (response: {
-    credential?: string; // Using optional string for safety
-    select_by: string; // Other fields as needed
+    credential?: string;
+    select_by: string;
   }) => {
     const id_token = response.credential;
     console.log("Received ID Token from Google:", id_token);
@@ -76,7 +68,16 @@ export default function GoogleSignInButton() {
       const result = await ContinueWithGoogle(payload);
       useAuthStore.getState().setAuth(result.token, result.user);
       toast.success("Login successful!");
-      router.push("/dashboard");
+      // Redirect based on role
+      const role = result.user.role;
+
+      if (role === "customer") {
+        router.push("/account"); // customer dashboard
+      } else if (role === "vendor") {
+        router.push("/dashboard"); // seller dashboard
+      } else {
+        router.push("/"); // fallback
+      }
     } catch (error) {
       console.error("Authentication failed on the server:", error);
       toast.error("Login failed. Please try again.");
@@ -84,7 +85,6 @@ export default function GoogleSignInButton() {
   };
 
   useEffect(() => {
-    // --- NEW RELIABLE LOADING LOGIC ---
     const initializeGsi = () => {
       const googleAccounts = (window as any).google?.accounts;
 
@@ -117,24 +117,17 @@ export default function GoogleSignInButton() {
         }
       );
 
-      setIsSdkLoaded(true); // Set true ONLY after successful initialization
+      setIsSdkLoaded(true);
     };
-
-    // 1. Check immediately (in case the script loaded *before* the component mounted)
     if ((window as any).google?.accounts?.id) {
       initializeGsi();
       return;
     }
-
-    // 2. Add an event listener to wait for the script to load (reliable method)
-    // The GSI script dispatches a 'load' event on the window when it's ready.
     window.addEventListener("load", initializeGsi);
-
-    // Cleanup: Remove the event listener when the component unmounts
     return () => {
       window.removeEventListener("load", initializeGsi);
     };
-  }, [clientId, handleCredentialResponse]); // Dependencies: clientId and the memoized handler
+  }, [clientId, handleCredentialResponse]);
 
   if (!isSdkLoaded) {
     return (
@@ -153,11 +146,6 @@ export default function GoogleSignInButton() {
 
       {/* Target div where Google will render the button */}
       <div id="g_id_signin" className="mb-4"></div>
-
-      <p className="text-sm text-gray-500 mt-2">
-        <span className="font-medium text-gray-700">Note:</span> This uses
-        Google's official sign-in button.
-      </p>
     </div>
   );
 }

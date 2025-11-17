@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { ContinueWithGoogle } from "./api/auth/login";
 import toast from "react-hot-toast";
 import router from "next/router";
+import { useAuthStore } from "@/store/useAuthStore";
 
 declare global {
   interface Window {
@@ -47,6 +48,7 @@ export default function GoogleOneTap() {
 
       try {
         const result = await ContinueWithGoogle(payload);
+        useAuthStore.getState().setAuth(result.token, result.user);
         console.log("Login successful! Token:", result.token);
         toast.success("Welcome back!");
         router.push("/dashboard");
