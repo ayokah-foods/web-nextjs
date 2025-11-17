@@ -7,6 +7,7 @@ import { ContinueWithGoogle } from "@/lib/api/auth/login";
 import router from "next/router";
 import toast from "react-hot-toast";
 import GoogleSignInButton from "../components/common/GoogleSignInButton";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -72,6 +73,7 @@ export default function LoginPage() {
     try {
       const result = await ContinueWithGoogle(payload);
       console.log("Login successful! Token:", result.token);
+      useAuthStore.getState().setAuth(result.token, result.user);
       router.push("/dashboard");
     } catch (error) {
       console.error("Authentication failed on the server:", error);

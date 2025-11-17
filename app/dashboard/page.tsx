@@ -1,12 +1,10 @@
 import React from 'react';
 
-const DashboardPage: React.FC = () => {
+export default function DashboardPage() {
     return (
-        <div>
+        <div className="h-screen flex flex-col items-center justify-center">
             <h1>Dashboard</h1>
             <p>Welcome to the dashboard!</p>
         </div>
     );
 };
-
-export default DashboardPage;

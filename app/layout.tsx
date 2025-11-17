@@ -66,12 +66,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${instrumentSans.variable}  antialiased bg-orange-50 h-full`}
+        className={`${instrumentSans.variable} antialiased bg-orange-50 h-full flex flex-col`}
       >
         <Script
           src="https://accounts.google.com/gsi/client"
-          strategy="afterInteractive" 
-          
+          strategy="afterInteractive"
         />
 
         <Providers>
@@ -81,8 +80,7 @@ export default function RootLayout({
             {children}
             <SplashScreen />
             <Footer />
-          </CartProvider>
-          {/* <GoogleOneTap /> */}
+          </CartProvider> 
         </Providers>
 
         <Script

@@ -1,11 +1,18 @@
 export interface User {
-    id: string;
-    name: string;
-    email: string;
-    profile_photo?: string;
-    country?: string;
-    state?: string;
-    city?: string; 
-    created_at: string;
-    updated_at: string;
+  id: string;
+  name: string;
+  email: string;
+  last_name: string;
+  email_verified_at: string;
+  phone_verified_at: string;
+  is_active: string;
+  google_id: string;
+  referral_code: string;
+  referred_by: string; 
+  profile_photo?: string;
+  country?: string;
+  state?: string;
+  city?: string;
+  created_at: string;
+  updated_at: string;
 }
