@@ -9,7 +9,6 @@ import {
   FiHeart,
   FiMapPin,
   FiSettings,
-  FiUsers,
   FiLifeBuoy,
   FiLogOut,
 } from "react-icons/fi";
@@ -19,8 +18,7 @@ const menuItems = [
   { name: "Orders", href: "/account/orders", icon: FiPackage },
   { name: "Wishlist", href: "/account/wishlist", icon: FiHeart },
   { name: "Address", href: "/account/address", icon: FiMapPin },
-  { name: "Setting", href: "/account/settings", icon: FiSettings },
-  { name: "Referral", href: "/account/referral", icon: FiUsers },
+  { name: "Notification Setting", href: "/account/settings", icon: FiSettings },
   { name: "Support", href: "/account/support", icon: FiLifeBuoy },
 ];
 

@@ -64,8 +64,8 @@ export default function GoogleSignInButton() {
 
       // API Call
       const result = await ContinueWithGoogle(payload);
-      useAuthStore.getState().setAuth(result.token, result.user);
-      // Save to cookies (so middleware can read it)
+      useAuthStore.getState().setAuth(result.token, result.user); 
+      
       document.cookie = `token=${result.token}; path=/;`;
       document.cookie = `role=${result.user.role}; path=/;`;
 
@@ -76,7 +76,7 @@ export default function GoogleSignInButton() {
       } else if (role === "vendor") {
         router.push("/dashboard"); // seller dashboard
       } else {
-        router.push("/"); // fallback
+        router.push("/"); 
       }
       toast.success("Welcome Back" );
 
