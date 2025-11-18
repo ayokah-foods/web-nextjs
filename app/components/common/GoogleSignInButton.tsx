@@ -46,7 +46,6 @@ export default function GoogleSignInButton() {
     select_by: string;
   }) => {
     const id_token = response.credential;
-    console.log("Received ID Token from Google:", id_token);
     if (!id_token) {
       console.error("Google response missing credential (ID Token).");
       toast.error("Google login failed: Missing token.");
@@ -61,7 +60,6 @@ export default function GoogleSignInButton() {
     try {
       const responsePayload = decodeJWT(id_token);
       if (responsePayload) {
-        console.log("Decoded JWT Email:", responsePayload.email);
       }
 
       // API Call

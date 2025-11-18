@@ -1,5 +1,5 @@
 export interface User {
-  id: string;
+  id: number;
   name: string;
   email: string;
   last_name: string;
@@ -17,4 +17,7 @@ export interface User {
   city?: string;
   created_at: string;
   updated_at: string;
+  street_address?: string;
+  zip_code?: string;
+  address_label?: string;
 }
