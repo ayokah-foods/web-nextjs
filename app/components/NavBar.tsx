@@ -156,7 +156,7 @@ function MobileNavLinks() {
       ? [
           {
             label: "Become a Seller",
-            href: "/seller/onboarding",
+            href: "/seller-onboarding",
             icon: (
               <BuildingStorefrontIcon className="w-4 h-4 text-yellow-500" />
             ),
