@@ -5,6 +5,7 @@ import { User } from "@/interfaces/user";
 import Address from "@/interfaces/address";
 import { updateAddress, getAddresses } from "@/lib/api/auth/shipping";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 interface ShippingSectionProps {
   user: User | null;
@@ -95,8 +96,76 @@ export default function ShippingSection({ user }: ShippingSectionProps) {
 
       setIsEditing(false);
     } catch (err) {
-      console.error(err);
-      toast.error("Failed to save address");
+      let message = "Failed to save address";
+      const e: any = err;
+
+      const humanizeField = (f: string) =>
+        f.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+
+      const extractMessagesFromObject = (obj: any) => {
+        const parts: string[] = [];
+        for (const [key, val] of Object.entries(obj)) {
+          if (Array.isArray(val)) {
+            val.forEach((v) =>
+              parts.push(`${humanizeField(key)}: ${String(v)}`)
+            );
+          } else if (typeof val === "string") {
+            parts.push(`${humanizeField(key)}: ${val}`);
+          } else if (typeof val === "object") {
+            // nested errors
+            const nested = extractMessagesFromObject(val);
+            if (nested) parts.push(nested);
+          }
+        }
+        return parts.join(" ");
+      };
+
+      if (axios.isAxiosError(e)) {
+        let resp = e.response?.data;
+        // Sometimes backend returns a JSON string - try parse it
+        if (typeof resp === "string") {
+          try {
+            resp = JSON.parse(resp);
+          } catch {
+            /* leave as string */
+          }
+        }
+
+        if (resp) {
+          // Laravel style: { message: "...", errors: { field: ["msg"] } }
+          if (resp.errors && typeof resp.errors === "object") {
+            message =
+              extractMessagesFromObject(resp.errors) ||
+              resp.message ||
+              String(resp);
+          } else if (typeof resp === "object") {
+            // handle when API returns { field: ["msg"] } directly
+            const possible = extractMessagesFromObject(resp);
+            message = possible || resp.message || JSON.stringify(resp);
+          } else if (typeof resp === "string") {
+            message = resp;
+          } else if (e.message) {
+            message = e.message;
+          }
+        } else if (e.message) {
+          message = e.message;
+        }
+      } else {
+        // fallback for non-axios errors
+        if (e) {
+          if (typeof e === "string") {
+            message = e;
+          } else if (e.response?.data?.message) {
+            message = e.response.data.message;
+          } else if (e.data?.message) {
+            message = e.data.message;
+          } else if (e.message) {
+            message = e.message;
+          }
+        }
+      }
+
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -105,7 +174,7 @@ export default function ShippingSection({ user }: ShippingSectionProps) {
   const handleCancel = () => {
     if (address) {
       setFormData({
-        address_id: address.address_id, 
+        address_id: address.address_id,
         street_address: address.street_address || "",
         city: address.city || "",
         state: address.state || "",
