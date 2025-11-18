@@ -1,5 +1,5 @@
-import AccountSidebar from "./components/AccountSidebar";
 import AccountHero from "./components/AccountHero";
+import AccountSidebar from "./components/AccountSidebar";
 
 export default function AccountLayout({
   children,
@@ -7,18 +7,18 @@ export default function AccountLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-yellow-50 text-gray-800">
-      {/* Header Hero */}
+    <div className="min-h-screen bg-orange-50 text-gray-800">
+      {/* Hero */}
       <AccountHero />
 
-      <div className="container mx-auto px-4 py-10 flex gap-6">
-        {/* Sticky Sidebar */}
-        <div className="w-1/5">
+      <div className="container mx-auto px-4 py-10 flex flex-col md:flex-row gap-6">
+        {/* Sidebar */}
+        <div className="md:w-1/4 lg:w-1/5 w-full">
           <AccountSidebar />
         </div>
 
-        {/* Main content area - 80% */}
-        <div className="w-4/5">{children}</div>
+        {/* Main content */}
+        <div className="flex-1 w-full">{children}</div>
       </div>
     </div>
   );

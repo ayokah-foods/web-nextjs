@@ -4,6 +4,7 @@ export interface User {
   email: string;
   last_name: string;
   role: string;
+  phone: string;
   email_verified_at: string;
   phone_verified_at: string;
   is_active: string;

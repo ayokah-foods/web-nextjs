@@ -49,9 +49,21 @@ export default function GoogleOneTap() {
       try {
         const result = await ContinueWithGoogle(payload);
         useAuthStore.getState().setAuth(result.token, result.user);
-        console.log("Login successful! Token:", result.token);
-        toast.success("Welcome back!");
-        router.push("/dashboard");
+        // Save to cookies (so middleware can read it)
+        document.cookie = `token=${result.token}; path=/;`;
+        document.cookie = `role=${result.user.role}; path=/;`;
+
+        // Redirect based on role
+        const role = result.user.role;
+
+        if (role === "customer") {
+          router.push("/account");
+        } else if (role === "vendor") {
+          router.push("/dashboard"); 
+        } else {
+          router.push("/"); // fallback
+        }
+        toast.success("Welcome Back");
       } catch (error) {
         console.error("Authentication failed on the server:", error);
         toast.error("Login failed. Please try again.");

@@ -71,8 +71,6 @@ export default function GoogleSignInButton() {
       document.cookie = `token=${result.token}; path=/;`;
       document.cookie = `role=${result.user.role}; path=/;`;
 
-      toast.success("Login successful!");
-      // Redirect based on role
       const role = result.user.role;
 
       if (role === "customer") {
@@ -82,6 +80,8 @@ export default function GoogleSignInButton() {
       } else {
         router.push("/"); // fallback
       }
+      toast.success("Welcome Back" );
+
     } catch (error) {
       console.error("Authentication failed on the server:", error);
       toast.error("Login failed. Please try again.");

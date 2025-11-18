@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function AccountHero() {
   return (
-    <div className="relative w-full h-44">
+    <div className="relative w-full h-40 md:h-48 lg:h-56">
       <Image
         src="/account-header.jpg"
         alt="Account Header"
@@ -14,8 +14,8 @@ export default function AccountHero() {
         priority
       />
 
-      <div className="absolute inset-0 flex flex-col justify-center px-8 text-white">
-        <h1 className="text-3xl font-semibold">My Account</h1>
+      <div className="absolute inset-0 flex flex-col justify-center px-6 md:px-10 text-white">
+        <h1 className="text-2xl md:text-3xl font-semibold">My Account</h1>
 
         <div className="text-sm mt-2 opacity-90">
           <Link href="/" className="hover:underline">
