@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { useAuthStore } from "./store/useAuthStore";
 
 const protectedRoutes = [
   "/account",
@@ -23,22 +22,23 @@ export function middleware(req: NextRequest) {
 
   if (!isProtected) return NextResponse.next();
 
-  // get auth token
-  const token = useAuthStore((state) => state.token);
-  const user = useAuthStore((state) => state.user);
-  const role = user?.role;
+  // ✓ Read cookies ONLY
+  const token = req.cookies.get("token")?.value;
+  const role = req.cookies.get("role")?.value;
 
+  // Not logged in
   if (!token) {
     const loginUrl = new URL("/login", req.url);
     loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);
   }
 
-  // role-based protection
+  // Customer-only routes
   if (pathname.startsWith("/account") && role !== "customer") {
     return NextResponse.redirect(new URL("/unauthorized", req.url));
   }
 
+  // Vendor-only routes
   if (pathname.startsWith("/dashboard") && role !== "vendor") {
     return NextResponse.redirect(new URL("/unauthorized", req.url));
   }
@@ -46,7 +46,6 @@ export function middleware(req: NextRequest) {
   return NextResponse.next();
 }
 
-// Apply middleware only on routes we care about
 export const config = {
   matcher: [
     "/account/:path*",

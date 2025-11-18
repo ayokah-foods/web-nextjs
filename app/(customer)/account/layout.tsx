@@ -7,7 +7,7 @@ export default function AccountLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-800">
+    <div className="min-h-screen bg-yellow-50 text-gray-800">
       {/* Header Hero */}
       <AccountHero />
 

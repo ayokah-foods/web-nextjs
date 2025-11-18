@@ -10,7 +10,7 @@ export default function AccountHero() {
         src="/account-header.jpg"
         alt="Account Header"
         fill
-        className="object-cover brightness-75"
+        className="object-cover brightness-25"
         priority
       />
 

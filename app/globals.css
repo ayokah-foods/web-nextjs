@@ -46,6 +46,9 @@ body,
 .btn-primary {
   @apply bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg w-full font-semibold;
 }
+.card {
+  @apply p-6 bg-white rounded-xl shadow-sm;
+}
 h1,
 h2,
 h3,

@@ -67,12 +67,16 @@ export default function GoogleSignInButton() {
       // API Call
       const result = await ContinueWithGoogle(payload);
       useAuthStore.getState().setAuth(result.token, result.user);
+      // Save to cookies (so middleware can read it)
+      document.cookie = `token=${result.token}; path=/;`;
+      document.cookie = `role=${result.user.role}; path=/;`;
+
       toast.success("Login successful!");
       // Redirect based on role
       const role = result.user.role;
 
       if (role === "customer") {
-        router.push("/account"); // customer dashboard
+        router.push("/account"); 
       } else if (role === "vendor") {
         router.push("/dashboard"); // seller dashboard
       } else {
