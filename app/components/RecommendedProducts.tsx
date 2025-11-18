@@ -53,11 +53,11 @@ const RecommendedProducts: FC = () => {
     <section className="mb-4">
       <div className="max-w-full mx-auto px-4 md:px-6 lg:px-8 pb-8">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl md:text-xl font-bold text-orange-500">
+          <h2 className="text-xl md:text-xl font-bold text-orange-800">
             Latest products
           </h2>
           <ArrowRightCircleIcon
-            className="w-6 h-6 text-orange-500 cursor-pointer"
+            className="w-6 h-6 text-orange-800 cursor-pointer"
             onClick={() => router.push("/items")}
           />
         </div>

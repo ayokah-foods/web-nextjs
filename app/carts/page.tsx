@@ -9,14 +9,13 @@ import {
 } from "@heroicons/react/24/outline";
 import { CartItem, useCart } from "@/context/CartContext";
 import { useState } from "react";
-import Modal from "../components/common/Modal"; 
+import Modal from "../components/common/Modal";
 import verifyCoupon from "@/lib/api/coupon";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import Coupon from "@/interfaces/coupon";
 import { ClipLoader } from "react-spinners";
 import { formatAmount } from "@/utils/formatCurrency";
- 
 
 export default function CartPage() {
   const { cart, updateQty, removeFromCart } = useCart();
@@ -26,7 +25,7 @@ export default function CartPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState<Coupon>();
- 
+
   const [itemToDelete, setItemToDelete] = useState<number | null>(null);
 
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
@@ -80,7 +79,7 @@ export default function CartPage() {
       setLoading(false);
     }
   };
- 
+
   const handleConfirmRemove = () => {
     if (itemToDelete) {
       removeFromCart(itemToDelete);
@@ -95,8 +94,8 @@ export default function CartPage() {
         <div className="flex-1 space-y-4">
           <h2 className="text-xl font-semibold text-gray-800 mb-4 bg-white p-4 rounded-xl shadow">
             Your Cart ({cart.length})
-          </h2> 
-          
+          </h2>
+
           {cart.map((item: CartItem) => (
             <div
               key={item.id}
@@ -114,7 +113,7 @@ export default function CartPage() {
                   <h3 className="font-medium text-gray-800">{item.title}</h3>
                   <span
                     className={`text-xs font-medium ${
-                      item.stock ? "text-orange-600" : "text-orange-500"
+                      item.stock ? "text-orange-600" : "text-orange-800"
                     }`}
                   >
                     {item.stock ? "In stock" : "Out of stock"}
@@ -124,14 +123,14 @@ export default function CartPage() {
                   <div className="flex items-center gap-2 mt-2 text-orange-600">
                     <button
                       onClick={() => updateQty(item.id, item.qty - 1)}
-                      className="w-5 h-5 flex items-center justify-center rounded-full cursor-pointer bg-orange-100 text-orange-500"
+                      className="w-5 h-5 flex items-center justify-center rounded-full cursor-pointer bg-orange-100 text-orange-800"
                     >
                       <MinusIcon className="w-3 h-3" />
                     </button>
                     <span className="text-sm font-medium">{item.qty}</span>
                     <button
                       onClick={() => updateQty(item.id, item.qty + 1)}
-                      className="w-5 h-5 flex items-center justify-center rounded-full cursor-pointer bg-orange-100 text-orange-500"
+                      className="w-5 h-5 flex items-center justify-center rounded-full cursor-pointer bg-orange-100 text-orange-800"
                     >
                       <PlusIcon className="w-3 h-3" />
                     </button>
@@ -144,13 +143,13 @@ export default function CartPage() {
                   {formatAmount(item.price * item.qty)}
                 </span>
                 <div className="flex items-center gap-2 mt-4">
-                  <button className="p-2 hover:text-orange-500">
+                  <button className="p-2 hover:text-orange-800">
                     <HeartIcon className="h-5 w-5 cursor-pointer text-gray-500" />
                   </button>
 
-                   <button
-                    onClick={() => setItemToDelete(item.id)} 
-                    className="p-2 hover:text-orange-500"
+                  <button
+                    onClick={() => setItemToDelete(item.id)}
+                    className="p-2 hover:text-orange-800"
                   >
                     <TrashIcon className="h-5 w-5 cursor-pointer text-gray-500 hover:text-red-500 " />
                   </button>
@@ -182,7 +181,7 @@ export default function CartPage() {
             <div className="flex justify-between items-center">
               <span>Coupon</span>
               <button
-                className="text-orange-500 font-medium cursor-pointer"
+                className="text-orange-800 font-medium cursor-pointer"
                 onClick={() => setShowCouponModal(true)}
               >
                 {discount > 0 ? "Change Coupon" : "Apply Coupon"}
@@ -200,7 +199,7 @@ export default function CartPage() {
             className={`mt-6 w-full py-3 rounded-full font-medium transition ${
               loading
                 ? "bg-gray-400 cursor-not-allowed"
-                : "bg-orange-500 hover:bg-orange-600 text-white cursor-pointer"
+                : "bg-orange-800 hover:bg-orange-600 text-white cursor-pointer"
             }`}
           >
             {loading ? (
@@ -214,7 +213,7 @@ export default function CartPage() {
           </button>
         </div>
       </div>
- 
+
       <Modal
         isOpen={showCouponModal}
         onClose={() => setShowCouponModal(false)}
@@ -229,7 +228,7 @@ export default function CartPage() {
           placeholder="Enter coupon code"
         />
 
-        {error && <p className="text-orange-500 text-sm mb-2">{error}</p>}
+        {error && <p className="text-orange-800 text-sm mb-2">{error}</p>}
 
         <div className="flex justify-end gap-2">
           <button
@@ -241,16 +240,16 @@ export default function CartPage() {
           <button
             onClick={handleApplyCoupon}
             disabled={loading || !couponCode}
-            className="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 cursor-pointer disabled:opacity-50"
+            className="px-4 py-2 bg-orange-800 text-white rounded-md hover:bg-orange-600 cursor-pointer disabled:opacity-50"
           >
             {loading ? "Applying..." : "Apply"}
           </button>
         </div>
       </Modal>
- 
+
       <Modal
         isOpen={itemToDelete !== null}
-        onClose={() => setItemToDelete(null)} 
+        onClose={() => setItemToDelete(null)}
         title="Remove Item?"
         description="Are you sure you want to remove this item from your cart?"
       >

@@ -44,7 +44,7 @@ body,
 }
 
 .btn-primary {
-  @apply bg-orange-500 hover:bg-orange-800 text-white py-3 rounded-lg w-full font-semibold;
+  @apply bg-orange-800 hover:bg-orange-500 text-white py-3 rounded-lg w-full font-semibold;
 }
 .card {
   @apply p-6 bg-white rounded-xl shadow-sm;
@@ -56,12 +56,12 @@ body,
 
 /* Primary / Orange button */
 .btn-orange {
-  @apply bg-orange-500 hover:bg-orange-800 text-white;
+  @apply bg-orange-800 hover:bg-orange-500 text-white;
 }
 
 /* Secondary / Gray button */
 .btn-gray {
-  @apply bg-gray-200 hover:bg-gray-300 text-gray-700;
+  @apply bg-gray-200 hover:bg-gray-300 text-gray-700 transition duration-150;
 }
 
 /* Disabled state */

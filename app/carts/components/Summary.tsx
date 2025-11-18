@@ -97,7 +97,7 @@ export default function OrderSummary({
           <Link
             href="/terms"
             target="_blank"
-            className="text-orange-500 font-semibold"
+            className="text-orange-800 font-semibold"
           >
             terms{" "}
           </Link>{" "}
@@ -105,7 +105,7 @@ export default function OrderSummary({
           <Link
             href="/privacy"
             target="_blank"
-            className="text-orange-500 font-semibold"
+            className="text-orange-800 font-semibold"
           >
             privacy{" "}
           </Link>
@@ -115,7 +115,7 @@ export default function OrderSummary({
       {shippingFee > 0 && (
         <button
           onClick={handleCheckout}
-          className="mt-6 w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-full font-medium cursor-pointer"
+          className="mt-6 w-full bg-orange-800 hover:bg-orange-600 text-white py-3 rounded-full font-medium cursor-pointer"
         >
           Checkout
         </button>

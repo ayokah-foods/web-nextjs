@@ -58,7 +58,7 @@ const TodaysDeal: FC = () => {
             Today`s Deal for You
           </h2>
           <ArrowRightCircleIcon
-            className="w-6 h-6 text-orange-500 cursor-pointer"
+            className="w-6 h-6 text-orange-800 cursor-pointer"
             onClick={() => router.push("/items")}
           />
         </div>

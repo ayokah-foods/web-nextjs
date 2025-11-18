@@ -9,7 +9,7 @@ export default function RecentOrderSection({ user }: RecentOrderSectionProps) {
     <div className="card">
       <div className="flex justify-between items-center mb-3">
         <h3 className="font-semibold">Recent Order History</h3>
-        <a className="text-sm text-orange-500 hover:underline cursor-pointer">
+        <a className="text-sm text-orange-800 hover:underline cursor-pointer">
           See all orders
         </a>
       </div>

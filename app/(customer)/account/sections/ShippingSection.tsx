@@ -199,7 +199,9 @@ export default function ShippingSection({ user }: ShippingSectionProps) {
 
   return (
     <div className="card p-6">
-      <h4 className="text-sm text-gray-500 mb-3">Shipping Address</h4>
+      <h4 hidden className="text-sm text-gray-500 mb-3">
+        Shipping Address
+      </h4>
 
       {isEditing ? (
         <div className="space-y-2">
@@ -289,10 +291,10 @@ export default function ShippingSection({ user }: ShippingSectionProps) {
           </p>
 
           <button
-            className="mt-3 text-orange-500 hover:underline cursor-pointer"
+            className="mt-3 text-orange-800 hover:underline cursor-pointer"
             onClick={() => setIsEditing(true)}
           >
-            Edit Address
+            Edit Shipping Address
           </button>
         </div>
       )}

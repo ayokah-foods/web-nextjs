@@ -17,7 +17,6 @@ import { motion } from "framer-motion";
 import { formatAmount } from "@/utils/formatCurrency";
 import type { CartItem as CartItemType } from "@/context/CartContext";
 
-
 type CartButtonProps = {
   onClick: () => void;
   disabled: boolean;
@@ -109,13 +108,11 @@ export default function CartDropdown() {
   );
 }
 
-
 type CartItemProps = {
   item: CartItemType;
   updateQty: (id: number, qty: number) => void;
   removeFromCart: (id: number) => void;
 };
-
 
 // Sub-component for the Cart Item
 function CartItem({ item, updateQty, removeFromCart }: CartItemProps) {
@@ -158,7 +155,7 @@ function CartItem({ item, updateQty, removeFromCart }: CartItemProps) {
         </span>
         <button onClick={() => removeFromCart(item.id)}>
           <TrashIcon
-            className="w-5 h-5 hover:text-orange-500 cursor-pointer"
+            className="w-5 h-5 hover:text-orange-800 cursor-pointer"
             title="Remove"
           />
         </button>
@@ -179,7 +176,7 @@ function CartButton({
     "w-full py-2.5 rounded-full font-medium transition disabled:bg-gray-400 disabled:cursor-not-allowed";
 
   const variants = {
-    primary: "bg-orange-500 hover:bg-orange-600 text-white cursor-pointer",
+    primary: "bg-orange-800 hover:bg-orange-600 text-white cursor-pointer",
     secondary: "bg-gray-500 hover:bg-gray-600 text-white cursor-pointer",
   };
 

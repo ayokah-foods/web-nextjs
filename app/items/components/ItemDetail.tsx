@@ -1,11 +1,7 @@
 "use client";
 import { useState, useMemo } from "react";
 import Image from "next/image";
-import { 
-  MinusIcon,
-  PlusIcon,
-  CheckIcon,
-} from "@heroicons/react/24/outline";
+import { MinusIcon, PlusIcon, CheckIcon } from "@heroicons/react/24/outline";
 import Item from "@/interfaces/items";
 import ItemTabs from "./ItemTabs";
 import { useCart } from "@/context/CartContext";
@@ -106,7 +102,7 @@ export default function ItemDetail({ product }: { product: Item }) {
                   height={80}
                   className={`rounded-md cursor-pointer border ${
                     selectedImage === img
-                      ? "border-orange-500"
+                      ? "border-orange-800"
                       : "border-gray-200"
                   }`}
                   onClick={() => setSelectedImage(img)}
@@ -128,7 +124,7 @@ export default function ItemDetail({ product }: { product: Item }) {
           <div className="flex flex-col space-y-4">
             <h1 className="text-2xl font-semibold">{product.title}</h1>
 
-            <div className="flex items-center"> 
+            <div className="flex items-center">
               <div className="flex items-center gap-1 text-yellow-400 mb-1">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <span key={i}>{i < product.average_rating ? "★" : "☆"}</span>
@@ -149,7 +145,7 @@ export default function ItemDetail({ product }: { product: Item }) {
                   <span className="line-through text-gray-400">
                     {formatAmount(regularPrice)}
                   </span>
-                  <span className="text-orange-500 font-semibold">
+                  <span className="text-orange-800 font-semibold">
                     -{discount}%
                   </span>
                 </>

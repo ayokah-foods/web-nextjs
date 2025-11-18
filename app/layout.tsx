@@ -1,13 +1,12 @@
-import type { Metadata } from "next";
-import { Instrument_Sans } from "next/font/google";
 import "./globals.css";
+import { Instrument_Sans } from "next/font/google";
+import type { Metadata } from "next";
 import SplashScreen from "./components/SplashScreen";
 import TopHeader from "./components/TopHeader";
 import NavBar from "./components/NavBar";
 import Providers from "./providers";
 import Footer from "./components/Footer";
 import { CartProvider } from "@/context/CartContext";
-import GoogleOneTap from "@/lib/providers";
 import { Toaster } from "react-hot-toast";
 import Script from "next/script";
 
@@ -64,9 +63,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${instrumentSans.variable}`}>
       <body
-        className={`${instrumentSans.variable} antialiased bg-orange-50 h-full flex flex-col`}
+        className={`antialiased bg-orange-50 h-full flex flex-col`}
       >
         <Script
           src="https://accounts.google.com/gsi/client"
@@ -80,7 +79,7 @@ export default function RootLayout({
             {children}
             <SplashScreen />
             <Footer />
-          </CartProvider> 
+          </CartProvider>
         </Providers>
 
         <Script

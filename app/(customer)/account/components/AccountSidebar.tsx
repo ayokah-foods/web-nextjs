@@ -19,7 +19,7 @@ const menuItems = [
   { name: "Orders", href: "/account/orders", icon: FiPackage },
   { name: "Wishlist", href: "/account/wishlist", icon: FiHeart },
   { name: "Address", href: "/account/address", icon: FiMapPin },
-  { name: "Setting", href: "/account/setting", icon: FiSettings },
+  { name: "Setting", href: "/account/settings", icon: FiSettings },
   { name: "Referral", href: "/account/referral", icon: FiUsers },
   { name: "Support", href: "/account/support", icon: FiLifeBuoy },
 ];

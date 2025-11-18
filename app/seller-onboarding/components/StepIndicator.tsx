@@ -29,7 +29,7 @@ export default function StepIndicator({
                 completed
                   ? "bg-green-500 text-white"
                   : isActive
-                  ? "border-orange-500 text-orange-500"
+                  ? "border-orange-800 text-orange-800"
                   : "border-gray-300 text-gray-400"
               }`}
             >

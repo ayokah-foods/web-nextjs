@@ -69,7 +69,7 @@ const CategorySection: FC = () => {
                 className="w-full h-56 object-cover group-hover:scale-105 transition"
               />
               <div className="absolute bottom-3 left-3 right-3">
-                <div className="bg-orange-500 text-white text-center py-2 rounded-lg font-semibold text-sm md:text-base">
+                <div className="bg-orange-800 text-white text-center py-2 rounded-lg font-semibold text-sm md:text-base">
                   {cat.name}
                 </div>
               </div>
@@ -96,7 +96,7 @@ const CategorySection: FC = () => {
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center">
-            <p className="text-3xl font-bold text-orange-500 text-center">
+            <p className="text-3xl font-bold text-orange-800 text-center">
               {banner.type === "home_service_banner"
                 ? "Nearby Service Providers"
                 : "Essential Daily Needs"}

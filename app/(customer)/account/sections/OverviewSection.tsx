@@ -83,13 +83,13 @@ export default function OverviewSection() {
         </h2>
         <p className="text-sm mt-1 text-gray-600">
           From your account dashboard, you can easily check & view your
-          <span className="text-orange-500"> Recent Orders</span>, manage your
-          <span className="text-orange-500">
+          <span className="text-orange-800"> Recent Orders</span>, manage your
+          <span className="text-orange-800">
             {" "}
             Shipping and Billing Addresses
           </span>
-          , and edit your 
-          <span className="text-orange-500"> Account Details</span>.
+          , and edit your
+          <span className="text-orange-800"> Account Details</span>.
         </p>
       </div>
 
@@ -153,7 +153,7 @@ export default function OverviewSection() {
                 {user?.role ?? "Customer"}
               </p>
               <button
-                className="mt-3 text-orange-500 hover:underline cursor-pointer"
+                className="mt-3 text-orange-800 hover:underline cursor-pointer"
                 onClick={() => setIsEditing(true)}
               >
                 Edit Profile
