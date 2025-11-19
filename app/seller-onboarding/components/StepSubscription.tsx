@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
-import { ArrowLongRightIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import { ChevronRightIcon } from "@heroicons/react/24/outline";
 import { listSubscriptions } from "@/lib/api/seller/subscription";
 import { FaMoneyBill1Wave } from "react-icons/fa6";
 
@@ -44,6 +44,37 @@ export default function StepSubscription({ onNext }: StepProps) {
     window.location.href = paymentLinkUrl;
   };
 
+  // Helper to determine styles based on plan name
+  const getPlanStyles = (name: string) => {
+    const lowerName = name.toLowerCase();
+
+    // Highlight Standard as the "Popular" choice
+    if (lowerName.includes("standard")) {
+      return {
+        container:
+          "border-orange-600 shadow-orange-200 scale-105 z-10 ring-1 ring-orange-600", // Added scale to make it pop
+        title: "text-orange-700",
+        button: "text-white bg-orange-700 hover:bg-orange-800",
+      };
+    }
+
+    // Darker style for Premium
+    if (lowerName.includes("premium")) {
+      return {
+        container: "border-gray-300 hover:border-gray-400",
+        title: "text-gray-900",
+        button: "text-white bg-black hover:bg-gray-800",
+      };
+    }
+
+    // Default for Basic
+    return {
+      container: "border-gray-300 hover:border-gray-400",
+      title: "text-gray-900",
+      button: "text-gray-700 bg-gray-100 hover:bg-gray-200",
+    };
+  };
+
   const renderLoading = () => (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       <Skeleton height={400} borderRadius={12} count={3} className="h-full" />
@@ -72,78 +103,69 @@ export default function StepSubscription({ onNext }: StepProps) {
           redirected to a secure Stripe payment gateway.
         </p>
       </div>
+
       <div className="space-y-6">
         {isLoading ? (
           renderLoading()
         ) : error ? (
           renderError()
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {plans.map((plan) => (
-              <div
-                key={plan.id}
-                className={`flex flex-col p-6 rounded-xl border-2 shadow-lg transition-shadow duration-300 
-                ${
-                  plan.name.toLowerCase().includes("basic")
-                    ? "border-indigo-600 shadow-indigo-300"
-                    : "border-gray-200 hover:shadow-xl"
-                }`}
-              >
-                {/* Plan Header */}
-                <div className="text-center pb-4 border-b border-gray-100">
-                  <h3
-                    className={`text-2xl font-extrabold ${
-                      plan.name.toLowerCase().includes("standard")
-                        ? "text-indigo-600"
-                        : "text-gray-900"
-                    }`}
-                  >
-                    {plan.name}
-                  </h3>
-                  <p className="mt-2 text-gray-500 text-sm">
-                    Best for{" "}
-                    {plan.name.toLowerCase().includes("premium")
-                      ? "growing"
-                      : "new"}{" "}
-                    businesses
-                  </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start pt-4">
+            {plans.map((plan) => {
+              const styles = getPlanStyles(plan.name);
 
-                  <p className="mt-4">
-                    <span className="text-5xl font-extrabold text-gray-900">
-                      £{plan.monthly_price.toFixed(2)}
-                    </span>
-                    <span className="text-lg font-medium text-gray-500">
-                      /month
-                    </span>
-                  </p>
-                </div>
-
-                {/* Feature List */}
-                <ul role="list" className="mt-6 space-y-3 grow">
-                  {plan.features.map((feature, index) => (
-                    <li key={index} className="flex items-start">
-                      <CheckCircleIcon className="h-6 w-6 text-orange-800 mr-2 shrink-0" />
-                      <span className="text-base text-gray-600">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                {/* Action Button */}
-                <button
-                  type="button"
-                  onClick={() => handleSubscribe(plan.payment_link_url)}
-                  className={`mt-8 w-full flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm transition duration-150 ease-in-out cursor-pointer
-                  ${
-                    plan.name.toLowerCase().includes("pro")
-                      ? "text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                      : "text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  }`}
+              return (
+                <div
+                  key={plan.id}
+                  className={`flex flex-col p-6 rounded-xl border-2 shadow-lg transition-all duration-300 ${styles.container}`}
                 >
-                  Start {plan.name}
-                  <ChevronRightIcon className="ml-1 h-4 w-4" />
-                </button>
-              </div>
-            ))}
+                  {/* Plan Header */}
+                  <div className="text-center pb-4 border-b border-gray-100">
+                    <h3 className={`text-2xl font-extrabold ${styles.title}`}>
+                      {plan.name}
+                    </h3>
+                    <p className="mt-2 text-gray-500 text-sm">
+                      Best for{" "}
+                      {plan.name.toLowerCase().includes("premium")
+                        ? "growing"
+                        : "new"}{" "}
+                      businesses
+                    </p>
+
+                    <p className="mt-4">
+                      <span className="text-5xl font-extrabold text-gray-900">
+                        £{plan.monthly_price}
+                      </span>
+                      <span className="text-lg font-medium text-gray-500">
+                        /mo
+                      </span>
+                    </p>
+                  </div>
+
+                  {/* Feature List */}
+                  <ul role="list" className="mt-6 space-y-3 grow">
+                    {plan.features.map((feature, index) => (
+                      <li key={index} className="flex items-start">
+                        <CheckCircleIcon className="h-6 w-6 text-orange-600 mr-2 shrink-0" />
+                        <span className="text-base text-gray-600">
+                          {feature}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* Action Button */}
+                  <button
+                    type="button"
+                    onClick={() => handleSubscribe(plan.payment_link_url)}
+                    className={`mt-8 w-full flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm transition duration-150 ease-in-out cursor-pointer ${styles.button}`}
+                  >
+                    Choose {plan.name}
+                    <ChevronRightIcon className="ml-1 h-3 w-3" />
+                  </button>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
