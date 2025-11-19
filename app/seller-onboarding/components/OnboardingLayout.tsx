@@ -22,8 +22,8 @@ export default function OnboardingLayout({ steps }: { steps: Step[] }) {
           src="/store-bg.jpg"
           alt="Ayokah Banner"
           width={1920}
-          height={50}
-          className="w-full h-50 object-cover"
+          height={40}
+          className="w-full h-40 object-cover"
           priority
         />
       </div>

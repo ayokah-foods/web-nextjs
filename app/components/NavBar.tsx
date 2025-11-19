@@ -151,7 +151,6 @@ function MobileNavLinks() {
       href: "/contact-us",
       icon: <PhoneIcon className="w-4 h-4 text-yellow-500" />,
     },
-    // ⭐ Add Become a Seller only if logged in and if role is customer
     ...(user?.role === "customer"
       ? [
           {
@@ -218,12 +217,11 @@ function DesktopNavLinks() {
       href: "/contact-us",
       icon: <PhoneIcon className="w-4 h-4" />,
     },
-    // ⭐ Add Become a Seller only if logged in and if role is customer
     ...(user?.role === "customer"
       ? [
           {
             label: "Become a Seller",
-            href: "/seller/onboarding",
+            href: "/seller-onboarding",
             icon: <BuildingStorefrontIcon className="w-4 h-4" />,
           },
         ]
