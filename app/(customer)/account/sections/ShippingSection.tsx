@@ -6,7 +6,6 @@ import Address from "@/interfaces/address";
 import { updateAddress, getAddresses } from "@/lib/api/auth/shipping";
 import toast from "react-hot-toast";
 import axios from "axios";
-
 interface ShippingSectionProps {
   user: User | null;
 }
