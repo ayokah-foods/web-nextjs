@@ -1,8 +1,7 @@
 import api from "./axios";
 import {
   InitialSettings,
-  NotificationPayload,
-  SaveResponse,
+  NotificationPayload, 
 } from "@/interfaces/notification";
 
 export async function getCommunicationSettings(): Promise<InitialSettings> {

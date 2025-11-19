@@ -10,8 +10,8 @@ export default function AddressBook() {
     <div>
       {/* Welcome Box */}
       <div className="card mb-6">
-        <h2 className="text-lg font-semibold">
-          <FiMapPin className="inline-block mr-2 text-orange-800" />
+        <h2 className="text-lg font-semibold flex items-center">
+          <FiMapPin className="text-orange-800 text-xl mr-2" size={24} />
           Shipping Address</h2>
         <p className="text-sm mt-1 text-gray-600">
           From your account dashboard, you can easily check, modify and view your
