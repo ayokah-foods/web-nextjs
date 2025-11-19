@@ -14,11 +14,14 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false);
 
   const [address, setAddress] = useState<Address>({
-    street: "",
+    street_address: "",
     city: "",
     state: "",
-    zip: "",
+    zip_code: "",
+    phone: "",
+    address_label: "",
     country: "",
+    
   });
 
   const [firstname, setFirstname] = useState("");
@@ -65,10 +68,10 @@ export default function CheckoutPage() {
         }
       : {
           ...basePayload,
-          street: address.street,
+          street: address.street_address,
           city: address.city,
           state: address.state,
-          zip: address.zip,
+          zip: address.zip_code,
           type: "products",
         };
 
@@ -149,7 +152,7 @@ export default function CheckoutPage() {
                 <input
                   type="text"
                   placeholder="Street Address"
-                  value={address.street}
+                  value={address.street_address}
                   onChange={(e) =>
                     handleAddressChange("street", e.target.value)
                   }
@@ -172,7 +175,7 @@ export default function CheckoutPage() {
                 <input
                   type="text"
                   placeholder="Zip Code"
-                  value={address.zip}
+                  value={address.zip_code}
                   onChange={(e) => handleAddressChange("zip", e.target.value)}
                   className="border border-gray-200 p-3 rounded focus:ring-orange-800 focus:border-orange-800 focus:outline-none transition duration-150"
                 />

@@ -2,7 +2,6 @@ import { useAuthStore } from "@/store/useAuthStore";
 import axios from "axios";
 import { setupCache } from "axios-cache-interceptor";
 import { toast } from "react-hot-toast";
-import Router from "next/router";
 
 let api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || "https://api.ayokah.co.uk/api/v1",
@@ -34,10 +33,14 @@ api.interceptors.response.use(
     if (error?.response?.status === 401) {
       useAuthStore.getState().clearAuth();
       toast.error("Session expired. Please log in again.");
-      Router.push("/login");
+
+      if (typeof window !== "undefined") {
+        window.location.href = "/login";
+      }
     }
     return Promise.reject(error);
   }
 );
+
 
 export default api;

@@ -26,10 +26,8 @@ const nextConfig: NextConfig = {
   },
 
   experimental: {
-    swcTraceProfiling: false,
-    turbo: {},
+    swcTraceProfiling: false, // This is still valid
   },
-  swcMinify: false,
 }; 
 
 export default nextConfig;
