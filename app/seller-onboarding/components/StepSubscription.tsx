@@ -4,9 +4,12 @@ import { useState, useEffect } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
-import { ChevronRightIcon } from "@heroicons/react/24/outline";
 import { listSubscriptions } from "@/lib/api/seller/subscription";
 import { FaMoneyBill1Wave } from "react-icons/fa6";
+import { subscriptionCheckout } from "@/lib/api/seller/shop";
+import { FiExternalLink } from "react-icons/fi";
+import { useSearchParams, useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 interface SubscriptionPlan {
   id: number;
@@ -40,11 +43,43 @@ export default function StepSubscription({ onNext }: StepProps) {
     fetchPlans();
   }, []);
 
-  const handleSubscribe = (paymentLinkUrl: string) => {
-    window.location.href = paymentLinkUrl;
+  // Add router hooks
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  // 1. Check for Cancelation on Mount
+  // 1. Check for Cancelation on Mount
+  useEffect(() => {
+    if (searchParams.get("canceled") === "true") {
+      toast.error(
+        "Payment was canceled. You can try again when you are ready.",
+        {
+          duration: 5000,
+          position: "top-center",
+        }
+      );
+
+      // Optional: Clean the URL so a refresh doesn't show the error again
+      router.replace("/seller-onboarding");
+    }
+  }, [searchParams, router]);
+  
+  const [isRedirecting, setIsRedirecting] = useState(false);
+
+  const handleSubscribe = async (priceId: string) => {
+    setIsRedirecting(true);
+    try {
+      const res = await subscriptionCheckout(priceId);
+      console.log("Checkout response:", res);
+      if (res.url) {
+        window.location.href = res.url;
+      }
+    } catch (err) {
+      toast.error("Failed to initialize checkout.");
+      setIsRedirecting(false);
+    }
   };
 
-  // Helper to determine styles based on plan name
   const getPlanStyles = (name: string) => {
     const lowerName = name.toLowerCase();
 
@@ -157,11 +192,14 @@ export default function StepSubscription({ onNext }: StepProps) {
                   {/* Action Button */}
                   <button
                     type="button"
-                    onClick={() => handleSubscribe(plan.payment_link_url)}
+                    onClick={() => handleSubscribe(plan.stripe_price_id)}
+                    disabled={isRedirecting}
                     className={`mt-8 w-full flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm transition duration-150 ease-in-out cursor-pointer ${styles.button}`}
                   >
-                    Choose {plan.name}
-                    <ChevronRightIcon className="ml-1 h-3 w-3" />
+                    {isRedirecting
+                      ? "Loading Stripe..."
+                      : `Choose ${plan.name}`}{" "}
+                    <FiExternalLink className="ml-1 h-3 w-3" />
                   </button>
                 </div>
               );

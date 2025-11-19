@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import OnboardingLayout from "./components/OnboardingLayout";
 import StepBankInfo from "./components/StepBankInfo";
 import StepImages from "./components/StepImages";
 import StepShopInfo from "./components/StepShopInfo";
 import StepSubscription from "./components/StepSubscription";
-import { useRouter } from "next/navigation";
+import { getMyShop } from "@/lib/api/seller/shop";
 
 const STEPS = [
   { id: 1, label: "Shop Info" },
@@ -15,12 +16,39 @@ const STEPS = [
   { id: 4, label: "Shop Sub" },
 ];
 
-
-export default function OnboardingPage() {
+function OnboardingContent() {
   const router = useRouter();
-  const [currentStep, setCurrentStep] = useState(1);
+  const searchParams = useSearchParams();
 
+  // 1. Grab step from URL (default to 1)
+  const initialStep = Number(searchParams.get("step")) || 1;
+
+  // 2. Initialize state with URL param
+  const [currentStep, setCurrentStep] = useState(initialStep);
   const [shopId, setShopId] = useState<number | null>(null);
+  const [isLoadingShop, setIsLoadingShop] = useState(false);
+
+  // 3. Recovery Logic: If user returns on Step > 1 (e.g. Cancel Payment),
+  // we need to fetch their Shop ID again because React state was lost on reload.
+  useEffect(() => {
+    const fetchShopOnReturn = async () => {
+      if (currentStep > 1 && !shopId) {
+        setIsLoadingShop(true);
+        try {
+          const res = await getMyShop();
+          if (res?.data?.id) {
+            setShopId(res.data.id);
+          }
+        } catch (error) {
+          console.error("Could not recover shop ID", error);
+        } finally {
+          setIsLoadingShop(false);
+        }
+      }
+    };
+
+    fetchShopOnReturn();
+  }, [currentStep, shopId]);
 
   const handleNextStep = (data?: any) => {
     if (data?.shopId) {
@@ -36,11 +64,27 @@ export default function OnboardingPage() {
   };
 
   const renderStepComponent = () => {
+    if (isLoadingShop) {
+      return <div className="p-10 text-center">Loading shop details...</div>;
+    }
+
     switch (currentStep) {
       case 1:
         return <StepShopInfo onNext={handleNextStep} />;
       case 2:
-        if (!shopId) return <p>Error: Shop ID missing. Please restart.</p>;
+        if (!shopId) {
+          return (
+            <div className="text-center p-6">
+              <p className="text-red-500 mb-4">Shop data is missing.</p>
+              <button
+                onClick={() => setCurrentStep(1)}
+                className="text-blue-600 underline"
+              >
+                Go back to Step 1
+              </button>
+            </div>
+          );
+        }
         return <StepImages shopId={shopId} onNext={handleNextStep} />;
       case 3:
         return <StepBankInfo onNext={handleNextStep} />;
@@ -55,5 +99,19 @@ export default function OnboardingPage() {
     <OnboardingLayout steps={STEPS} currentStep={currentStep}>
       {renderStepComponent()}
     </OnboardingLayout>
+  );
+}
+
+export default function OnboardingPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex h-screen items-center justify-center">
+          Loading...
+        </div>
+      }
+    >
+      <OnboardingContent />
+    </Suspense>
   );
 }
