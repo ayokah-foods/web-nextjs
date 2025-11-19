@@ -132,14 +132,12 @@ export default function ShippingSection({ user }: ShippingSectionProps) {
         }
 
         if (resp) {
-          // Laravel style: { message: "...", errors: { field: ["msg"] } }
           if (resp.errors && typeof resp.errors === "object") {
             message =
               extractMessagesFromObject(resp.errors) ||
               resp.message ||
               String(resp);
           } else if (typeof resp === "object") {
-            // handle when API returns { field: ["msg"] } directly
             const possible = extractMessagesFromObject(resp);
             message = possible || resp.message || JSON.stringify(resp);
           } else if (typeof resp === "string") {
@@ -223,7 +221,7 @@ export default function ShippingSection({ user }: ShippingSectionProps) {
             name="state"
             value={formData.state}
             onChange={handleChange}
-            placeholder="State (2-letter code)"
+            placeholder="State/Province"
             className="input w-full"
           />
           <input
@@ -280,7 +278,7 @@ export default function ShippingSection({ user }: ShippingSectionProps) {
             {user?.name} {user?.last_name ?? "Guest"}
           </p>
           <p className="text-gray-700 text-sm">
-            {formData.street_address || "No address added yet."},{" "}
+            {formData.street_address || ""}{" "}
             {formData.city}, {formData.state}, {formData.country}
           </p>
           <p className="text-gray-700 text-sm">

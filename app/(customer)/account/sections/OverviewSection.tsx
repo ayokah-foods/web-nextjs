@@ -126,6 +126,7 @@ export default function OverviewSection() {
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder="Phone Number"
+                maxLength={10}
               />
               <div className="flex gap-2 justify-center mt-2">
                 <button

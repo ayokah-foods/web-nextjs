@@ -76,10 +76,9 @@ export default function GoogleSignInButton() {
       } else if (role === "vendor") {
         router.push("/dashboard"); // seller dashboard
       } else {
-        router.push("/"); 
+        // router.push("/"); 
       }
       toast.success("Welcome Back" );
-
     } catch (error) {
       console.error("Authentication failed on the server:", error);
       toast.error("Login failed. Please try again.");
