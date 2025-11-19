@@ -18,7 +18,9 @@ interface SubscriptionPlan {
   payment_link_url: string;
 }
 
-export default function StepSubscription() {
+type StepProps = { onNext?: (data?: any) => void };
+
+export default function StepSubscription({ onNext }: StepProps) {
   const [plans, setPlans] = useState<SubscriptionPlan[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

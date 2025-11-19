@@ -1,20 +1,24 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import StepIndicator from "./StepIndicator";
 
-type Step = {
+type StepDefinition = {
   id: number;
   label: string;
-  component: React.ReactNode;
 };
 
-export default function OnboardingLayout({ steps }: { steps: Step[] }) {
-  const [activeStep, setActiveStep] = useState(1);
+interface LayoutProps {
+  children: React.ReactNode;
+  currentStep: number;
+  steps: StepDefinition[];
+}
 
-  const currentStep = steps.find((s) => s.id === activeStep);
-
+export default function OnboardingLayout({
+  children,
+  currentStep,
+  steps,
+}: LayoutProps) {
   return (
     <div className="bg-orange-50">
       <div className="w-full mb-2">
@@ -22,7 +26,7 @@ export default function OnboardingLayout({ steps }: { steps: Step[] }) {
           src="/store-bg.jpg"
           alt="Ayokah Banner"
           width={1920}
-          height={40}
+          height={160}
           className="w-full h-40 object-cover"
           priority
         />
@@ -34,12 +38,12 @@ export default function OnboardingLayout({ steps }: { steps: Step[] }) {
 
         <StepIndicator
           steps={steps}
-          activeStep={activeStep}
-          setActiveStep={setActiveStep}
+          activeStep={currentStep}
+          setActiveStep={() => {}} 
         />
 
         <div className="mt-10 bg-white p-6 rounded-xl shadow-sm border">
-          {currentStep?.component}
+          {children}
         </div>
       </div>
     </div>

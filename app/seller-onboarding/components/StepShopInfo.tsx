@@ -6,16 +6,15 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { BeatLoader } from "react-spinners";
 import { motion, AnimatePresence } from "framer-motion";
-import { useRouter } from "next/navigation";
 
 import counties from "@/data/uk-counties.json";
 import citiesData from "@/data/uk-cities.json";
 import { listCategories } from "@/lib/api/category";
-import { createShop } from "@/lib/api/seller/shop";
+import { saveShop } from "@/lib/api/seller/shop";
 import { FaShoppingBag } from "react-icons/fa";
 import toast from "react-hot-toast";
+import { StepProps } from "@/interfaces/StepProps";
 
-// --- Types ---
 interface SelectOption {
   id: number;
   name: string;
@@ -26,7 +25,6 @@ interface FadeSlideProps {
   keyId: string | number;
 }
 
-// --- Animation Wrapper Component ---
 const FadeSlide = ({ children, keyId }: FadeSlideProps) => (
   <AnimatePresence mode="wait">
     <motion.div
@@ -41,9 +39,7 @@ const FadeSlide = ({ children, keyId }: FadeSlideProps) => (
   </AnimatePresence>
 );
 
-export default function StepShopInfo() {
-  const router = useRouter();
-
+export default function StepShopInfo({ onNext }: StepProps) {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [description, setDescription] = useState("");
@@ -83,7 +79,7 @@ export default function StepShopInfo() {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const LIMIT = 5000;
- 
+
   useEffect(() => {
     setIsCityLoading(true);
 
@@ -103,7 +99,7 @@ export default function StepShopInfo() {
 
     return () => clearTimeout(timer);
   }, [selectedCounty]);
- 
+
   useEffect(() => {
     const fetchCategories = async () => {
       setCategoriesLoading(true);
@@ -134,7 +130,7 @@ export default function StepShopInfo() {
 
     fetchCategories();
   }, [selectedType]);
- 
+
   const handleDescriptionChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       const currentLength = e.target.value.length;
@@ -151,7 +147,7 @@ export default function StepShopInfo() {
       }
     },
     [LIMIT]
-  ); 
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -172,40 +168,42 @@ export default function StepShopInfo() {
       formData.append("address", address);
       formData.append("description", description);
 
-      // Use the lowercased name for the API 'type' parameter
       formData.append("type", selectedType.name.toLowerCase());
 
-      // Location details
       formData.append("state", selectedCounty.name);
       formData.append("city", selectedCity.name);
       formData.append("country", "United Kingdom");
 
-      // Category
       formData.append("category_id", String(selectedCategory.id));
 
-      // Nullable file fields
       formData.append("logo", "");
       formData.append("banner", "");
 
-      const response = await createShop(formData);
-
+      const response = await saveShop(formData);
+      console.log("Create Shop Response:", response);
       if (response.status === "success") {
-        router.push("/shop/setup-success");
+        onNext({ shopId: response.data.id });
       } else {
         setErrorMsg(
           response.message || "Shop could not be created. Try again."
         );
-        toast.error( response.message || "Shop could not be created. Try again." );
+        toast.error(
+          response.message || "Shop could not be created. Try again."
+        );
       }
     } catch (error: any) {
       setErrorMsg(
         error?.response?.data?.message ??
           "An unknown error occurred while creating the shop."
       );
+      toast.error(
+        error?.response?.data?.message ??
+          "An unknown error occurred while creating the shop."
+      );
     } finally {
       setLoading(false);
     }
-  }; 
+  };
 
   const isFormDisabled =
     loading ||
@@ -214,7 +212,7 @@ export default function StepShopInfo() {
     !selectedCategory;
 
   return (
-    <>
+    <div className="h-full">
       <div className="border border-orange-100 p-4 rounded-md mb-6">
         <h2 className="text-lg font-semibold flex items-center">
           <FaShoppingBag className="text-orange-800 text-xl mr-2" size={24} />
@@ -386,6 +384,6 @@ export default function StepShopInfo() {
           )}
         </button>
       </form>
-    </>
+    </div>
   );
 }

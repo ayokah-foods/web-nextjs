@@ -1,7 +1,7 @@
 import api from "../axios";
 
-export async function createShop(formData: FormData) {
-  const response = await api.post("/shop/create", formData, {
+export async function saveShop(formData: FormData) {
+  const response = await api.post("/vendor/shop/save", formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
 

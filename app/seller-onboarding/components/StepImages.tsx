@@ -6,7 +6,10 @@ import Image from "next/image";
 import { updateShopLogo, updateShopBanner } from "@/lib/api/seller/shop";
 import { FaFlagCheckered } from "react-icons/fa";
 
-export default function StepImages({ shopId }: { shopId: number }) {
+type StepImagesProps = { shopId: number; onNext?: (data?: any) => void };
+
+
+export default function StepImages({ shopId, onNext }: StepImagesProps) {
   const [logo, setLogo] = useState<File | null>(null);
   const [banner, setBanner] = useState<File | null>(null);
 
@@ -80,7 +83,7 @@ export default function StepImages({ shopId }: { shopId: number }) {
       if (banner) {
         await updateShopBanner(shopId, banner);
       }
-
+      onNext && onNext();
       toast.success("Images uploaded successfully!");
     } catch (error: any) {
       console.error(error);
@@ -98,7 +101,8 @@ export default function StepImages({ shopId }: { shopId: number }) {
           Shop or Business Images
         </h2>
         <p className="text-sm mt-1 text-gray-600">
-          Please provide your shop or business images to get attracted to customers.
+          Please provide your shop or business images to get attracted to
+          customers.
         </p>
       </div>
       <form onSubmit={handleSubmit} className="space-y-6 text-gray-700">

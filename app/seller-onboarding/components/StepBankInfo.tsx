@@ -5,10 +5,9 @@ import { useRouter } from "next/navigation";
 import { saveBankInfo } from "@/lib/api/seller/bank";
 import { FaCashRegister } from "react-icons/fa";
 import toast from "react-hot-toast";
+import { StepProps } from "@/interfaces/StepProps";
 
-export default function StepBankInfo() {
-  const router = useRouter();
-
+export default function StepBankInfo({ onNext }: StepProps) {
   const [bankName, setBankName] = useState("");
   const [bankCode, setBankCode] = useState("");
   const [institutionNumber, setInstitutionNumber] = useState("");
@@ -40,7 +39,7 @@ export default function StepBankInfo() {
 
       if (res.status === "success") {
         setSuccessMsg(res.message);
-        // router.push("/dashboard"); // or next step
+        onNext && onNext();
       }
     } catch (err: any) {
       setErrorMsg(
@@ -64,11 +63,11 @@ export default function StepBankInfo() {
           Bank Information
         </h2>
         <p className="text-sm mt-1 text-gray-600">
-          Please provide your correct personal/corporate bank details to receive payments.
+          Please provide your correct personal/corporate bank details to receive
+          payments.
         </p>
       </div>
       <form onSubmit={handleSubmit} className="space-y-6 text-gray-800">
-
         {errorMsg && (
           <div className="p-3 bg-red-100 text-red-700 rounded">{errorMsg}</div>
         )}
