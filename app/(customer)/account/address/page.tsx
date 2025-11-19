@@ -21,6 +21,7 @@ export default function AddressBook() {
           </span> 
         </p>
       </div>
+      
       <ShippingSection user={user} />
     </div>
   );
