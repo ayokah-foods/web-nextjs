@@ -1,23 +1,33 @@
 "use client";
 
 import SelectField from "@/app/components/common/SelectField";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { BeatLoader } from "react-spinners";
 import { motion, AnimatePresence } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 import counties from "@/data/uk-counties.json";
 import citiesData from "@/data/uk-cities.json";
+import { listCategories } from "@/lib/api/category";
+import { createShop } from "@/lib/api/seller/shop";
+import { FaShoppingBag } from "react-icons/fa";
+import toast from "react-hot-toast";
 
-// Animation Wrapper
-const FadeSlide = ({
-  children,
-  keyId,
-}: {
+// --- Types ---
+interface SelectOption {
+  id: number;
+  name: string;
+}
+
+interface FadeSlideProps {
   children: React.ReactNode;
-  keyId: any;
-}) => (
+  keyId: string | number;
+}
+
+// --- Animation Wrapper Component ---
+const FadeSlide = ({ children, keyId }: FadeSlideProps) => (
   <AnimatePresence mode="wait">
     <motion.div
       key={keyId}
@@ -32,39 +42,48 @@ const FadeSlide = ({
 );
 
 export default function StepShopInfo() {
-  const categories = [
-    { id: 1, name: "Fashion" },
-    { id: 2, name: "Electronics" },
-    { id: 3, name: "Groceries" },
-    { id: 4, name: "Beauty & Health" },
+  const router = useRouter();
+
+  const [name, setName] = useState("");
+  const [address, setAddress] = useState("");
+  const [description, setDescription] = useState("");
+
+  const types: SelectOption[] = [
+    { id: 2, name: "Products" },
+    { id: 1, name: "Services" },
   ];
+  const [selectedType, setSelectedType] = useState<SelectOption>(types[0]);
 
-  const types = [
-    { id: 1, name: "Retail" },
-    { id: 2, name: "Wholesale" },
-    { id: 3, name: "Both" },
-  ];
+  const [categories, setCategories] = useState<SelectOption[]>([]);
+  const [categoriesLoading, setCategoriesLoading] = useState(true);
+  const [categoriesError, setCategoriesError] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<SelectOption | null>(
+    null
+  );
 
-  const [selectedCategory, setSelectedCategory] = useState(categories[0]);
-  const [selectedType, setSelectedType] = useState(types[0]);
-
-  const countyOptions = counties.map((c, i) => ({
+  const countyOptions: SelectOption[] = counties.map((c, i) => ({
     id: i + 1,
     name: c.name,
   }));
-
   const allCities = Object.entries(citiesData).map(([city, county]) => ({
     city,
     county,
   }));
-
-  const [selectedCounty, setSelectedCounty] = useState(countyOptions[0]);
-  const [selectedCity, setSelectedCity] = useState({ id: 0, name: "" });
-
+  const [selectedCounty, setSelectedCounty] = useState<SelectOption>(
+    countyOptions[0]
+  );
+  const [selectedCity, setSelectedCity] = useState<SelectOption>({
+    id: 0,
+    name: "",
+  });
+  const [cityOptions, setCityOptions] = useState<SelectOption[]>([]);
   const [isCityLoading, setIsCityLoading] = useState(false);
-  const [cityOptions, setCityOptions] = useState<any[]>([]);
 
-  // Load cities with UI delay
+  // Submission State
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const LIMIT = 5000;
+ 
   useEffect(() => {
     setIsCityLoading(true);
 
@@ -84,129 +103,289 @@ export default function StepShopInfo() {
 
     return () => clearTimeout(timer);
   }, [selectedCounty]);
+ 
+  useEffect(() => {
+    const fetchCategories = async () => {
+      setCategoriesLoading(true);
+      setCategoriesError("");
+      setCategories([]);
+      setSelectedCategory(null);
 
-  const LIMIT = 5000;
-  function handleInput(e: React.ChangeEvent<HTMLTextAreaElement>) {
-    const LIMIT = 5000;
+      const typeString = selectedType.name.toLowerCase();
 
-    const counter = e.target.nextElementSibling as HTMLElement;
-    counter.textContent = `${e.target.value.length} / ${LIMIT}`;
+      try {
+        const response = await listCategories(50, 0, undefined, typeString);
 
-    if (e.target.value.length > LIMIT * 0.9) {
-      counter.classList.add("text-red-500");
-      counter.classList.remove("text-gray-400");
-    } else {
-      counter.classList.add("text-gray-400");
-      counter.classList.remove("text-red-500");
+        const formatted: SelectOption[] =
+          response?.categories?.map((cat: any) => ({
+            id: cat.id,
+            name: cat.name,
+          })) ?? [];
+
+        setCategories(formatted);
+        setSelectedCategory(formatted[0] ?? null);
+      } catch (err: any) {
+        console.error("Failed to load categories:", err);
+        setCategoriesError("Failed to load categories. Please try again.");
+      } finally {
+        setCategoriesLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, [selectedType]);
+ 
+  const handleDescriptionChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      const currentLength = e.target.value.length;
+      setDescription(e.target.value);
+
+      const counter = e.target.nextElementSibling as HTMLElement | null;
+      if (!counter) return;
+
+      counter.textContent = `${currentLength} / ${LIMIT}`;
+      if (currentLength > LIMIT * 0.9) {
+        counter.classList.replace("text-gray-400", "text-red-500");
+      } else {
+        counter.classList.replace("text-red-500", "text-gray-400");
+      }
+    },
+    [LIMIT]
+  ); 
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!selectedCategory || categories.length === 0) {
+      setErrorMsg("Please select a valid category.");
+      return;
     }
-  }
+
+    setLoading(true);
+    setErrorMsg("");
+
+    try {
+      const formData = new FormData();
+
+      // Form Data
+      formData.append("name", name);
+      formData.append("address", address);
+      formData.append("description", description);
+
+      // Use the lowercased name for the API 'type' parameter
+      formData.append("type", selectedType.name.toLowerCase());
+
+      // Location details
+      formData.append("state", selectedCounty.name);
+      formData.append("city", selectedCity.name);
+      formData.append("country", "United Kingdom");
+
+      // Category
+      formData.append("category_id", String(selectedCategory.id));
+
+      // Nullable file fields
+      formData.append("logo", "");
+      formData.append("banner", "");
+
+      const response = await createShop(formData);
+
+      if (response.status === "success") {
+        router.push("/shop/setup-success");
+      } else {
+        setErrorMsg(
+          response.message || "Shop could not be created. Try again."
+        );
+        toast.error( response.message || "Shop could not be created. Try again." );
+      }
+    } catch (error: any) {
+      setErrorMsg(
+        error?.response?.data?.message ??
+          "An unknown error occurred while creating the shop."
+      );
+    } finally {
+      setLoading(false);
+    }
+  }; 
+
+  const isFormDisabled =
+    loading ||
+    categoriesLoading ||
+    cityOptions.length === 0 ||
+    !selectedCategory;
 
   return (
-    <form className="space-y-5 text-gray-900">
-      {/* Shop Name */}
-      <div>
-        <label className="text-sm font-medium mb-1 block">Shop Name</label>
-        <input className="input" placeholder="Shop Name" />
+    <>
+      <div className="border border-orange-100 p-4 rounded-md mb-6">
+        <h2 className="text-lg font-semibold flex items-center">
+          <FaShoppingBag className="text-orange-800 text-xl mr-2" size={24} />
+          Shop or Business Information
+        </h2>
+        <p className="text-sm mt-1 text-gray-600">
+          Please provide your shop or business details to get started.
+        </p>
       </div>
+      <form onSubmit={handleSubmit} className="space-y-5 text-gray-900">
+        {/* ERROR MESSAGE */}
+        {errorMsg && (
+          <div className="p-3 text-red-700 bg-red-100 rounded-md text-sm">
+            {errorMsg}
+          </div>
+        )}
 
-      {/* Category */}
-      <FadeSlide keyId={selectedCategory.id}>
-        <SelectField
-          label="Shop Category"
-          value={selectedCategory}
-          onChange={setSelectedCategory}
-          options={categories}
-        />
-      </FadeSlide>
-
-      {/* Type */}
-      <FadeSlide keyId={selectedType.id}>
-        <SelectField
-          label="Shop Type"
-          value={selectedType}
-          onChange={setSelectedType}
-          options={types}
-        />
-      </FadeSlide>
-
-      {/* Address */}
-      <div>
-        <label className="text-sm font-medium mb-1 block">Shop Address</label>
-        <input className="input" placeholder="Shop Address" />
-      </div>
-
-      {/* County */}
-      <FadeSlide keyId={selectedCounty.id}>
-        <SelectField
-          label="Province / County"
-          value={selectedCounty}
-          onChange={setSelectedCounty}
-          options={countyOptions}
-        />
-      </FadeSlide>
-
-      <div>
-        <label className="text-sm font-medium mb-1 flex items-center gap-2">
-          City
-          {isCityLoading && <BeatLoader size={6} />}
-        </label>
-
-        <FadeSlide
-          keyId={isCityLoading ? "loading" : selectedCity.id || "empty"}
-        >
-          {isCityLoading ? (
-            <Skeleton height={45} borderRadius={10} />
-          ) : cityOptions.length === 0 ? (
-            // NO CITIES FOUND UI
-            <div className="h-[45px] flex items-center justify-center rounded-lg border bg-gray-50 text-gray-500 text-sm">
-              No cities available for this region
-            </div>
-          ) : (
-            <SelectField
-              label=""
-              value={selectedCity}
-              onChange={setSelectedCity}
-              options={cityOptions}
-            />
-          )}
-        </FadeSlide>
-      </div>
-
-      {/* Country */}
-      <div>
-        <label className="text-sm font-medium mb-1 block">Country</label>
-        <input
-          className="input bg-gray-100 cursor-not-allowed"
-          value="United Kingdom"
-          readOnly
-        />
-      </div>
-
-      {/* Description */}
-      <div>
-        <label className="text-sm font-medium mb-1 block">
-          Shop Description
-        </label>
-
-        <div className="relative">
-          <textarea
-            className="input pr-16"
-            placeholder="Shop Description"
-            rows={5}
-            maxLength={LIMIT}
-            onInput={handleInput}
+        {/* Shop Name */}
+        <div>
+          <label className="text-sm font-medium mb-1 block">
+            Shop/Business name
+          </label>
+          <input
+            className="input"
+            placeholder="Shop Name"
+            maxLength={50}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
           />
-
-          {/* Counter */}
-          <span className="absolute bottom-2 right-3 text-xs text-gray-400">
-            0 / {LIMIT}
-          </span>
         </div>
-      </div>
-      {/* Button */}
-      <button type="submit" className="btn-primary w-full">
-        Continue
-      </button>
-    </form>
+
+        {/* Type */}
+        <FadeSlide keyId={selectedType.id}>
+          <SelectField
+            label="Shop/Business type"
+            value={selectedType}
+            onChange={setSelectedType}
+            options={types}
+          />
+        </FadeSlide>
+
+        {/* Category */}
+        <div>
+          <label className="text-sm font-medium mb-1 block">
+            Shop/Business category
+          </label>
+
+          {categoriesLoading ? (
+            <Skeleton height={45} borderRadius={10} />
+          ) : categoriesError ? (
+            <div className="text-red-500 text-sm">{categoriesError}</div>
+          ) : (
+            <FadeSlide
+              keyId={selectedType.id + "-" + (selectedCategory?.id ?? "none")}
+            >
+              {categories.length > 0 && selectedCategory ? (
+                <SelectField
+                  label=""
+                  value={selectedCategory}
+                  onChange={setSelectedCategory}
+                  options={categories}
+                />
+              ) : (
+                <div className="h-[45px] flex items-center justify-center rounded-lg border bg-gray-50 text-gray-500 text-sm">
+                  No categories available for {selectedType.name}
+                </div>
+              )}
+            </FadeSlide>
+          )}
+        </div>
+
+        {/* Address */}
+        <div>
+          <label className="text-sm font-medium mb-1 block">
+            Shop/Business address
+          </label>
+          <input
+            className="input"
+            placeholder="Shop Address"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            required
+          />
+        </div>
+
+        {/* County */}
+        <FadeSlide keyId={selectedCounty.id}>
+          <SelectField
+            label="Province / County"
+            value={selectedCounty}
+            onChange={setSelectedCounty}
+            options={countyOptions}
+          />
+        </FadeSlide>
+
+        {/* City */}
+        <div>
+          <label className="text-sm font-medium mb-1 flex items-center gap-2">
+            City
+            {isCityLoading && <BeatLoader size={6} />}
+          </label>
+
+          <FadeSlide
+            keyId={isCityLoading ? "loading" : selectedCity.id || "empty"}
+          >
+            {isCityLoading ? (
+              <Skeleton height={45} borderRadius={10} />
+            ) : cityOptions.length === 0 ? (
+              <div className="h-[45px] flex items-center justify-center rounded-lg border bg-gray-50 text-gray-500 text-sm">
+                No cities available for this region
+              </div>
+            ) : (
+              <SelectField
+                label=""
+                value={selectedCity}
+                onChange={setSelectedCity}
+                options={cityOptions}
+              />
+            )}
+          </FadeSlide>
+        </div>
+
+        {/* Country */}
+        <div>
+          <label className="text-sm font-medium mb-1 block">Country</label>
+          <input
+            className="input bg-gray-100 cursor-not-allowed"
+            value="United Kingdom"
+            readOnly
+          />
+        </div>
+
+        {/* Description */}
+        <div>
+          <label className="text-sm font-medium mb-1 block">
+            Shop/Business description
+          </label>
+
+          <div className="relative">
+            <textarea
+              className="input pr-16"
+              placeholder="Tell us about your shop/business..."
+              rows={5}
+              maxLength={LIMIT}
+              value={description}
+              onChange={handleDescriptionChange}
+              required
+            />
+
+            <span className="absolute bottom-2 right-3 text-xs text-gray-400">
+              {description.length} / {LIMIT}
+            </span>
+          </div>
+        </div>
+
+        {/* Submit */}
+        <button
+          type="submit"
+          className="btn-primary w-full"
+          disabled={isFormDisabled}
+        >
+          {loading ? (
+            <>
+              <BeatLoader size={8} color="white" /> Creating Shop...
+            </>
+          ) : (
+            "Continue"
+          )}
+        </button>
+      </form>
+    </>
   );
 }

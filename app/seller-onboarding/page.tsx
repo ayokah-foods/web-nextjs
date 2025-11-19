@@ -1,16 +1,18 @@
 import OnboardingLayout from "./components/OnboardingLayout";
 import StepBankInfo from "./components/StepBankInfo";
-import StepDocuments from "./components/StepDocuments";
+import StepImages from "./components/StepImages";
 import StepShopInfo from "./components/StepShopInfo";
+import StepSubscription from "./components/StepSubscription";
 
 
 export default function OnboardingPage() {
   return (
     <OnboardingLayout
       steps={[
-        { id: 1, label: "Shop Information", component: <StepShopInfo /> },
+        { id: 1, label: "Shop Info", component: <StepShopInfo /> },
         { id: 2, label: "Bank Info", component: <StepBankInfo /> },
-        { id: 3, label: "Documents", component: <StepDocuments /> },
+        { id: 3, label: "Shop Images", component: <StepImages  /> },
+        { id: 4, label: "Shop Sub", component: <StepSubscription  /> },
       ]}
     />
   );

@@ -1,22 +1,31 @@
 "use client";
 
 import { Fragment } from "react";
-import { Listbox, ListboxButton, ListboxOption, ListboxOptions, Transition } from "@headlessui/react";
+import {
+  Listbox,
+  ListboxButton,
+  ListboxOption,
+  ListboxOptions,
+  Transition,
+} from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/24/outline";
 
-type Option = { id: number; name: string };
+// Generic default shape (id + name required)
+type DefaultOption = { id: number; name: string };
 
-export default function SelectField({
+type SelectFieldProps<T extends DefaultOption> = {
+  label?: string;
+  value: T;
+  onChange: (value: T) => void;
+  options: T[];
+};
+
+export default function SelectField<T extends DefaultOption>({
   label,
   value,
   onChange,
   options,
-}: {
-  label: string;
-  value: Option;
-  onChange: (value: Option) => void;
-  options: Option[];
-}) {
+}: SelectFieldProps<T>) {
   return (
     <div>
       {label && (
@@ -76,3 +85,4 @@ export default function SelectField({
     </div>
   );
 }
+// ...existing code...
