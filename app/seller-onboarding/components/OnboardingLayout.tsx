@@ -16,8 +16,8 @@ export default function OnboardingLayout({ steps }: { steps: Step[] }) {
   const currentStep = steps.find((s) => s.id === activeStep);
 
   return (
-    <div className="bg-yellow-50">
-      <div className="w-full mb-6">
+    <div className="bg-orange-50">
+      <div className="w-full mb-2">
         <Image
           src="/store-bg.jpg"
           alt="Ayokah Banner"
@@ -27,9 +27,7 @@ export default function OnboardingLayout({ steps }: { steps: Step[] }) {
           priority
         />
       </div>
-      <div className="container mx-auto py-10 max-w-6xl p-2">
-        {/* Logo / Nav Image */}
-
+      <div className="container mx-auto py-2 max-w-6xl p-2">
         <h1 className="text-3xl font-bold mb-6 text-center">
           Seller Onboarding
         </h1>

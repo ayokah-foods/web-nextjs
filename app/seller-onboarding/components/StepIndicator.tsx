@@ -12,7 +12,7 @@ export default function StepIndicator({
   setActiveStep,
 }: StepProps) {
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between ">
       {steps.map((step) => {
         const completed = step.id < activeStep;
         const isActive = step.id === activeStep;
@@ -37,7 +37,7 @@ export default function StepIndicator({
             </div>
             <span
               className={`mt-2 ${
-                isActive ? "font-bold text-orange-600" : "text-gray-500"
+                isActive ? "font-bold text-orange-800" : "text-gray-500"
               }`}
             >
               {step.label}

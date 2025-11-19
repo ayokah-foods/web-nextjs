@@ -85,6 +85,22 @@ export default function StepShopInfo() {
     return () => clearTimeout(timer);
   }, [selectedCounty]);
 
+  const LIMIT = 5000;
+  function handleInput(e: React.ChangeEvent<HTMLTextAreaElement>) {
+    const LIMIT = 5000;
+
+    const counter = e.target.nextElementSibling as HTMLElement;
+    counter.textContent = `${e.target.value.length} / ${LIMIT}`;
+
+    if (e.target.value.length > LIMIT * 0.9) {
+      counter.classList.add("text-red-500");
+      counter.classList.remove("text-gray-400");
+    } else {
+      counter.classList.add("text-gray-400");
+      counter.classList.remove("text-red-500");
+    }
+  }
+
   return (
     <form className="space-y-5 text-gray-900">
       {/* Shop Name */}
@@ -129,10 +145,6 @@ export default function StepShopInfo() {
         />
       </FadeSlide>
 
-      {/* City */}
-      {/* =========================
-    CITY SELECT WITH LOADING + EMPTY STATE
-========================== */}
       <div>
         <label className="text-sm font-medium mb-1 flex items-center gap-2">
           City
@@ -175,9 +187,22 @@ export default function StepShopInfo() {
         <label className="text-sm font-medium mb-1 block">
           Shop Description
         </label>
-        <textarea className="input" placeholder="Shop Description" />
-      </div>
 
+        <div className="relative">
+          <textarea
+            className="input pr-16"
+            placeholder="Shop Description"
+            rows={5}
+            maxLength={LIMIT}
+            onInput={handleInput}
+          />
+
+          {/* Counter */}
+          <span className="absolute bottom-2 right-3 text-xs text-gray-400">
+            0 / {LIMIT}
+          </span>
+        </div>
+      </div>
       {/* Button */}
       <button type="submit" className="btn-primary w-full">
         Continue
