@@ -9,7 +9,7 @@ interface AuthStore {
   setAuth: (token: string, user: User) => void;
   clearAuth: () => void;
   setHasHydrated: (state: boolean) => void;
-  updateUser: (user: Partial<User>) => void; // new method
+  updateUser: (user: Partial<User>) => void;
 }
 
 export const useAuthStore = create<AuthStore>()(
