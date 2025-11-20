@@ -102,6 +102,7 @@ export default function StepBankInfo({ onNext }: StepProps) {
               value={bankCode}
               onChange={(e) => setBankCode(e.target.value)}
               required
+              maxLength={10}
             />
           </div>
 

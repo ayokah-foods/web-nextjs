@@ -19,17 +19,13 @@ const STEPS = [
 function OnboardingContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-
-  // 1. Grab step from URL (default to 1)
+ 
   const initialStep = Number(searchParams.get("step")) || 1;
-
-  // 2. Initialize state with URL param
+ 
   const [currentStep, setCurrentStep] = useState(initialStep);
   const [shopId, setShopId] = useState<number | null>(null);
   const [isLoadingShop, setIsLoadingShop] = useState(false);
-
-  // 3. Recovery Logic: If user returns on Step > 1 (e.g. Cancel Payment),
-  // we need to fetch their Shop ID again because React state was lost on reload.
+ 
   useEffect(() => {
     const fetchShopOnReturn = async () => {
       if (currentStep > 1 && !shopId) {

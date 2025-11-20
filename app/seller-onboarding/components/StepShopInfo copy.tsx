@@ -1,25 +1,23 @@
 "use client";
 
 import SelectField from "@/app/components/common/SelectField";
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { BeatLoader } from "react-spinners";
 import { motion, AnimatePresence } from "framer-motion";
+
+import counties from "@/data/uk-counties.json";
+import citiesData from "@/data/uk-cities.json";
 import { listCategories } from "@/lib/api/category";
 import { saveShop } from "@/lib/api/seller/shop";
 import { FaShoppingBag } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { StepProps } from "@/interfaces/StepProps";
-import { locationData } from "@/data/locations";
 
 interface SelectOption {
   id: number;
   name: string;
-  // Optional extra fields for our internal logic
-  code?: string;
-  flag?: string;
-  dial_code?: string;
 }
 
 interface FadeSlideProps {
@@ -42,13 +40,11 @@ const FadeSlide = ({ children, keyId }: FadeSlideProps) => (
 );
 
 export default function StepShopInfo({ onNext }: StepProps) {
-  // --- Form State ---
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [description, setDescription] = useState("");
 
-  // --- Type & Category State ---
   const types: SelectOption[] = [
     { id: 2, name: "Products" },
     { id: 1, name: "Services" },
@@ -62,82 +58,49 @@ export default function StepShopInfo({ onNext }: StepProps) {
     null
   );
 
-  // --- Location State ---
-  // Convert locationData to SelectOptions
-  const countryOptions: SelectOption[] = useMemo(
-    () =>
-      locationData.map((c) => ({
-        id: c.id,
-        name: c.name,
-        code: c.code,
-        flag: c.flag,
-        dial_code: c.dial_code,
-      })),
-    []
+  const countyOptions: SelectOption[] = counties.map((c, i) => ({
+    id: i + 1,
+    name: c.name,
+  }));
+  const allCities = Object.entries(citiesData).map(([city, county]) => ({
+    city,
+    county,
+  }));
+  const [selectedCounty, setSelectedCounty] = useState<SelectOption>(
+    countyOptions[0]
   );
-
-  const [selectedCountry, setSelectedCountry] = useState<SelectOption>(
-    countryOptions[0]
-  ); // Default to UK (Index 0) or Kenya
-
-  const [stateOptions, setStateOptions] = useState<SelectOption[]>([]);
-  const [selectedState, setSelectedState] = useState<SelectOption | null>(null);
-
+  const [selectedCity, setSelectedCity] = useState<SelectOption>({
+    id: 0,
+    name: "",
+  });
   const [cityOptions, setCityOptions] = useState<SelectOption[]>([]);
-  const [selectedCity, setSelectedCity] = useState<SelectOption | null>(null);
   const [isCityLoading, setIsCityLoading] = useState(false);
 
-  // --- Submission State ---
+  // Submission State
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const LIMIT = 5000;
 
-  // 1. Handle Country Change -> Load States
   useEffect(() => {
-    const countryData = locationData.find((c) => c.id === selectedCountry.id);
-    if (countryData) {
-      const states = countryData.states.map((s) => ({
-        id: s.id,
-        name: s.name,
-      }));
-      setStateOptions(states);
-      // Reset child selections
-      setSelectedState(states.length > 0 ? states[0] : null);
-      setCityOptions([]);
-      setSelectedCity(null);
-    }
-  }, [selectedCountry]);
-
-  // 2. Handle State Change -> Load Cities
-  useEffect(() => {
-    if (!selectedState) return;
-
     setIsCityLoading(true);
-    // Simulate small network/processing delay for UX
-    const timer = setTimeout(() => {
-      const countryData = locationData.find((c) => c.id === selectedCountry.id);
-      const stateData = countryData?.states.find(
-        (s) => s.id === selectedState.id
-      );
 
-      if (stateData) {
-        const cities = stateData.cities.map((c) => ({
-          id: c.id,
-          name: c.name,
+    const timer = setTimeout(() => {
+      const filtered = allCities
+        .filter((c) => c.county === selectedCounty.name)
+        .map((c, idx) => ({
+          id: idx + 1,
+          name: c.city,
         }));
-        setCityOptions(cities);
-        setSelectedCity(cities.length > 0 ? cities[0] : null);
-      } else {
-        setCityOptions([]);
-        setSelectedCity(null);
-      }
+
+      setCityOptions(filtered);
+      setSelectedCity(filtered[0] ?? { id: 0, name: "" });
+
       setIsCityLoading(false);
-    }, 300);
+    }, 500);
 
     return () => clearTimeout(timer);
-  }, [selectedState, selectedCountry]);
+  }, [selectedCounty]);
 
-  // 3. Handle Category Loading
   useEffect(() => {
     const fetchCategories = async () => {
       setCategoriesLoading(true);
@@ -205,15 +168,13 @@ export default function StepShopInfo({ onNext }: StepProps) {
       formData.append("name", name);
       formData.append("address", address);
       formData.append("description", description);
-
       formData.append("phone", phoneNumber);
 
       formData.append("type", selectedType.name.toLowerCase());
 
-      // Location details
-      formData.append("country", selectedCountry.name); // Now dynamic
-      formData.append("state", selectedState?.name || "");
-      formData.append("city", selectedCity?.name || "");
+      formData.append("state", selectedCounty.name);
+      formData.append("city", selectedCity.name);
+      formData.append("country", "United Kingdom");
 
       formData.append("category_id", String(selectedCategory.id));
 
@@ -221,9 +182,9 @@ export default function StepShopInfo({ onNext }: StepProps) {
       formData.append("banner", "");
 
       const response = await saveShop(formData);
-
+      console.log("Create Shop Response:", response);
       if (response.status === "success") {
-        toast.success("Shop Info saved successfully!");
+        toast.success("Shop Info received successfully!");
         onNext({ shopId: response.data.id });
       } else {
         setErrorMsg(
@@ -235,10 +196,12 @@ export default function StepShopInfo({ onNext }: StepProps) {
       }
     } catch (error: any) {
       setErrorMsg(
-        error?.response?.data?.message ?? "An unknown error occurred."
+        error?.response?.data?.message ??
+          "An unknown error occurred while creating the shop."
       );
       toast.error(
-        error?.response?.data?.message ?? "An unknown error occurred."
+        error?.response?.data?.message ??
+          "An unknown error occurred while creating the shop."
       );
     } finally {
       setLoading(false);
@@ -248,10 +211,8 @@ export default function StepShopInfo({ onNext }: StepProps) {
   const isFormDisabled =
     loading ||
     categoriesLoading ||
-    !selectedCategory ||
-    !selectedCountry ||
-    !selectedState ||
-    !selectedCity;
+    cityOptions.length === 0 ||
+    !selectedCategory;
 
   return (
     <div className="h-full">
@@ -264,7 +225,6 @@ export default function StepShopInfo({ onNext }: StepProps) {
           Please provide your shop or business details to get started.
         </p>
       </div>
-
       <form onSubmit={handleSubmit} className="space-y-5 text-gray-900">
         {/* ERROR MESSAGE */}
         {errorMsg && (
@@ -273,47 +233,6 @@ export default function StepShopInfo({ onNext }: StepProps) {
           </div>
         )}
 
-        {/* Country Selection */}
-        <FadeSlide keyId="country-select">
-          <SelectField
-            label="Country"
-            value={selectedCountry}
-            onChange={setSelectedCountry}
-            options={countryOptions}
-          />
-        </FadeSlide>
-
-        {/* Phone Number with Flag & Code */}
-        <div>
-          <label className="text-sm font-medium mb-1 block">
-            Shop/Business phone number
-          </label>
-          <div className="flex items-center">
-            {/* Flag and Dial Code Block */}
-            <div className="flex items-center justify-center h-[45px] px-3 border border-gray-300 border-r-0 rounded-l-lg bg-gray-50 text-gray-600 text-sm min-w-[90px]">
-              <span className="mr-2 text-lg">{selectedCountry.flag}</span>
-              <span>{selectedCountry.dial_code}</span>
-            </div>
-
-            {/* Actual Input */}
-            <input
-              className="flex-1 h-[45px] border border-gray-300 rounded-r-lg px-3 focus:ring-2 focus:ring-orange-500 outline-none"
-              type="tel"
-              placeholder="712 345 678"
-              maxLength={15}
-              minLength={9}
-              value={phoneNumber}
-              onChange={(e) => {
-                const val = e.target.value.replace(/\D/g, "");
-                setPhoneNumber(val);
-              }}
-              required
-            />
-          </div>
-          <p className="text-xs text-gray-400 mt-1">
-            Enter number without the country code.
-          </p>
-        </div>
         {/* Shop Name */}
         <div>
           <label className="text-sm font-medium mb-1 block">
@@ -369,6 +288,20 @@ export default function StepShopInfo({ onNext }: StepProps) {
           )}
         </div>
 
+        <div>
+          <label className="text-sm font-medium mb-1 block">
+            Shop/Business phone number
+          </label>
+          <input
+            className="input"
+            placeholder="Shop phone number"
+            maxLength={15}
+            minLength={12}
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            required
+          />
+        </div>
         {/* Address */}
         <div>
           <label className="text-sm font-medium mb-1 block">
@@ -376,33 +309,22 @@ export default function StepShopInfo({ onNext }: StepProps) {
           </label>
           <input
             className="input"
-            placeholder="Shop Address (Street, Building, etc)"
+            placeholder="Shop Address"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
             required
           />
         </div>
 
-        {/* State / Province / County */}
-        <div>
-          <label className="text-sm font-medium mb-1 block">
-            State / Province / County
-          </label>
-          <FadeSlide keyId={"state-" + selectedCountry.id}>
-            {stateOptions.length > 0 && selectedState ? (
-              <SelectField
-                label=""
-                value={selectedState}
-                onChange={setSelectedState}
-                options={stateOptions}
-              />
-            ) : (
-              <div className="h-[45px] flex items-center justify-center rounded-lg border bg-gray-50 text-gray-500 text-sm">
-                No states available
-              </div>
-            )}
-          </FadeSlide>
-        </div>
+        {/* County */}
+        <FadeSlide keyId={selectedCounty.id}>
+          <SelectField
+            label="Province / County"
+            value={selectedCounty}
+            onChange={setSelectedCounty}
+            options={countyOptions}
+          />
+        </FadeSlide>
 
         {/* City */}
         <div>
@@ -412,7 +334,7 @@ export default function StepShopInfo({ onNext }: StepProps) {
           </label>
 
           <FadeSlide
-            keyId={isCityLoading ? "loading" : selectedCity?.id || "empty"}
+            keyId={isCityLoading ? "loading" : selectedCity.id || "empty"}
           >
             {isCityLoading ? (
               <Skeleton height={45} borderRadius={10} />
@@ -423,12 +345,22 @@ export default function StepShopInfo({ onNext }: StepProps) {
             ) : (
               <SelectField
                 label=""
-                value={selectedCity!}
+                value={selectedCity}
                 onChange={setSelectedCity}
                 options={cityOptions}
               />
             )}
           </FadeSlide>
+        </div>
+
+        {/* Country */}
+        <div>
+          <label className="text-sm font-medium mb-1 block">Country</label>
+          <input
+            className="input bg-gray-100 cursor-not-allowed"
+            value="United Kingdom"
+            readOnly
+          />
         </div>
 
         {/* Description */}
@@ -443,7 +375,6 @@ export default function StepShopInfo({ onNext }: StepProps) {
               placeholder="Tell us about your shop/business..."
               rows={5}
               maxLength={LIMIT}
-              minLength={500}
               value={description}
               onChange={handleDescriptionChange}
               required
