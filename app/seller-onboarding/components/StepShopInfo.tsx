@@ -182,6 +182,7 @@ export default function StepShopInfo({ onNext }: StepProps) {
       const response = await saveShop(formData);
       console.log("Create Shop Response:", response);
       if (response.status === "success") {
+        toast.success("Shop Info received successfully!");
         onNext({ shopId: response.data.id });
       } else {
         setErrorMsg(
