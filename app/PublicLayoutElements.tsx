@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { useAuthStore } from "@/store/useAuthStore";
 import TopHeader from "./components/TopHeader";
 import NavBar from "./components/NavBar";

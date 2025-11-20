@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { useAuthStore } from "@/store/useAuthStore";
 import SplashScreen from "./components/SplashScreen";
 import Footer from "./components/Footer";

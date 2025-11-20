@@ -10,7 +10,6 @@ import {
 } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/24/outline";
 
-// Generic default shape (id + name required)
 type DefaultOption = { id: number; name: string };
 
 type SelectFieldProps<T extends DefaultOption> = {
@@ -85,4 +84,3 @@ export default function SelectField<T extends DefaultOption>({
     </div>
   );
 }
-// ...existing code...
