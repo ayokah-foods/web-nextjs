@@ -22,8 +22,8 @@ export interface Country {
 
 export const locationData: Country[] = [
   /* -----------------------------------------------------------
-    UNITED KINGDOM — Key African diaspora hubs
-  ----------------------------------------------------------- */
+    UNITED KINGDOM — Key African diaspora hubs
+  ----------------------------------------------------------- */
   {
     id: 1,
     name: "United Kingdom",
@@ -79,11 +79,10 @@ export const locationData: Country[] = [
         ],
       },
     ],
-  },
+  } /* -----------------------------------------------------------
+    KENYA — Strong East African seller hubs & rising trade
+  ----------------------------------------------------------- */,
 
-  /* -----------------------------------------------------------
-    KENYA — Strong East African seller hubs
-  ----------------------------------------------------------- */
   {
     id: 2,
     name: "Kenya",
@@ -115,11 +114,10 @@ export const locationData: Country[] = [
         cities: [{ id: 24, name: "Kisumu City" }],
       },
     ],
-  },
+  } /* -----------------------------------------------------------
+    NIGERIA — Largest African market with diaspora sellers
+  ----------------------------------------------------------- */,
 
-  /* -----------------------------------------------------------
-    NIGERIA — Largest African market with diaspora sellers
-  ----------------------------------------------------------- */
   {
     id: 3,
     name: "Nigeria",
@@ -157,11 +155,10 @@ export const locationData: Country[] = [
         cities: [{ id: 33, name: "Ibadan" }],
       },
     ],
-  },
+  } /* -----------------------------------------------------------
+    GHANA — Strong West African food & goods exporters
+  ----------------------------------------------------------- */,
 
-  /* -----------------------------------------------------------
-    GHANA — Strong West African food & goods exporters
-  ----------------------------------------------------------- */
   {
     id: 4,
     name: "Ghana",
@@ -184,13 +181,59 @@ export const locationData: Country[] = [
         cities: [{ id: 37, name: "Kumasi" }],
       },
     ],
-  },
+  } /* -----------------------------------------------------------
+    SOUTH AFRICA — Largest trading partner (services-led growth)
+  ----------------------------------------------------------- */,
 
-  /* -----------------------------------------------------------
-    UGANDA — Major East African sellers
-  ----------------------------------------------------------- */
   {
-    id: 5,
+    id: 5, // Changed ID from Uganda's old ID
+    name: "South Africa",
+    code: "ZA",
+    flag: "🇿🇦",
+    dial_code: "+27",
+    states: [
+      {
+        id: 1,
+        name: "Gauteng",
+        cities: [
+          { id: 38, name: "Johannesburg" }, // Replaced Kampala/Entebbe
+          { id: 39, name: "Pretoria" },
+        ],
+      },
+      {
+        id: 2,
+        name: "Western Cape",
+        cities: [{ id: 40, name: "Cape Town" }], // Replaced Mbarara
+      },
+    ],
+  } /* -----------------------------------------------------------
+    MOROCCO — Rising North African export corridor (agri-products)
+  ----------------------------------------------------------- */,
+
+  {
+    id: 6, // Changed ID from Tanzania's old ID
+    name: "Morocco",
+    code: "MA",
+    flag: "🇲🇦",
+    dial_code: "+212",
+    states: [
+      {
+        id: 1,
+        name: "Casablanca-Settat",
+        cities: [{ id: 41, name: "Casablanca" }], // Replaced Dar es Salaam
+      },
+      {
+        id: 2,
+        name: "Rabat-Salé-Kénitra",
+        cities: [{ id: 42, name: "Rabat" }], // Replaced Arusha
+      },
+    ],
+  } /* -----------------------------------------------------------
+    UGANDA — Major East African sellers (maintaining trade focus)
+  ----------------------------------------------------------- */,
+
+  {
+    id: 7, // New ID for Uganda (was 5)
     name: "Uganda",
     code: "UG",
     flag: "🇺🇬",
@@ -200,23 +243,22 @@ export const locationData: Country[] = [
         id: 1,
         name: "Central Region",
         cities: [
-          { id: 38, name: "Kampala" },
-          { id: 39, name: "Entebbe" },
+          { id: 43, name: "Kampala" }, // New ID for Kampala
+          { id: 44, name: "Entebbe" },
         ],
       },
       {
         id: 2,
         name: "Western Region",
-        cities: [{ id: 40, name: "Mbarara" }],
+        cities: [{ id: 45, name: "Mbarara" }],
       },
     ],
-  },
+  } /* -----------------------------------------------------------
+    TANZANIA — Rising East African export corridor (maintaining focus)
+  ----------------------------------------------------------- */,
 
-  /* -----------------------------------------------------------
-    TANZANIA — Rising East African export corridor
-  ----------------------------------------------------------- */
   {
-    id: 6,
+    id: 8, // New ID for Tanzania (was 6)
     name: "Tanzania",
     code: "TZ",
     flag: "🇹🇿",
@@ -225,21 +267,20 @@ export const locationData: Country[] = [
       {
         id: 1,
         name: "Dar es Salaam",
-        cities: [{ id: 41, name: "Dar es Salaam" }],
+        cities: [{ id: 46, name: "Dar es Salaam" }], // New ID
       },
       {
         id: 2,
         name: "Arusha Region",
-        cities: [{ id: 42, name: "Arusha" }],
+        cities: [{ id: 47, name: "Arusha" }], // New ID
       },
     ],
-  },
+  } /* -----------------------------------------------------------
+    RWANDA — Fast-growing business and food export sector
+  ----------------------------------------------------------- */,
 
-  /* -----------------------------------------------------------
-    RWANDA — Fast-growing business and food export sector
-  ----------------------------------------------------------- */
   {
-    id: 7,
+    id: 9, // New ID for Rwanda (was 7)
     name: "Rwanda",
     code: "RW",
     flag: "🇷🇼",
@@ -248,7 +289,7 @@ export const locationData: Country[] = [
       {
         id: 1,
         name: "Kigali",
-        cities: [{ id: 43, name: "Kigali City" }],
+        cities: [{ id: 48, name: "Kigali City" }], // New ID
       },
     ],
   },
