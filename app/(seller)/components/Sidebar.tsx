@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LuLayoutDashboard,
   LuPackage,
@@ -16,6 +16,7 @@ import {
   LuList,
   LuLogOut,
 } from "react-icons/lu";
+import { useAuthStore } from "@/store/useAuthStore";
 
 interface NavItem {
   id: number;
@@ -32,8 +33,7 @@ const navItems: NavItem[] = [
     label: "Product Management",
     href: "/product-management",
     icon: LuPackage,
-    children: [
-    ],
+    children: [],
   },
   {
     id: 3,
@@ -52,7 +52,7 @@ const navItems: NavItem[] = [
     label: "Finance & Payment",
     href: "/finance-payment",
     icon: LuWallet,
-  }, 
+  },
   {
     id: 7,
     label: "Accounts & Settings",
@@ -86,7 +86,7 @@ const navItems: NavItem[] = [
         label: "Store Policies",
         href: "/shop-management/policies",
         icon: LuList,
-      }, 
+      },
     ],
   },
 ];
@@ -146,18 +146,19 @@ const NavLink = ({
 };
 
 export function Sidebar() {
+  const router = useRouter();
   const currentPath = usePathname();
-
+  const { clearAuth } = useAuthStore();
+  const handleLogout = () => {
+    clearAuth();
+    router.push("/login");
+  };
   return (
     <div className="flex flex-col w-64 bg-white border-r border-gray-200">
       {/* Logo Area */}
       <div className="flex items-center justify-center h-20 border-b border-gray-200 p-4">
         <span className="text-xl font-bold text-orange-900 flex items-center">
-          <img
-            src="/logo.svg"
-            alt="Ayokah logo"
-            className="h-10 w-auto mr-2"
-          />
+          <img src="/logo.svg" alt="Ayokah logo" className="h-10 w-auto mr-2" />
         </span>
       </div>
 
@@ -173,8 +174,8 @@ export function Sidebar() {
       {/* Log Out */}
       <div className="p-4 border-t border-gray-200">
         <button
-          onClick={() => console.log("Logout action")} // Replace with actual logout function
-          className="flex items-center w-full p-3 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-150"
+          onClick={handleLogout}
+          className="flex items-center w-full p-3 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-150 cursor-pointer"
         >
           <LuLogOut className="w-5 h-5 mr-3" />
           Log Out
