@@ -10,8 +10,14 @@ import { addItem, updateItem } from "@/lib/api/items";
 import { getMyShop } from "@/lib/api/seller/shop";
 import Category from "@/interfaces/category";
 import SelectDropdown from "../../dashboard/components/commons/Fields/SelectDropdown";
-import { dimensionOptions, PRICING_MODEL_OPTIONS, DELIVERY_METHOD_OPTIONS, sizeUnitOptions } from "@/setting";
+import {
+  dimensionOptions,
+  PRICING_MODEL_OPTIONS,
+  DELIVERY_METHOD_OPTIONS,
+  sizeUnitOptions,
+} from "@/setting";
 import { Editor as TinyMCEEditor } from "@tinymce/tinymce-react";
+import { capitalizeWords } from "@/utils/formatWord";
 
 function FallbackSubmitButton({
   loading,
@@ -101,15 +107,15 @@ export default function ItemForm({ onClose, item }: ItemFormProps) {
 
   // service-only fields
   const findOption = (options: any[], value: string) =>
-  options.find((opt) => opt.value === value) ?? { label: "", value: "" };
+    options.find((opt) => opt.value === value) ?? { label: "", value: "" };
 
-const [pricingModel, setPricingModel] = useState(
-  findOption(PRICING_MODEL_OPTIONS, item?.pricing_model ?? "fixed")
-);
+  const [pricingModel, setPricingModel] = useState(
+    findOption(PRICING_MODEL_OPTIONS, item?.pricing_model ?? "fixed")
+  );
 
-const [deliveryMethod, setDeliveryMethod] = useState(
-  findOption(DELIVERY_METHOD_OPTIONS, item?.delivery_method ?? "online")
-);
+  const [deliveryMethod, setDeliveryMethod] = useState(
+    findOption(DELIVERY_METHOD_OPTIONS, item?.delivery_method ?? "online")
+  );
   const [estimatedDeliveryTime, setEstimatedDeliveryTime] = useState<string>(
     item?.estimated_delivery_time ?? ""
   );
@@ -132,8 +138,8 @@ const [deliveryMethod, setDeliveryMethod] = useState(
         const shopRes = await getMyShop();
         if (!mounted) return;
 
-        const shopType = "services";
-        // const shopType = shopRes?.data?.type ?? "services";
+        // const shopType = "services";
+        const shopType = shopRes?.data?.type ?? "services";
         setShopType(shopType);
 
         // Fetch categories
@@ -229,10 +235,8 @@ const [deliveryMethod, setDeliveryMethod] = useState(
       return "Title is required and must be at least 5 characters";
     if (title.length > 100) return "Title must be at most 100 characters";
 
-    if (!description || description.trim().length < 10)
-      return "Description is required and must be at least 10 characters";
-    if (description.length > 10000)
-      return "Description must be at most 10000 characters";
+    if (!description || description.trim().length < 100)
+      return "Description is required and must be at least 100 characters";
 
     // images
     const totalImages = imagePreviews.length;
@@ -278,29 +282,35 @@ const [deliveryMethod, setDeliveryMethod] = useState(
       }
     }
 
-    if (hasVariations) {
-      // would require at least one variation in real app
-    } else {
-      // prices
-      if (
-        salesPrice === "" ||
-        isNaN(Number(salesPrice)) ||
-        Number(salesPrice) < 0
-      )
-        return "Sales price is required and must be a non-negative number";
-      if (
-        regularPrice === "" ||
-        isNaN(Number(regularPrice)) ||
-        Number(regularPrice) < 0
-      )
-        return "Regular price is required and must be a non-negative number";
-      if (
-        quantity === "" ||
-        isNaN(Number(quantity)) ||
-        !Number.isInteger(Number(quantity)) ||
-        Number(quantity) < 0
-      )
-        return "Quantity is required and must be a non-negative integer";
+    // prices
+    if (
+      salesPrice === "" ||
+      isNaN(Number(salesPrice)) ||
+      Number(salesPrice) < 0
+    ) {
+      return "Sales price is required and must be a non-negative number";
+    }
+
+    if (
+      regularPrice === "" ||
+      isNaN(Number(regularPrice)) ||
+      Number(regularPrice) < 0
+    ) {
+      return "Regular price is required and must be a non-negative number";
+    }
+
+    // sales price must be lower than regular price
+    if (Number(salesPrice) >= Number(regularPrice)) {
+      return "Sales price must be lower than the regular price";
+    }
+
+    if (
+      quantity === "" ||
+      isNaN(Number(quantity)) ||
+      !Number.isInteger(Number(quantity)) ||
+      Number(quantity) < 0
+    ) {
+      return "Quantity is required and must be a non-negative integer";
     }
 
     return null;
@@ -318,26 +328,25 @@ const [deliveryMethod, setDeliveryMethod] = useState(
       }
 
       const fd = new FormData();
-      fd.append("title", title);
+      fd.append("title", capitalizeWords(title));
       fd.append("description", description);
       fd.append("notify_user", String(notifyUser ? 1 : 0));
 
-      // Use child category ID if selected, otherwise use parent category ID
       const categoryId = selectedChildCategory.value || selectedCategory.value;
 
       if (categoryId) {
         fd.append("category_id", categoryId);
       } else {
-        // This case should be prevented by validation
+        toast.error("Category ID is missing");
         throw new Error("Category ID is missing");
       }
 
       if (weight) fd.append("weight", weight);
-      if (weightUnit.value) fd.append("weight_unit", weightUnit.value); // Check for non-empty value
+      if (weightUnit.value) fd.append("weight_unit", weightUnit.value);
       if (lengthVal) fd.append("length", lengthVal);
       if (widthVal) fd.append("width", widthVal);
       if (heightVal) fd.append("height", heightVal);
-      if (sizeUnit.value) fd.append("size_unit", sizeUnit.value); // Check for non-empty value
+      if (sizeUnit.value) fd.append("size_unit", sizeUnit.value);
 
       if (shopType === "services") {
         fd.append("pricing_model", pricingModel);
@@ -348,13 +357,9 @@ const [deliveryMethod, setDeliveryMethod] = useState(
         fd.append("available_to", availableTo);
       }
 
-      if (!hasVariations) {
-        fd.append("sales_price", salesPrice);
-        fd.append("regular_price", regularPrice);
-        fd.append("quantity", quantity);
-      } else {
-        // for simplicity we do not support complex variations UI here — the backend expects a variations array
-      }
+      fd.append("sales_price", salesPrice);
+      fd.append("regular_price", regularPrice);
+      fd.append("quantity", quantity);
 
       // append images (new files). If editing and existing images remain, backend should accept both.
       imageFiles.forEach((f) => fd.append("images[]", f));
@@ -485,7 +490,7 @@ const [deliveryMethod, setDeliveryMethod] = useState(
               Quantity <span className="text-red-500">*</span>
             </label>
             <input
-              value={quantity}
+              value={quantity || 1}
               onChange={(e) => setQuantity(e.target.value)}
               className="input"
               placeholder="0"
@@ -569,7 +574,7 @@ const [deliveryMethod, setDeliveryMethod] = useState(
       )}
       {shopType === "services" && (
         <>
-          <div className="grid grid-cols-2 gap-4"> 
+          <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Pricing Model
@@ -587,13 +592,12 @@ const [deliveryMethod, setDeliveryMethod] = useState(
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Delivery Method
               </label>
-             <SelectDropdown
+              <SelectDropdown
                 options={DELIVERY_METHOD_OPTIONS}
                 value={deliveryMethod}
                 onChange={(option) => setDeliveryMethod(option)}
                 placeholder="Select Delivery Method"
               />
-
             </div>
           </div>
 
@@ -665,31 +669,33 @@ const [deliveryMethod, setDeliveryMethod] = useState(
           <span className="text-red-500">*</span>
         </label>
 
-        <label className="relative w-full aspect-square border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-amber-500 hover:bg-amber-50 transition-colors overflow-hidden flex items-center justify-center p-4">
-          <div className="flex flex-col items-center justify-center text-center text-gray-500">
-            <HiOutlineUpload className="text-3xl" />
-            <span className="mt-2 text-sm">
-              Click to upload or drag and drop
-            </span>
-            <span className="text-xs mt-1 text-gray-400">
-              You can add more images later
-            </span>
-          </div>
-          <input
-            id="itemImages"
-            type="file"
-            accept="image/*"
-            multiple
-            className="hidden"
-            onChange={handleImagesChange}
-          />
-        </label>
+        {imagePreviews.length < 7 && (
+          <label className="relative w-full aspect-square border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-amber-500 hover:bg-amber-50 transition-colors overflow-hidden flex items-center justify-center p-4">
+            <div className="flex flex-col items-center justify-center text-center text-gray-500">
+              <HiOutlineUpload className="text-3xl" />
+              <span className="mt-2 text-sm">
+                Click to upload or drag and drop
+              </span>
+              <span className="text-xs mt-1 text-gray-400">
+                You can add more images later
+              </span>
+            </div>
+            <input
+              id="itemImages"
+              type="file"
+              accept="image/*"
+              multiple
+              className="hidden"
+              onChange={handleImagesChange}
+            />
+          </label>
+        )}
 
         <div className="mt-3 grid grid-cols-3 gap-2">
           {imagePreviews.map((src, idx) => (
             <div
               key={idx}
-              className="relative rounded-lg overflow-hidden h-28 border"
+              className="relative rounded-lg overflow-hidden h-28  border border-orange-950"
             >
               <Image
                 src={src}
@@ -700,7 +706,7 @@ const [deliveryMethod, setDeliveryMethod] = useState(
               <button
                 type="button"
                 onClick={() => removeImageAt(idx)}
-                className="absolute top-1 right-1 bg-white rounded-full p-1 shadow"
+                className="absolute top-1 right-1 bg-red-200 rounded-full p-1 shadow-md cursor-pointer hover:bg-red-400 "
               >
                 <HiOutlineXCircle />
               </button>
