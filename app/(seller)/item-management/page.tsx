@@ -1,8 +1,15 @@
+"use client";
+
+import { useState } from "react";
 import { LuPackage, LuPlus } from "react-icons/lu";
 import ItemOverview from "./components/ItemOverview";
 import ItemsTable from "./components/ItemsTable";
+import Drawer from "../dashboard/components/commons/Drawer";
+import ItemForm from "./components/ItemForm";
 
 export default function ProductManagementPage() {
+  const [isDrawerOpen, setDrawerOpen] = useState(false);
+
   return (
     <>
       <div className="card mb-6 hover:shadow-lg transition-all duration-300 rounded-xl bg-white cursor-default">
@@ -11,7 +18,10 @@ export default function ProductManagementPage() {
             <LuPackage />
             Items Managements
           </h2>
+
+          {/* Add Item → open drawer */}
           <button
+            onClick={() => setDrawerOpen(true)}
             className="
               btn btn-orange 
               flex items-center 
@@ -20,21 +30,28 @@ export default function ProductManagementPage() {
             "
           >
             <LuPlus className="text-xl lg:text-lg" />
-            <span className="hidden lg:inline">Add Item</span>{" "}
-          </button>{" "}
+            <span className="hidden lg:inline">Add Item</span>
+          </button>
         </div>
 
         <p className="text-sm mt-1 text-gray-600">
           From your Items management dashboard, you can easily check, modify and
-          add new
-          <span className="text-orange-800"> Items</span>
+          add new <span className="text-orange-800"> Items</span>
         </p>
       </div>
 
       <ItemOverview />
 
-      <ItemsTable  limit={10} offset={0} status={'active'} />
-      
+      <ItemsTable limit={10} offset={0} status={"active"} />
+
+      {/* Drawer with Item Form */}
+      <Drawer
+        isOpen={isDrawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        title="Add item"
+      >
+        <ItemForm onClose={() => setDrawerOpen(false)} />
+      </Drawer>
     </>
   );
 }

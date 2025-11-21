@@ -14,4 +14,5 @@ export default interface Category {
   updated_at?: string;
   children?: Category[];
   products?: Item[];
+  parent_name?: string;
 }

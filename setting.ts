@@ -99,3 +99,27 @@ export const MONTHS = [
   "November",
   "December",
 ];
+
+
+export const dimensionOptions = [
+  { label: "g", value: "g" },
+  { label: "kg", value: "kg" },
+  { label: "lbs", value: "lbs" },
+  { label: "oz", value: "oz" },
+];
+export const sizeUnitOptions = [
+  { label: "cm", value: "cm" },
+  { label: "mm", value: "mm" },
+  { label: "in", value: "in" },
+];
+
+export const PRICING_MODEL_OPTIONS = [
+  { value: "fixed", label: "Fixed" },
+  { value: "negotiable", label: "Negotiable" },
+];
+
+export const DELIVERY_METHOD_OPTIONS = [
+  { value: "online", label: "Online" },
+  { value: "offline", label: "Offline" },
+  { value: "hybrid", label: "Hybrid" },
+];
