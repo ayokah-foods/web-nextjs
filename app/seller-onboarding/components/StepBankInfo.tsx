@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { saveBankInfo } from "@/lib/api/seller/bank";
 import { FaCashRegister } from "react-icons/fa";
 import toast from "react-hot-toast";
-import { StepProps } from "@/interfaces/StepProps";
+import { StepProps } from "@/interfaces/stepProps";
 
 export default function StepBankInfo({ onNext }: StepProps) {
   const [bankName, setBankName] = useState("");

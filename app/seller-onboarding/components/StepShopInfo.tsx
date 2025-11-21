@@ -10,7 +10,7 @@ import { listCategories } from "@/lib/api/category";
 import { saveShop } from "@/lib/api/seller/shop";
 import { FaShoppingBag } from "react-icons/fa";
 import toast from "react-hot-toast";
-import { StepProps } from "@/interfaces/StepProps";
+import { StepProps } from "@/interfaces/stepProps";
 import { locationData } from "@/data/locations";
 
 interface SelectOption {

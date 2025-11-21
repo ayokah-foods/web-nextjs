@@ -35,7 +35,7 @@ export default function LoginPage() {
         <Image
           width={1200}
           height={1600}
-          src="https://placehold.co/1200x1600/FDE8C7/333333?text=African+Market+Hub"
+          src="https://placehold.co/1200x1600/FDE8C7/333333?text=Ayokah+Foods+And+Services"
           alt="A woman in traditional African attire"
           className="w-full h-full object-cover"
           unoptimized

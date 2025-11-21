@@ -1,13 +1,61 @@
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import isTodayPlugin from "dayjs/plugin/isToday";
+import isYesterdayPlugin from "dayjs/plugin/isYesterday";
+import weekOfYear from "dayjs/plugin/weekOfYear";
+import localizedFormat from "dayjs/plugin/localizedFormat";
+
+dayjs.extend(relativeTime);
+dayjs.extend(isTodayPlugin);
+dayjs.extend(isYesterdayPlugin);
+dayjs.extend(weekOfYear);
+dayjs.extend(localizedFormat);
+
+/**
+ * Format relative time (e.g. "1 minute ago", "3 hours ago")
+ */
 export const formatTimeAgo = (timestamp: string): string => {
-  const date = new Date(timestamp);
-  const now = new Date();
-  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+  if (!timestamp) return "";
 
-  if (diffInSeconds < 60) return `${diffInSeconds} seconds ago`;
-  if (diffInSeconds < 3600)
-    return `${Math.floor(diffInSeconds / 60)} minutes ago`;
-  if (diffInSeconds < 86400)
-    return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+  const date = dayjs(timestamp);
+  if (!date.isValid()) return "";
 
-  return date.toLocaleDateString();
+  return date.fromNow();
 };
+
+/**
+ * Human readable date for notifications:
+ * - Today, 3:45PM
+ * - Yesterday, 11:18AM
+ * - Tue 5:21PM (same week)
+ * - 3rd, January (older)
+ */
+export function formatHumanReadableDate(timestamp: string): string {
+  const date = dayjs(timestamp);
+  if (!date.isValid()) return "";
+
+  if (date.isToday()) {
+    return `Today, ${date.format("h:mma")}`;
+  }
+
+  if (date.isYesterday()) {
+    return `Yesterday, ${date.format("h:mma")}`;
+  }
+
+  const now = dayjs();
+  if (date.week() === now.week()) {
+    return `${date.format("ddd")} ${date.format("h:mma")}`;
+  }
+
+  return date.format("Do, MMMM");
+}
+
+/**
+ * Simple short formatting (e.g. "21 Feb")
+ */
+export function formatDate(date: string | Date): string {
+  const d = dayjs(date);
+  if (!d.isValid()) return "";
+
+  return d.format("DD MMM");
+}

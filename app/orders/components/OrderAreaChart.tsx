@@ -1,14 +1,14 @@
 "use client";
 
-import { useEffect, useState, useCallback, useMemo } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import dynamic from "next/dynamic";
-import { ApexOptions } from "apexcharts";
-import AreaChartSkeleton from "../Skeletons/AreaChartSkeleton";
-import SelectDropdown from "./Fields/SelectDropdown";
+import { ApexOptions } from "apexcharts"; 
+import SelectDropdown from "@/app/(seller)/dashboard/components/commons/Fields/SelectDropdown";
+import AreaChartSkeleton from "@/app/(seller)/dashboard/components/Skeletons/AreaChartSkeleton";
+import { GraphPoint } from "@/interfaces/orders";
+import { getOrderGraph } from "@/lib/api/orders";
 import { MONTHS } from "@/setting";
-import { getSalesGraph } from "@/lib/api/seller/overview";
 import { formatDate } from "@/utils/formatDate";
-
 const ReactApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const AreaChart = () => {
@@ -24,15 +24,14 @@ const AreaChart = () => {
     const [selected, setSelected] = useState<{ label: string; value: string }>(monthOptions[0]
     );
 
-    const fetchChartData = useCallback(async (selectedPeriod: string) => {
+    const fetchChartData = useCallback(async (start_date: string) => {
         setLoading(true);
         try {
-            const response = await getSalesGraph(selectedPeriod);
-            const raw = response ?? [];
+            const raw = await getOrderGraph(start_date);
 
-            if (response?.data?.status === "success" && Array.isArray(raw) && raw.length > 0) {
-                const categories = raw.map((item: { day: string }) => formatDate(new Date(item.day)));
-                const series = raw.map((item: { total: string }) => parseFloat(item.total));
+            if (Array.isArray(raw) && raw.length > 0) {
+                const categories = raw.map((item: GraphPoint) => formatDate(new Date(item.day)));
+                const series = raw.map((item: GraphPoint) => item.total);
                 setChartData({ categories, series });
                 setHasData(true);
             } else {
@@ -40,12 +39,14 @@ const AreaChart = () => {
                 setHasData(false);
             }
         } catch (error) {
-            console.error("Failed to fetch sales graph data:", error);
+            console.error("Failed to fetch shop analytics:", error);
             setHasData(false);
         } finally {
             setLoading(false);
         }
     }, []);
+
+
 
     useEffect(() => {
         fetchChartData(selected.value);
@@ -103,7 +104,7 @@ const AreaChart = () => {
                 colors: ["#F97316"],
 
             },
-            series: [{ name: "Sales", data: chartData.series }],
+            series: [{ name: "Total orders", data: chartData.series }],
             xaxis: {
                 categories: chartData.categories,
                 labels: {
@@ -135,9 +136,9 @@ const AreaChart = () => {
         [chartData]
     );
     return (
-        <div className="p-0 text-gray-950">
+        <div className="p-6 card text-gray-950">
             <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-medium">Sales Graph</h2>
+                <h2 className="text-lg font-medium">Order Graph</h2>
                 <SelectDropdown options={monthOptions} value={selected} onChange={setSelected} />
             </div>
 
