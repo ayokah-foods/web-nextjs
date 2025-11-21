@@ -9,6 +9,7 @@ import { listOrders } from "@/lib/api/orders";
 import TanStackTable from "@/app/(seller)/dashboard/components/commons/TanStackTable";
 import { ColumnDef } from "@tanstack/react-table";
 import StatusBadge from "@/utils/StatusBadge";
+import { FaExternalLinkAlt } from "react-icons/fa";
 
 interface RecentOrdersTableProps {
     limit: number;   
@@ -124,7 +125,7 @@ const RecentOrdersTable: React.FC<RecentOrdersTableProps> = ({ limit }) => {
         try {
             setLoading(true);
             const response = await listOrders(limit, 0);  
-            setOrders(response.orders);
+            setOrders(response.data);
         } catch (err) {
             console.error(err);
             setError("An error occurred while fetching orders.");
@@ -138,20 +139,25 @@ const RecentOrdersTable: React.FC<RecentOrdersTableProps> = ({ limit }) => {
     }, [fetchOrders]);
 
     return (
-        <div>
-            <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-medium">Recent orders</h2>
-                <Link href="/orders" className="text-sm bg-gray-300 hover:bg-gray-400 text-gray-600 hover:text-amber-50 py-2 px-4 rounded">
-                    See all
-                </Link>
-            </div>
-            <TanStackTable
-                data={orders}
-                columns={columns}
-                loading={loading}
-                error={error}
-            />
+      <>
+        <div className="card flex justify-between items-center mb-4">
+          <h2 className="text-lg font-medium">Recent orders</h2>
+          <Link
+            href="/orders"
+            className="text-sm btn btn-gray flex items-center"
+          >
+            See all <FaExternalLinkAlt className="ml-2" />
+          </Link>
         </div>
+        <div>
+          <TanStackTable
+            data={orders}
+            columns={columns}
+            loading={loading}
+            error={error}
+          />
+        </div>
+      </>
     );
 };
 

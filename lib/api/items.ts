@@ -32,3 +32,9 @@ export async function getItemDetail(slug: string) {
   const response = await api.get(`/product/${slug}`);
   return response.data;
 }
+
+export async function getItemStatictics() {
+  const {data} = await api.get(`/vendor/items/statistics`);
+  return data.data;
+}
+

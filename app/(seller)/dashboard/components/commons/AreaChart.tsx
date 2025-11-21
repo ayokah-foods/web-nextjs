@@ -135,22 +135,32 @@ const AreaChart = () => {
         [chartData]
     );
     return (
-        <div className="p-0 text-gray-950">
-            <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-medium">Sales Graph</h2>
-                <SelectDropdown options={monthOptions} value={selected} onChange={setSelected} />
-            </div>
-
-            {loading ? (
-                <AreaChartSkeleton />
-            ) : hasData ? (
-                <ReactApexChart options={options} series={options.series} type="area" height={300} />
-            ) : (
-                <div className="text-center text-black py-10">
-                    No data available for {selected.label}.
-                </div>
-            )}
+      <>
+        <div className="card flex items-center justify-between mb-6">
+          <h2 className="text-lg font-medium">Sales Graph</h2>
+          <SelectDropdown
+            options={monthOptions}
+            value={selected}
+            onChange={setSelected}
+          />
         </div>
+        <div className="p-0 text-gray-950 card">
+          {loading ? (
+            <AreaChartSkeleton />
+          ) : hasData ? (
+            <ReactApexChart
+              options={options}
+              series={options.series}
+              type="area"
+              height={300}
+            />
+          ) : (
+            <div className="text-center text-black py-10">
+              No data available for {selected.label}.
+            </div>
+          )}
+        </div>
+      </>
     );
 };
 

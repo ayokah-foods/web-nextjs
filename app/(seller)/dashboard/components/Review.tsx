@@ -81,18 +81,13 @@ export function RecentReviews() {
     fetchReviews();
   }, []);
 
-  if (loading) {
-    return <RecentReviewsSkeleton />;
-  }
-
   if (error) {
     return <p className="text-red-500">{error}</p>;
   }
 
   return (
-    <div className="mb-4">
-      {/* Header row */}
-      <div className="flex justify-between items-center mb-6">
+    <>
+      <div className="card flex justify-between items-center mb-6">
         <h2 className="text-lg font-medium">Recent Reviews</h2>
         <Link
           href="/reviews"
@@ -101,18 +96,26 @@ export function RecentReviews() {
           See all <FaExternalLinkAlt className="ml-2" />
         </Link>
       </div>
-
-      {/* Reviews list */}
-      <div className="divide-y divide-white/10">
-        {reviews.map((review) => (
-          <div
-            key={review.id}
-            className="cursor-pointer hover:bg-hub-secondary-50/50 rounded-lg p-1"
-          >
-            <ReviewCard review={review} />
-          </div>
-        ))}
+      <div className="mb-6 card">
+        <div className="divide-y divide-white/10">
+          {loading ? (
+            <RecentReviewsSkeleton />
+          ) : reviews.length === 0 ? (
+            <div className="py-6 text-center text-gray-400 text-sm">
+              No reviews yet.
+            </div>
+          ) : (
+            reviews.map((review) => (
+              <div
+                key={review.id}
+                className="cursor-pointer hover:bg-hub-secondary-50/50 rounded-lg p-1"
+              >
+                <ReviewCard review={review} />
+              </div>
+            ))
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

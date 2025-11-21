@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { LuLogOut } from "react-icons/lu";
 import { useAuthStore } from "@/store/useAuthStore";
 import { NAVIGATION } from "@/setting";
+import Image from "next/image";
 
 export function Sidebar({
   isOpen,
@@ -32,8 +33,8 @@ export function Sidebar({
       `}
     >
       {/* Logo */}
-      <div className="flex items-center justify-center h-20 border-b p-4">
-        <img src="/logo.svg" alt="logo" className="h-10 w-auto" />
+      <div className="flex items-center justify-center h-16 border-b p-4">
+        <Image width={100} height={40} src="/logo.svg" alt="logo" className="h-10 w-auto" />
       </div>
 
       {/* Nav */}
@@ -47,7 +48,7 @@ export function Sidebar({
                 ? "bg-orange-100 text-orange-700"
                 : "text-gray-700 hover:bg-gray-100"
             }`}
-            onClick={toggleSidebar} // close menu on mobile
+            onClick={toggleSidebar} 
           >
             <item.icon className="inline-block w-5 h-5 mr-3" />
             {item.label}

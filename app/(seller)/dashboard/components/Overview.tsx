@@ -31,7 +31,7 @@ const StatCard: React.FC<StatCardProps> = ({
   <div className="card border-b-4 border-orange-300 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/7 p-4 cursor-pointer hover:bg-orange-50 transition duration-300 ease-in-out hover:shadow-lg transform hover:-translate-y-1 rounded-lg">
     <div className="flex items-center justify-between mb-0">
       <div className="text-sm font-medium text-gray-500">{title}</div>
-      <Icon className="text-2xl text-orange-500" />
+      <Icon className="text-md text-orange-500" />
     </div>
     {/* Value section */}
     <div className="flex items-baseline gap-2">

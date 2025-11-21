@@ -6,6 +6,7 @@ import Overview from "./components/Overview";
 import SelectDropdown from "./components/commons/Fields/SelectDropdown";
 import AreaChart from "./components/commons/AreaChart";
 import RecentOrdersTable from "@/app/orders/components/RecentOrdersTable";
+import { LuLayoutDashboard } from "react-icons/lu";
 
 const periods = [
   { value: "last_year", label: "All" },
@@ -19,32 +20,44 @@ const DashboardPage: React.FC = () => {
   const [selectedPeriod, setSelectedPeriod] = useState(periods[0]);
 
   return (
-    <div className="space-y-4 text-gray-700 p-4 md:p-0">
-      <div className="flex items-center justify-between">
-        <SelectDropdown
-          options={[
-            { value: "all", label: "All" },
-            { value: "this_week", label: "This week" },
-            { value: "last_week", label: "Last week" },
-            { value: "last_month", label: "Last month" },
-            { value: "last_year", label: "Last year" },
-          ]}
-          value={selectedPeriod}
-          onChange={setSelectedPeriod}
-        />
-      </div>
-      <Overview period={selectedPeriod.value} />
-      <div className="flex flex-wrap gap-4"> 
-        <div className="card w-full md:w-[calc(70%-0.5rem)]"> 
-          <AreaChart />
+    <>
+      <div className="card mb-6 hover:shadow-lg transition-all duration-300 rounded-xl bg-white cursor-default">
+        <div className="flex justify-between items-center">
+          <h2 className="text-lg font-semibold flex items-center gap-2 text-orange-800!">
+            <LuLayoutDashboard />
+            Seller Dashboard
+          </h2>
+          <SelectDropdown
+            options={[
+              { value: "all", label: "All" },
+              { value: "this_week", label: "This week" },
+              { value: "last_week", label: "Last week" },
+              { value: "last_month", label: "Last month" },
+              { value: "last_year", label: "Last year" },
+            ]}
+            value={selectedPeriod}
+            onChange={setSelectedPeriod}
+          />
         </div>
- 
-        <div className="card w-full md:w-[calc(30%-0.5rem)] p-6"> 
-          <RecentReviews />
-        </div>
+        <p className="text-sm mt-1 text-gray-600">
+          From your dashboard, you can easily access and control your
+          <span className="text-orange-800"> selling platform</span>
+        </p>
       </div>
-      <RecentOrdersTable limit={10} />
-    </div>
+      <div className="space-y-4 text-gray-700 p-4 md:p-0">
+        <Overview period={selectedPeriod.value} />
+        <div className="flex flex-wrap gap-4">
+          <div className="w-full md:w-[calc(70%-0.5rem)]">
+            <AreaChart />
+          </div>
+
+          <div className="w-full md:w-[calc(30%-0.5rem)]">
+            <RecentReviews />
+          </div>
+        </div>
+        <RecentOrdersTable limit={10} />
+      </div>
+    </>
   );
 };
 

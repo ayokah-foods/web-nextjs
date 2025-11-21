@@ -24,8 +24,8 @@ export const NAVIGATION: NavItem[] = [
   { id: 1, label: "Dashboard", href: "/dashboard", icon: LuLayoutDashboard },
   {
     id: 2,
-    label: "Product Management",
-    href: "/product-management",
+    label: "Item Management",
+    href: "/item-management",
     icon: LuPackage,
     children: [],
   },
