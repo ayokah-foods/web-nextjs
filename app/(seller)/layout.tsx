@@ -1,4 +1,3 @@
-// app/components/layouts/SellerLayout.tsx
 "use client";
 
 import React, { useEffect, useState } from "react";

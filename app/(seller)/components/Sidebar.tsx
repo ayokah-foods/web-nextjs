@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { LuLogOut } from "react-icons/lu";
 import { useAuthStore } from "@/store/useAuthStore";
-import { navItems } from "@/setting";
+import { NAVIGATION } from "@/setting";
 
 export function Sidebar({
   isOpen,
@@ -38,7 +38,7 @@ export function Sidebar({
 
       {/* Nav */}
       <nav className="flex-1 overflow-y-auto p-4 space-y-2">
-        {navItems.map((item) => (
+        {NAVIGATION.map((item) => (
           <Link
             key={item.id}
             href={item.href}

@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { NAVIGATION } from "@/app/setting";
 import clsx from "clsx";
 import { useState, useMemo } from "react";
 import { ChevronDownIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
-import { User } from "@/types/UserType";
+import { User } from "@/interfaces/user";
+import { NAVIGATION } from "@/setting";
 
 const NavMenu = ({ user }: { user: User | null }) => {
     const pathname = usePathname();
@@ -29,7 +29,7 @@ const NavMenu = ({ user }: { user: User | null }) => {
                 "Shop Management",
                 "FAQs Management"
             ];
-            return NAVIGATION.filter((nav) => allowed.includes(nav.name));
+            return NAVIGATION.filter((nav) => allowed.includes(nav.label));
         }
         return NAVIGATION;
     }, [user]);
@@ -45,12 +45,12 @@ const NavMenu = ({ user }: { user: User | null }) => {
         <ul className="space-y-2">
             {filteredNavigation.map((item) => {
                 const isActiveParent = pathname.startsWith(item.href);
-                const isOpen = openSections[item.name] || isActiveParent;
+                const isOpen = openSections[item.label] || isActiveParent;
 
                 return (
-                    <li key={item.name}>
+                    <li key={item.label}>
                         <button
-                            onClick={() => toggleSection(item.name)}
+                            onClick={() => toggleSection(item.label)}
                             className={clsx(
                                 "w-full flex items-center justify-between px-3 py-1.5 rounded-md text-xs font-semibold overflow-y-auto scrollbar-thin scrollbar-thumb-gray-50 hover:scrollbar-thumb-gray-100 scrollbar-track-transparent",
                                 isActiveParent
@@ -60,7 +60,7 @@ const NavMenu = ({ user }: { user: User | null }) => {
                         >
                             <span className="flex items-center gap-x-3">
                                 <item.icon className="h-5 w-5" />
-                                {item.name}
+                                {item.label}
                             </span>
                             {item.children &&
                                 (isOpen ? (
@@ -75,7 +75,7 @@ const NavMenu = ({ user }: { user: User | null }) => {
                                 {item.children.map((subItem) => {
                                     const isActiveSub = pathname === subItem.href;
                                     return (
-                                        <li key={subItem.name}>
+                                        <li key={subItem.label}>
                                             <Link
                                                 href={subItem.href}
                                                 className={clsx(
@@ -85,7 +85,7 @@ const NavMenu = ({ user }: { user: User | null }) => {
                                                         : "text-gray-500 hover:text-orange-500 hover:bg-orange-50"
                                                 )}
                                             >
-                                                {subItem.name}
+                                                {subItem.label}
                                             </Link>
                                         </li>
                                     );

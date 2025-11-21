@@ -20,7 +20,7 @@ interface NavItem {
   children?: NavItem[];
 }
 
-export const navItems: NavItem[] = [
+export const NAVIGATION: NavItem[] = [
   { id: 1, label: "Dashboard", href: "/dashboard", icon: LuLayoutDashboard },
   {
     id: 2,
