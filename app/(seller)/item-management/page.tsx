@@ -1,5 +1,6 @@
-import { LuPackage } from "react-icons/lu";
+import { LuPackage, LuPlus } from "react-icons/lu";
 import ItemOverview from "./components/ItemOverview";
+import ItemsTable from "./components/ItemsTable";
 
 export default function ProductManagementPage() {
   return (
@@ -10,16 +11,30 @@ export default function ProductManagementPage() {
             <LuPackage />
             Items Managements
           </h2>
-          <button className="btn btn-orange"> Add Item </button>
+          <button
+            className="
+              btn btn-orange 
+              flex items-center 
+              p-2 lg:py-2 lg:px-4 lg:gap-1 
+              sm:rounded-xl
+            "
+          >
+            <LuPlus className="text-xl lg:text-lg" />
+            <span className="hidden lg:inline">Add Item</span>{" "}
+          </button>{" "}
         </div>
 
         <p className="text-sm mt-1 text-gray-600">
           From your Items management dashboard, you can easily check, modify and
-          add new your
+          add new
           <span className="text-orange-800"> Items</span>
         </p>
       </div>
+
       <ItemOverview />
+
+      <ItemsTable  limit={10} offset={0} status={'active'} />
+      
     </>
   );
 }

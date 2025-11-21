@@ -32,7 +32,7 @@ const StatCard: React.FC<StatCardProps> = ({
     <div className="flex items-center justify-between mb-0">
       <div className="text-sm font-medium text-gray-500">{title}</div>
 
-      <Icon className="text-md text-orange-600" />
+      <Icon className="text-xl text-orange-600" />
     </div>
     {/* Value section */}
     <div className="flex items-baseline gap-2 mt-2">
@@ -96,24 +96,24 @@ const ItemOverview: React.FC = () => {
   }
 
   const statCards = [
-    { title: "Total Products", value: stats?.total_products, icon: FaTruck },
+    { title: "Total Items", value: stats?.total_products, icon: FaTruck },
     {
-      title: "Active Products",
+      title: "Active Items",
       value: stats?.active_products,
       icon: FaHourglassHalf,
     },
     {
-      title: "Inactive Products",
+      title: "Inactive Items",
       value: stats?.inactive_products,
       icon: FaTimesCircle,
     },
     {
-      title: "Products Ordered",
+      title: "Items Ordered",
       value: stats?.ordered_products,
       icon: FaShoppingCart,
     },
     {
-      title: "Products Reviewed",
+      title: "Items Reviewed",
       value: stats?.reviewed_products,
       icon: FaUndo,
     },

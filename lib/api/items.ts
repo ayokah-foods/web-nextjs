@@ -1,5 +1,6 @@
 import api from "./axios";
 
+
 export async function listItems(
   limit: number,
   offset: number,
@@ -28,6 +29,20 @@ export async function listItems(
   return response.data;
 } 
 
+export async function listSellerItems(
+  limit: number,
+  offset: number,
+  search?: string,  
+) {
+  const response = await api.get("/vendor/items", {
+    params: {
+      limit,
+      offset,
+      ...(search ? { search } : {}),  
+    },
+  });
+  return response.data;
+} 
 export async function getItemDetail(slug: string) {
   const response = await api.get(`/product/${slug}`);
   return response.data;
@@ -36,5 +51,11 @@ export async function getItemDetail(slug: string) {
 export async function getItemStatictics() {
   const {data} = await api.get(`/vendor/items/statistics`);
   return data.data;
+}
+
+
+export async function updateItemStatus(productId: number, status: string) {
+  const response = await api.patch(`/product/${productId}/status/${status}`);
+  return response.data;
 }
 
