@@ -53,12 +53,12 @@ export async function getItemStatictics() {
 }
 
 export async function updateItemStatus(productId: number, status: string) {
-  const response = await api.patch(`/product/${productId}/status/${status}`);
+  const response = await api.patch(`/vendor/product/${productId}/status/${status}`);
   return response.data;
 }
 
 export async function addItem(formData: FormData) {
-  const response = await api.post("/items/create", formData, {
+  const response = await api.post("/vendor/items/create", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
       Accept: "application/json",
@@ -69,7 +69,7 @@ export async function addItem(formData: FormData) {
 }
 
 export async function updateItem(ItemId: number, formData: FormData) {
-  const response = await api.post(`/items/${ItemId}/update`, formData, {
+  const response = await api.post(`/vendor/items/${ItemId}/update`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
       Accept: "application/json",

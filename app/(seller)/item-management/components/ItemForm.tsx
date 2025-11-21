@@ -372,7 +372,7 @@ export default function ItemForm({ onClose, item }: ItemFormProps) {
         toast.success("Item added successfully");
       }
 
-      onClose();
+      // onClose();
       // optionally reload parent view
       // window.location.reload(); // avoid forcing a full reload in SPA
     } catch (err) {
