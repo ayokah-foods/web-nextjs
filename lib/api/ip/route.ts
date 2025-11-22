@@ -18,3 +18,26 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json({ ip: ip || "Unknown IP" });
 }
+
+export async function numverifyValidatePhone({
+  number,
+  countryCode,
+}: {
+  number: string;
+  countryCode: string;
+}) {
+  try {
+    const apiKey = process.env.NEXT_PUBLIC_NUMVERIFY_API;
+
+    const url = `http://apilayer.net/api/validate?access_key=${apiKey}&number=${number}&country_code=${countryCode}&format=1`;
+
+    const res = await fetch(url);
+
+    if (!res.ok) throw new Error("NumVerify request failed");
+
+    return await res.json();
+  } catch (err) {
+    console.error("NumVerify API error:", err);
+    return { valid: false };
+  }
+}

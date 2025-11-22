@@ -12,11 +12,11 @@ import { FaShoppingBag } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { StepProps } from "@/interfaces/StepProps";
 import { locationData } from "@/data/locations";
+import { numverifyValidatePhone } from "@/lib/api/ip/route";
 
 interface SelectOption {
   id: number;
   name: string;
-  // Optional extra fields for our internal logic
   code?: string;
   flag?: string;
   dial_code?: string;
@@ -47,6 +47,9 @@ export default function StepShopInfo({ onNext }: StepProps) {
   const [address, setAddress] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [description, setDescription] = useState("");
+
+  const [isValidatingPhone, setIsValidatingPhone] = useState(false);
+  const [isPhoneValid, setIsPhoneValid] = useState<null | boolean>(null);
 
   // --- Type & Category State ---
   const types: SelectOption[] = [
@@ -169,6 +172,43 @@ export default function StepShopInfo({ onNext }: StepProps) {
     fetchCategories();
   }, [selectedType]);
 
+  const validatePhoneNumber = useCallback(async () => {
+    if (!phoneNumber || phoneNumber.length < 7) {
+      setIsPhoneValid(null);
+      return;
+    }
+
+    setIsValidatingPhone(true);
+
+    try {
+    const fullNumber = `${selectedCountry.dial_code?.replace(
+      "+",
+      ""
+    )}${phoneNumber}`;
+
+    const data = await numverifyValidatePhone({
+      number: fullNumber,
+      countryCode: selectedCountry.code ?? '',
+    });
+
+      setIsPhoneValid(data.valid === true);
+    } catch (err) {
+      console.error("Phone validation failed:", err);
+      setIsPhoneValid(false);
+    }
+
+    setIsValidatingPhone(false);
+  }, [phoneNumber, selectedCountry]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      validatePhoneNumber();
+    }, 600); // wait 0.6 sec after typing stops
+
+    return () => clearTimeout(timer);
+  }, [phoneNumber, validatePhoneNumber]);
+
+
   const handleDescriptionChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       const currentLength = e.target.value.length;
@@ -251,6 +291,7 @@ export default function StepShopInfo({ onNext }: StepProps) {
     !selectedCategory ||
     !selectedCountry ||
     !selectedState ||
+    isPhoneValid !== true;
     !selectedCity;
 
   return (
@@ -273,7 +314,6 @@ export default function StepShopInfo({ onNext }: StepProps) {
           </div>
         )}
 
-        {/* Country Selection */}
         <FadeSlide keyId="country-select">
           <SelectField
             label="Country"
@@ -283,19 +323,16 @@ export default function StepShopInfo({ onNext }: StepProps) {
           />
         </FadeSlide>
 
-        {/* Phone Number with Flag & Code */}
-        <div>
+        {/* <div>
           <label className="text-sm font-medium mb-1 block">
             Shop/Business phone number
           </label>
           <div className="flex items-center">
-            {/* Flag and Dial Code Block */}
             <div className="flex items-center justify-center h-[45px] px-3 border border-gray-300 border-r-0 rounded-l-lg bg-gray-50 text-gray-600 text-sm min-w-[90px]">
               <span className="mr-2 text-lg">{selectedCountry.flag}</span>
               <span>{selectedCountry.dial_code}</span>
             </div>
 
-            {/* Actual Input */}
             <input
               className="flex-1 h-[45px] border border-gray-300 rounded-r-lg px-3 focus:ring-2 focus:ring-orange-500 outline-none"
               type="tel"
@@ -313,7 +350,53 @@ export default function StepShopInfo({ onNext }: StepProps) {
           <p className="text-xs text-gray-400 mt-1">
             Enter number without the country code.
           </p>
+        </div> */}
+        <div>
+          <label className="text-sm font-medium mb-1 block">
+            Shop/Business phone number
+          </label>
+
+          <div className="flex items-center">
+            {/* Country */}
+            <div className="flex items-center justify-center h-[45px] px-3 border border-gray-300 border-r-0 rounded-l-lg bg-gray-50 text-gray-600 text-sm min-w-[90px]">
+              <span className="mr-2 text-lg">{selectedCountry.flag}</span>
+              <span>{selectedCountry.dial_code}</span>
+            </div>
+
+            {/* Input */}
+            <input
+              className="flex-1 h-[45px] border border-gray-300 rounded-r-lg px-3 focus:ring-2 focus:ring-orange-500 outline-none"
+              type="tel"
+              placeholder="712 345 678"
+              value={phoneNumber}
+              onChange={(e) => {
+                const val = e.target.value.replace(/\D/g, "");
+                setPhoneNumber(val);
+              }}
+              required
+            />
+
+            {/* Validation Icon */}
+            <div className="ml-2 w-6">
+              {isValidatingPhone && <BeatLoader size={6} />}
+
+              {!isValidatingPhone && isPhoneValid === true && (
+                <span className="text-green-600 text-xl">👍</span>
+              )}
+
+              {!isValidatingPhone && isPhoneValid === false && (
+                <span className="text-red-600 text-xl">👎</span>
+              )}
+            </div>
+          </div>
+
+          {isPhoneValid === false && (
+            <h2 className="text-xs text-red-500! mt-1">
+              Invalid phone number. Please enter a valid number.
+            </h2>
+          )}
         </div>
+
         {/* Shop Name */}
         <div>
           <label className="text-sm font-medium mb-1 block">
