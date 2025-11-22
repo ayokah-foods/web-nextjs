@@ -4,7 +4,9 @@ import { getItemDetail } from "@/lib/api/items";
 
 
 export async function generateMetadata({ params }: PageParams): Promise<Metadata> {
-  const { slug } = params;
+  // const { slug } = params;
+  const awaitedParams = await params;
+  const slug = awaitedParams.slug;
 
   try {
     const response = await getItemDetail(slug);
@@ -51,13 +53,15 @@ type PageParams = {
 
 
 export default async function ItemDetailPage({ params }: PageParams) {
-  const { slug } = params;
+  // const { slug } = params;
+  const awaitedParams = await params;
+  const slug = awaitedParams.slug;
 
   try {
     const response = await getItemDetail(slug);
-    const product = response.data.product;
 
-    // JSON-LD Product Schema for ecommerce SEO
+    const product = response.data.product; 
+
     const productSchema = {
       "@context": "https://schema.org",
       "@type": "Product",
@@ -92,7 +96,6 @@ export default async function ItemDetailPage({ params }: PageParams) {
 
     return (
       <>
-        {/* JSON-LD PRODUCT SCHEMA */}
         <script
           type="application/ld+json"
           suppressHydrationWarning

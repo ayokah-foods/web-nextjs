@@ -185,10 +185,10 @@ export default function ItemDetail({ product }: { product: Item }) {
                   }}
                   className={`px-6 py-2 rounded-full font-medium text-sm flex items-center justify-center gap-2 transition-all duration-300 cursor-pointer ${
                     added
-                      ? "bg-orange-600 text-white scale-105"
+                      ? "bg-orange-800 text-white scale-105"
                       : isInCart
-                      ? "bg-orange-600 text-white hover:bg-orange-700"
-                      : "bg-orange-400 text-white hover:bg-orange-600"
+                      ? "bg-orange-800 text-white hover:bg-orange-700"
+                      : "bg-orange-400 text-white hover:bg-orange-800"
                   }`}
                 >
                   {added ? (
@@ -207,10 +207,10 @@ export default function ItemDetail({ product }: { product: Item }) {
                   onClick={handleAddToCart}
                   className={`px-6 py-2 rounded-full font-medium text-sm flex items-center justify-center gap-2 transition-all duration-300 cursor-pointer ${
                     added
-                      ? "bg-orange-600 text-white scale-105"
+                      ? "bg-orange-800 text-white scale-105"
                       : isInCart
-                      ? "bg-orange-600 text-white hover:bg-orange-700"
-                      : "bg-orange-400 text-white hover:bg-orange-600"
+                      ? "bg-orange-800 text-white hover:bg-orange-700"
+                      : "bg-orange-400 text-white hover:bg-orange-800"
                   }`}
                 >
                   {added ? (

@@ -55,6 +55,7 @@ export default function LoginPage() {
                 height={40}
                 style={{ height: "40px" }}
                 priority
+                unoptimized
               />
             </Link>
           </div>
@@ -74,7 +75,7 @@ export default function LoginPage() {
           </div>
 
           {/* Google Button */}
-          <div> 
+          <div>
             <GoogleSignInButton />
           </div>
         </div>

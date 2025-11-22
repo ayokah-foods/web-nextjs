@@ -14,13 +14,17 @@ export default function Footer() {
           {/* Logo */}
           <div className="col-span-2 flex flex-col gap-4">
             <div className="flex items-center gap-2">
-              <Image
-                src="/images/logo.svg"
-                alt="African Market Hub"
-                className="cursor-pointer"
-                width={140}
-                height={30}
-              />
+              <Link href={'/'}>
+                <Image
+                  src="/images/logo.svg"
+                  alt="African Market Hub"
+                  className="cursor-pointer"
+                  width={140}
+                  height={30}
+                  priority
+                  unoptimized
+                />
+              </Link>
             </div>
             <span className="text-sm">
               Your No 1 African marketplace online platform.
