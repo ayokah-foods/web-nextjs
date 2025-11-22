@@ -1,3 +1,5 @@
+import { Shop } from "./orders";
+
 export interface ProductResponse {
   status: string;
   data: Product[];
@@ -37,6 +39,7 @@ export interface Product {
   status: 'active' | 'inactive';
   type: string;  
   shop_id: number;
+  shop?: Shop;
   category_id: number;
   available_from: string;
   available_to: string;
