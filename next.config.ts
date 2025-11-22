@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here image */
+
   images: {
     remotePatterns: [
       {
@@ -26,7 +26,7 @@ const nextConfig: NextConfig = {
   },
 
   experimental: {
-    swcTraceProfiling: false, // This is still valid
+    swcTraceProfiling: false,
   },
 }; 
 

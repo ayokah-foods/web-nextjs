@@ -35,7 +35,7 @@ export default function Drawer({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
+          <div className="fixed inset-0 bg-black/30 md:backdrop-blur-sm" />
         </TransitionChild>
 
         <div className="fixed inset-0 overflow-hidden">
@@ -53,7 +53,9 @@ export default function Drawer({
                 <DialogPanel className="w-screen max-w-md bg-white shadow-xl h-full flex flex-col">
                   {/* Header */}
                   <div className="px-4 py-4 border-b border-gray-200 flex items-center justify-between">
-                    <h2 className="text-lg font-medium text-gray-800">{title}</h2>
+                    <h2 className="text-lg font-medium text-gray-800">
+                      {title}
+                    </h2>
                     <button
                       onClick={onClose}
                       className="text-gray-400 hover:text-gray-600"
@@ -63,7 +65,9 @@ export default function Drawer({
                   </div>
 
                   {/* Content */}
-                  <div className="flex-1 overflow-y-auto px-4 py-6">{children}</div>
+                  <div className="flex-1 overflow-y-auto px-4 py-6">
+                    {children}
+                  </div>
                 </DialogPanel>
               </TransitionChild>
             </div>
