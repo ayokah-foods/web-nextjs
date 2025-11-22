@@ -58,7 +58,7 @@ export async function updateItemStatus(productId: number, status: string) {
 }
 
 export async function addItem(formData: FormData) {
-  const response = await api.post("/vendor/items/create", formData, {
+  const response = await api.post("/vendor/item/create", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
       Accept: "application/json",
@@ -69,7 +69,7 @@ export async function addItem(formData: FormData) {
 }
 
 export async function updateItem(ItemId: number, formData: FormData) {
-  const response = await api.post(`/vendor/items/${ItemId}/update`, formData, {
+  const response = await api.post(`/vendor/item/${ItemId}/update`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
       Accept: "application/json",
@@ -77,4 +77,10 @@ export async function updateItem(ItemId: number, formData: FormData) {
   });
 
   return response.data;
+}
+
+
+export async function deleteItem(productId: number) {
+  const { data } = await api.delete(`/vendor/item/${productId}`);
+  return data.data;
 }

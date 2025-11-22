@@ -8,6 +8,7 @@ import StatusBadge from "@/utils/StatusBadge";
 import { 
   EyeIcon,
   StarIcon,
+  TrashIcon,
 } from "@heroicons/react/24/outline";
 import toast from "react-hot-toast";
 import { Product } from "@/interfaces/products";
@@ -16,6 +17,10 @@ import TanStackTable from "../../dashboard/components/commons/TanStackTable";
 import { listSellerItems, updateItemStatus } from "@/lib/api/items";
 import SelectDropdown from "../../dashboard/components/commons/Fields/SelectDropdown";
 import { getStockBadgeClass } from "@/utils/StockBadge";
+import { PencilSquareIcon } from "@heroicons/react/24/outline";
+import ConfirmationModal from "../../dashboard/components/commons/ConfirmationModal";
+import Drawer from "../../dashboard/components/commons/Drawer";
+import ItemForm from "./ItemForm";
 
 interface ProductTableProps {
   limit: number;
@@ -33,14 +38,22 @@ function ProductActionCell({
   productId,
   initialStatus,
   onStatusUpdate,
+  onEdit,
 }: {
   productId: number;
   initialStatus: string;
   onStatusUpdate: (newStatus: string) => void;
+  onEdit: (product: Product) => void;
 }) {
   const [status, setStatus] = useState<Option>(
     statusOptions.find((opt) => opt.value === initialStatus) || statusOptions[0]
   );
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isDrawerOpen, setDrawerOpen] = useState(false);
+    const [editingProduct, setEditingProduct] = useState<Product | null>(
+      null
+    );
+    const [loading, setLoading] = useState(false);
 
   const handleStatusChange = async (selected: Option) => {
     const previous = status;
@@ -55,14 +68,77 @@ function ProductActionCell({
     }
   };
 
+  
+    const handleDelete = async () => {
+      try {
+        setLoading(true);
+        await deleteItem(product.id);
+        toast.success("Item deleted successfully.");
+        setIsModalOpen(false);
+        window.location.reload();
+      } catch {
+        toast.error("Failed to delete item.");
+      } finally {
+        setLoading(false);
+      }
+    };
   return (
-    <div className="flex flex-col gap-2">
-      <SelectDropdown
-        value={status}
-        options={statusOptions}
-        onChange={handleStatusChange}
-      />
-    </div>
+    <>
+      <div className="flex gap-2">
+        <SelectDropdown
+          value={status}
+          options={statusOptions}
+          onChange={handleStatusChange}
+        />
+        <button
+          title="Update"
+          className="bg-yellow-500 text-white p-1.5 rounded-md hover:bg-yellow-600 flex items-center gap-1"
+          onClick={() => {
+            onEdit(productId);
+          }}
+        >
+          <PencilSquareIcon className="w-4 h-4" /> Update
+        </button>
+        <button
+          title="Delete"
+          className="bg-red-500 text-white p-1.5 rounded-md hover:bg-red-600 flex items-center gap-1"
+          onClick={() => setIsModalOpen(true)}
+        >
+          <TrashIcon className="w-4 h-4" /> Delete
+        </button>
+      </div>
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="Confirm Deletion"
+      >
+        <p className="mt-2 text-sm text-gray-500">
+          Are you sure you want to delete this item? This action cannot be
+          undone.
+        </p>
+        <div className="mt-4 flex justify-end gap-3">
+          <button
+            className="rounded-md border px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            onClick={() => setIsModalOpen(false)}
+          >
+            Cancel
+          </button>
+          <button
+            className="rounded-md bg-red-600 px-4 py-2 text-sm text-white hover:bg-red-700 cursor-pointer"
+            onClick={handleDelete}
+          >
+            {loading ? "Deleting..." : "Delete"}
+          </button>
+        </div>
+      </ConfirmationModal>
+      <Drawer
+        isOpen={isDrawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        title={editingProduct ? "Edit item" : "Add item"}
+      >
+        <ItemForm onClose={() => setDrawerOpen(false)} />
+      </Drawer>
+    </>
   );
 }
 
