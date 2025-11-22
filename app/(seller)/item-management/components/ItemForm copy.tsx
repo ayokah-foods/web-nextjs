@@ -21,7 +21,6 @@ import {
 } from "@/setting";
 import { Editor as TinyMCEEditor } from "@tinymce/tinymce-react";
 import { capitalizeWords } from "@/utils/formatWord";
-import axios, { AxiosError } from "axios";
 
 function FallbackSubmitButton({
   loading,
@@ -62,7 +61,9 @@ export default function ItemForm({ onClose, item }: ItemFormProps) {
   // form state
   const [title, setTitle] = useState(item?.title ?? "");
   const [description, setDescription] = useState(item?.description ?? "");
-  
+  const [notifyUser, setNotifyUser] = useState<boolean>(true);
+
+  const [hasVariations, setHasVariations] = useState<boolean>(false);
   const [salesPrice, setSalesPrice] = useState<string>(
     item?.sales_price ? String(item.sales_price) : ""
   );
@@ -91,9 +92,8 @@ export default function ItemForm({ onClose, item }: ItemFormProps) {
     item?.height ? String(item.height) : ""
   );
   const [sizeUnit, setSizeUnit] = useState<DropdownOption>(
-    SIZE_UNIT_OPTIONS.find(
-      (s: DropdownOption) => s.value === item?.size_unit
-    ) ?? EMPTY_DROPDOWN_OPTION
+    SIZE_UNIT_OPTIONS.find((s: DropdownOption) => s.value === item?.size_unit) ??
+      EMPTY_DROPDOWN_OPTION
   );
 
   const [selectedCategory, setSelectedCategory] = useState<DropdownOption>(
@@ -193,6 +193,7 @@ export default function ItemForm({ onClose, item }: ItemFormProps) {
     };
   }, [item]);
 
+  // image change (multiple)
   const handleImagesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     if (files.length === 0) return;
@@ -243,6 +244,7 @@ export default function ItemForm({ onClose, item }: ItemFormProps) {
 
     if (selectedCategory.value === "") return "Please select a category";
 
+    // If subcategory is required, check it too
     if (selectedCategory.children && selectedCategory.children.length > 0) {
       if (selectedChildCategory.value === "")
         return "Please select a subcategory";
@@ -269,6 +271,7 @@ export default function ItemForm({ onClose, item }: ItemFormProps) {
         return "Please choose at least one available day for services";
       if (!availableFrom || !availableTo)
         return "Available from/to are required for services";
+      // simple time comparison (assumes hh:mma like 08:30am)
       try {
         const parse = (t: string) => t.replace(/\s+/g, "");
         if (parse(availableFrom) >= parse(availableTo))
@@ -326,6 +329,7 @@ export default function ItemForm({ onClose, item }: ItemFormProps) {
       const fd = new FormData();
       fd.append("title", capitalizeWords(title));
       fd.append("description", description);
+      fd.append("notify_user", String(notifyUser ? 1 : 0));
 
       const categoryId = selectedChildCategory.value || selectedCategory.value;
 
@@ -356,6 +360,7 @@ export default function ItemForm({ onClose, item }: ItemFormProps) {
       fd.append("regular_price", regularPrice);
       fd.append("quantity", quantity);
 
+      // append images (new files). If editing and existing images remain, backend should accept both.
       imageFiles.forEach((f) => fd.append("images[]", f));
 
       if (item?.id) {
@@ -367,14 +372,10 @@ export default function ItemForm({ onClose, item }: ItemFormProps) {
       }
 
       onClose();
-      window.location.reload();
+      window.location.reload(); 
     } catch (err) {
-      let message = "An error occurred while saving the item";
-      if (axios.isAxiosError(err)) {
-        const axiosErr = err as AxiosError<{ message: string }>;
-        message = axiosErr.response?.data?.message ?? axiosErr.message;
-      }
-      toast.error(message);
+      console.error(err);
+      toast.error("An error occurred while saving the item");
     } finally {
       setLoading(false);
     }

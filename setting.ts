@@ -100,14 +100,13 @@ export const MONTHS = [
   "December",
 ];
 
-
-export const dimensionOptions = [
+export const DIMENSION_OPTIONS = [
   { label: "g", value: "g" },
   { label: "kg", value: "kg" },
   { label: "lbs", value: "lbs" },
   { label: "oz", value: "oz" },
 ];
-export const sizeUnitOptions = [
+export const SIZE_UNIT_OPTIONS = [
   { label: "cm", value: "cm" },
   { label: "mm", value: "mm" },
   { label: "in", value: "in" },
@@ -123,3 +122,7 @@ export const DELIVERY_METHOD_OPTIONS = [
   { value: "offline", label: "Offline" },
   { value: "hybrid", label: "Hybrid" },
 ];
+
+export const MAX_IMAGES = 7;
+export const MAX_IMAGE_SIZE = 2 * 1024 * 1024;
+export const VALID_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];

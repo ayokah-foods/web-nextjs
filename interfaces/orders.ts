@@ -1,4 +1,5 @@
 import Address from "./address";
+import { Product } from "./products";
 import { User } from "./user";
 
 
@@ -57,34 +58,7 @@ export type Order = {
     product: Product;
 };
 
-export type Product = {
-    id: number;
-    title: string;
-    slug: string;
-    description: string;
-    sales_price: string;
-    regular_price: string;
-    quantity: number;
-    notify_user: number;
-    images: string[];
-    image_public_ids: string[];
-    status: string;
-    type: string;
-    shop_id: number;
-    category_id: number;
-    available_from: string | null;
-    available_to: string | null;
-    available_days: string | null;
-    estimated_delivery_time: string | null;
-    delivery_method: string | null;
-    pricing_model: string | null;
-    views: number;
-    created_at: string;
-    updated_at: string;
-    shop: Shop;
-    average_rating: number;
-    vendor: User;
-};
+
 
 export type Shop = {
     id: number;

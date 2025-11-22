@@ -6,9 +6,11 @@ import ItemOverview from "./components/ItemOverview";
 import ItemsTable from "./components/ItemsTable";
 import Drawer from "../dashboard/components/commons/Drawer";
 import ItemForm from "./components/ItemForm";
+import { Product } from "@/interfaces/products";
 
 export default function ProductManagementPage() {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
   return (
     <>
@@ -50,7 +52,19 @@ export default function ProductManagementPage() {
         onClose={() => setDrawerOpen(false)}
         title="Add item"
       >
-        <ItemForm onClose={() => setDrawerOpen(false)} />
+        {editingProduct && (
+          <ItemForm
+            {...({
+              product: editingProduct,
+              onClose: () => setDrawerOpen(false),
+            } as any)}
+          />
+        )}
+        {/* Render ItemForm for both Add (no item) and Edit (with item) */}
+        <ItemForm
+          item={editingProduct ?? undefined}
+          onClose={() => setDrawerOpen(false)}
+        />
       </Drawer>
     </>
   );

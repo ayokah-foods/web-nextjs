@@ -5,22 +5,23 @@ import Image from "next/image";
 import { ColumnDef } from "@tanstack/react-table";
 import { debounce } from "lodash";
 import StatusBadge from "@/utils/StatusBadge";
-import { 
+import {
   EyeIcon,
   StarIcon,
   TrashIcon,
+  PencilSquareIcon,
 } from "@heroicons/react/24/outline";
 import toast from "react-hot-toast";
 import { Product } from "@/interfaces/products";
 import { formatHumanReadableDate } from "@/utils/formatDate";
 import TanStackTable from "../../dashboard/components/commons/TanStackTable";
-import { listSellerItems, updateItemStatus } from "@/lib/api/items";
+import { deleteItem, listSellerItems, updateItemStatus } from "@/lib/api/items";
 import SelectDropdown from "../../dashboard/components/commons/Fields/SelectDropdown";
 import { getStockBadgeClass } from "@/utils/StockBadge";
-import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import ConfirmationModal from "../../dashboard/components/commons/ConfirmationModal";
 import Drawer from "../../dashboard/components/commons/Drawer";
 import ItemForm from "./ItemForm";
+import { formatAmount } from "@/utils/formatCurrency";
 
 interface ProductTableProps {
   limit: number;
@@ -43,21 +44,18 @@ function ProductActionCell({
   productId: number;
   initialStatus: string;
   onStatusUpdate: (newStatus: string) => void;
-  onEdit: (product: Product) => void;
+  onEdit: (productId: number) => void;
 }) {
   const [status, setStatus] = useState<Option>(
     statusOptions.find((opt) => opt.value === initialStatus) || statusOptions[0]
   );
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isDrawerOpen, setDrawerOpen] = useState(false);
-    const [editingProduct, setEditingProduct] = useState<Product | null>(
-      null
-    );
-    const [loading, setLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleStatusChange = async (selected: Option) => {
     const previous = status;
     setStatus(selected);
+
     try {
       await updateItemStatus(productId, selected.value);
       toast.success("Status updated");
@@ -68,20 +66,20 @@ function ProductActionCell({
     }
   };
 
-  
-    const handleDelete = async () => {
-      try {
-        setLoading(true);
-        await deleteItem(product.id);
-        toast.success("Item deleted successfully.");
-        setIsModalOpen(false);
-        window.location.reload();
-      } catch {
-        toast.error("Failed to delete item.");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const handleDelete = async () => {
+    try {
+      setLoading(true);
+      await deleteItem(productId);
+      toast.success("Item deleted successfully.");
+      setIsModalOpen(false);
+      window.location.reload();
+    } catch {
+      toast.error("Failed to delete item.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <div className="flex gap-2">
@@ -90,23 +88,22 @@ function ProductActionCell({
           options={statusOptions}
           onChange={handleStatusChange}
         />
+
         <button
-          title="Update"
-          className="bg-yellow-500 text-white p-1.5 rounded-md hover:bg-yellow-600 flex items-center gap-1"
-          onClick={() => {
-            onEdit(productId);
-          }}
+          className="bg-yellow-500 text-white p-1.5 rounded-md hover:bg-yellow-600 flex items-center gap-1 cursor-pointer"
+          onClick={() => onEdit(productId)}
         >
           <PencilSquareIcon className="w-4 h-4" /> Update
         </button>
+
         <button
-          title="Delete"
-          className="bg-red-500 text-white p-1.5 rounded-md hover:bg-red-600 flex items-center gap-1"
+          className="bg-red-500 text-white p-1.5 rounded-md hover:bg-red-600 flex items-center gap-1 cursor-pointer"
           onClick={() => setIsModalOpen(true)}
         >
           <TrashIcon className="w-4 h-4" /> Delete
         </button>
       </div>
+
       <ConfirmationModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -118,7 +115,7 @@ function ProductActionCell({
         </p>
         <div className="mt-4 flex justify-end gap-3">
           <button
-            className="rounded-md border px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            className="rounded-md border px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
             onClick={() => setIsModalOpen(false)}
           >
             Cancel
@@ -131,13 +128,6 @@ function ProductActionCell({
           </button>
         </div>
       </ConfirmationModal>
-      <Drawer
-        isOpen={isDrawerOpen}
-        onClose={() => setDrawerOpen(false)}
-        title={editingProduct ? "Edit item" : "Add item"}
-      >
-        <ItemForm onClose={() => setDrawerOpen(false)} />
-      </Drawer>
     </>
   );
 }
@@ -152,6 +142,10 @@ const ItemsTable: React.FC<ProductTableProps> = ({ limit, offset, status }) => {
     pageSize: limit,
   });
   const [totalProducts, setTotalProducts] = useState(0);
+
+  // Drawer and editing product state
+  const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
   const updateProductStatusInState = (
     id: number,
@@ -221,8 +215,8 @@ const ItemsTable: React.FC<ProductTableProps> = ({ limit, offset, status }) => {
           const salesPrice = parseFloat(row.original.sales_price || "0");
           const regularPrice = parseFloat(row.original.regular_price || "0");
 
-          const formattedSales = `$${salesPrice.toFixed(2)}`;
-          const formattedRegular = `$${regularPrice.toFixed(2)}`;
+          const formattedSales = `${formatAmount(salesPrice)}`;
+          const formattedRegular = `${formatAmount(regularPrice)}`;
 
           return (
             <div className="flex flex-col text-xs">
@@ -240,7 +234,6 @@ const ItemsTable: React.FC<ProductTableProps> = ({ limit, offset, status }) => {
           );
         },
       },
-
       {
         header: "Stock",
         accessorKey: "quantity",
@@ -262,7 +255,6 @@ const ItemsTable: React.FC<ProductTableProps> = ({ limit, offset, status }) => {
         accessorKey: "views",
         cell: ({ getValue }) => {
           const views = getValue() as number;
-
           return (
             <div className="flex items-center gap-1 text-gray-700">
               <EyeIcon className="w-4 h-4 text-amber-600" />
@@ -271,7 +263,6 @@ const ItemsTable: React.FC<ProductTableProps> = ({ limit, offset, status }) => {
           );
         },
       },
-
       {
         header: "Status",
         accessorKey: "status",
@@ -301,11 +292,18 @@ const ItemsTable: React.FC<ProductTableProps> = ({ limit, offset, status }) => {
                 newStatus as "active" | "inactive"
               )
             }
+            onEdit={(id) => {
+              const product = products.find((p) => p.id === id);
+              if (product) {
+                setEditingProduct(product);
+                setDrawerOpen(true);
+              }
+            }}
           />
         ),
       },
     ],
-    []
+    [products]
   );
 
   const fetchProducts = useCallback(
@@ -327,14 +325,16 @@ const ItemsTable: React.FC<ProductTableProps> = ({ limit, offset, status }) => {
         setLoading(false);
       }
     },
-    [pagination.pageSize, offset, status]
+    [pagination.pageSize]
   );
 
-  const debouncedFetchProducts = useMemo(() => {
-    return debounce((pageIndex: number, search: string) => {
-      fetchProducts(pageIndex, search);
-    }, 300);
-  }, [fetchProducts]);
+  const debouncedFetchProducts = useMemo(
+    () =>
+      debounce((pageIndex: number, search: string) => {
+        fetchProducts(pageIndex, search);
+      }, 300),
+    [fetchProducts]
+  );
 
   useEffect(() => {
     debouncedFetchProducts(pagination.pageIndex, search);
@@ -377,6 +377,20 @@ const ItemsTable: React.FC<ProductTableProps> = ({ limit, offset, status }) => {
           });
         }}
       />
+
+      {/* Drawer for Add/Edit */}
+      <Drawer
+        isOpen={isDrawerOpen}
+        onClose={() => {
+          setDrawerOpen(false);
+          setEditingProduct(null);
+        }}
+        title={editingProduct ? "Edit Item" : "Add Item"}
+      > 
+        {editingProduct && (
+          <ItemForm item={editingProduct} onClose={() => setDrawerOpen(false)} />
+        )}
+      </Drawer>
     </div>
   );
 };

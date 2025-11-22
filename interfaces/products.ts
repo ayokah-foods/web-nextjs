@@ -57,3 +57,4 @@ export interface Product {
   };
   average_rating: number;
 }
+

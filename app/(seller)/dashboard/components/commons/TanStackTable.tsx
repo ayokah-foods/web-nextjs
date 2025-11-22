@@ -13,7 +13,7 @@ interface TanStackTableProps<T> {
   data: T[];
   columns: ColumnDef<T>[];
   loading?: boolean;
-  
+
   error?: string | null;
   itemsPerPage?: number;
   pagination?: {
@@ -74,10 +74,16 @@ function TanStackTable<T>({
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <th key={header.id} className="px-4 py-3 text-left whitespace-nowrap">
+                <th
+                  key={header.id}
+                  className="px-4 py-3 text-left whitespace-nowrap"
+                >
                   {header.isPlaceholder
                     ? null
-                    : flexRender(header.column.columnDef.header, header.getContext())}
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
                 </th>
               ))}
             </tr>
@@ -104,7 +110,10 @@ function TanStackTable<T>({
             </tr>
           ) : data.length === 0 ? (
             <tr>
-              <td colSpan={columns.length} className="text-gray-600 text-sm p-6 text-center">
+              <td
+                colSpan={columns.length}
+                className="text-gray-600 text-sm p-6 text-center"
+              >
                 No data available
               </td>
             </tr>
@@ -124,7 +133,7 @@ function TanStackTable<T>({
 
       {/* Pagination */}
       {pagination && !loading && (
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between px-4 py-4 border-t border-gray-200 bg-gray-50 gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between w-full px-4 py-4 border-t border-gray-200 bg-gray-50 gap-4">
           <div className="text-sm text-gray-600">
             Showing{" "}
             <span className="font-semibold text-gray-800">
@@ -161,7 +170,10 @@ function TanStackTable<T>({
 
             <span className="text-sm font-medium text-gray-700">
               Page {pagination.pageIndex + 1} of{" "}
-              {Math.max(Math.ceil(pagination.totalRows / pagination.pageSize), 1)}
+              {Math.max(
+                Math.ceil(pagination.totalRows / pagination.pageSize),
+                1
+              )}
             </span>
 
             <button
