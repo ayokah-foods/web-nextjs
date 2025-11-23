@@ -70,11 +70,11 @@ export default function RootLayout({
         />
         <Providers>
           <CartProvider>
-            {/* <WishlistProvider> */}
+            <WishlistProvider>
               <PublicLayoutElements />
               {children}
               <FooterWrapper />
-            {/* </WishlistProvider> */}
+            </WishlistProvider>
           </CartProvider>
         </Providers>
         <Script

@@ -32,7 +32,7 @@ api.interceptors.response.use(
   (error) => {
     if (error?.response?.status === 401) {
       useAuthStore.getState().clearAuth();
-      toast.error("Session expired. Please log in again.");
+      toast.error("Session expired. Please log in to continue.");
 
       if (typeof window !== "undefined") {
         window.location.href = "/login";

@@ -11,12 +11,14 @@ export interface SaveWishlistPayload {
 }
 
 export async function saveWishlist(payload: SaveWishlistPayload) {
-  const { data } = await api.post(`/customer/wishlist/store`, payload, {
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-  });
+  const { data } = await api.post(`/customer/wishlist/create`, payload);
+
+  return data;
+}
+
+// @todo
+export async function removeWishlist(wishlistId: number) {
+  const { data } = await api.delete(`/customer/wishlist/delete/${wishlistId}`);
 
   return data;
 }
