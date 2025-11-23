@@ -28,7 +28,10 @@ export default function CartPage() {
 
   const [itemToDelete, setItemToDelete] = useState<number | null>(null);
 
-  const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+  const subtotal = cart.reduce(
+    (sum: number, item: CartItem) => sum + Number(item.price) * Number(item.qty),
+    0
+  );
   const total = Math.max(0, subtotal - discount);
 
   const handleApplyCoupon = async () => {
@@ -178,7 +181,7 @@ export default function CartPage() {
 
                 <div className="flex flex-col items-end justify-between h-full">
                   <span className="text-lg font-semibold text-gray-800">
-                    {formatAmount(item.price * item.qty)}
+                    {formatAmount(Number(item.price) * Number(item.qty))}
                   </span>
                   <div className="flex items-center gap-2 mt-4">
                     <button className="p-2 hover:text-orange-800">

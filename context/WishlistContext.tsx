@@ -34,15 +34,17 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
   const { addToCart } = useCart();
 
   // Load wishlist on mount
-  useEffect(() => {
-    const stored = sessionStorage.getItem(STORAGE_KEY);
-    if (stored) setWishlist(JSON.parse(stored));
-  }, []);
+useEffect(() => {
+  const stored = localStorage.getItem(STORAGE_KEY);
+  if (stored) setWishlist(JSON.parse(stored));
+}, []);
+
 
   // Persist changes
-  useEffect(() => {
-    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(wishlist));
-  }, [wishlist]);
+useEffect(() => {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(wishlist));
+}, [wishlist]);
+
 
   /**
    * ADD TO WISHLIST

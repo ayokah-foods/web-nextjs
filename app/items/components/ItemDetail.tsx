@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
 import { MinusIcon, PlusIcon, CheckIcon } from "@heroicons/react/24/outline";
 import Item from "@/interfaces/items";
@@ -10,8 +10,7 @@ import truncate from "html-truncate";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Link from "next/link";
-import { useWishlist } from "@/context/WishlistContext";
-import { useAuthStore } from "@/store/useAuthStore";
+import WishlistButton from "@/app/wishlists/components/WishlistButton";
 
 const reviews = [
   {
@@ -32,7 +31,7 @@ const reviews = [
     date: "30 Apr, 2024",
   },
 ];
-
+ 
 export default function ItemDetail({ product }: { product: Item }) {
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(
@@ -89,22 +88,7 @@ export default function ItemDetail({ product }: { product: Item }) {
       router.push("/carts");
     }
   };
-  const { addToWishlist } = useWishlist();
-  const { user } = useAuthStore();
-  
-  const handleWishlist = () => {
-    if (!user) {
-      toast.error("Please login to use wishlist");
-      return;
-    }
 
-    addToWishlist({
-      id: product.id,
-      title: product.title,
-      image: product.images[0],
-      price: parseFloat(product.sales_price),
-    });
-  };
   return (
     <>
       <div className="bg-white">
@@ -244,13 +228,8 @@ export default function ItemDetail({ product }: { product: Item }) {
                   )}
                 </button>
               )}
-              {/* wishlist */}
-              <button
-                onClick={handleWishlist}
-                className="btn btn-gray rounded-full! text-xs!"
-              >
-                Wishlist
-              </button>{" "}
+              {/* @ts-ignore */}
+              <WishlistButton product={product} />
             </div>
 
             <div className="text-sm text-gray-500 space-y-1">

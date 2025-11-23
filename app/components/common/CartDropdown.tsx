@@ -38,7 +38,10 @@ export default function CartDropdown() {
   };
 
   const totalItems = cart.length;
-  const subtotal = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
+  const subtotal = cart.reduce(
+    (acc, item) => acc + Number(item.price) * Number(item.qty),
+    0
+  );
 
   return (
     <Dropdown
@@ -117,7 +120,7 @@ type CartItemProps = {
 // Sub-component for the Cart Item
 function CartItem({ item, updateQty, removeFromCart }: CartItemProps) {
   return (
-    <div className="flex gap-3 border-b pb-4 last:border-b-0">
+    <div className="flex gap-3 border-b border-gray-200 pb-4 last:border-b-0">
       <Image
         src={item.image}
         alt={item.title}
@@ -151,7 +154,7 @@ function CartItem({ item, updateQty, removeFromCart }: CartItemProps) {
       </div>
       <div className="flex flex-col items-end justify-between text-gray-500">
         <span className="text-sm text-gray-700 font-semibold">
-          {formatAmount(item.price * item.qty)}
+          {formatAmount(Number(item.price) * Number(item.qty))}
         </span>
         <button onClick={() => removeFromCart(item.id)}>
           <TrashIcon
