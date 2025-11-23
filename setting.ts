@@ -125,4 +125,9 @@ export const DELIVERY_METHOD_OPTIONS = [
 
 export const MAX_IMAGES = 7;
 export const MAX_IMAGE_SIZE = 2 * 1024 * 1024;
-export const VALID_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
+export const VALID_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+];
