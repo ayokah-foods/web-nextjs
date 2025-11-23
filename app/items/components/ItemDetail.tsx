@@ -9,6 +9,9 @@ import { formatAmount } from "@/utils/formatCurrency";
 import truncate from "html-truncate";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import Link from "next/link";
+import { useWishlist } from "@/context/WishlistContext";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const reviews = [
   {
@@ -86,6 +89,22 @@ export default function ItemDetail({ product }: { product: Item }) {
       router.push("/carts");
     }
   };
+  const { addToWishlist } = useWishlist();
+  const { user } = useAuthStore();
+  
+  const handleWishlist = () => {
+    if (!user) {
+      toast.error("Please login to use wishlist");
+      return;
+    }
+
+    addToWishlist({
+      id: product.id,
+      title: product.title,
+      image: product.images[0],
+      price: parseFloat(product.sales_price),
+    });
+  };
   return (
     <>
       <div className="bg-white">
@@ -110,7 +129,7 @@ export default function ItemDetail({ product }: { product: Item }) {
               ))}
             </div>
 
-            <div className="flex-1">
+            <div className="">
               <Image
                 src={selectedImage}
                 alt={product.title}
@@ -124,7 +143,7 @@ export default function ItemDetail({ product }: { product: Item }) {
           <div className="flex flex-col space-y-4">
             <h1 className="text-2xl font-semibold">{product.title}</h1>
 
-            <div className="flex items-center">
+            <div hidden className="flex items-center">
               <div className="flex items-center gap-1 text-yellow-400 mb-1">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <span key={i}>{i < product.average_rating ? "★" : "☆"}</span>
@@ -156,11 +175,11 @@ export default function ItemDetail({ product }: { product: Item }) {
               <span dangerouslySetInnerHTML={{ __html: truncatedHtml }} />
             </p>
 
-            <div className="flex items-center gap-4 mt-5">
+            <div className="flex items-center gap-2 mt-5">
               <div className="flex items-center rounded-md">
                 <button
                   onClick={decreaseQty}
-                  className="p-2 bg-gray-200 text-gray-500 hover:text-white hover:bg-orange-400 rounded-full cursor-pointer"
+                  className="btn btn-gray rounded-full!"
                 >
                   <MinusIcon className="h-4 w-4" />
                 </button>
@@ -169,7 +188,7 @@ export default function ItemDetail({ product }: { product: Item }) {
                 </span>
                 <button
                   onClick={increaseQty}
-                  className="p-2 bg-gray-200 text-gray-500 hover:text-white hover:bg-orange-400 rounded-full cursor-pointer"
+                  className="btn btn-gray rounded-full!"
                 >
                   <PlusIcon className="h-4 w-4" />
                 </button>
@@ -183,7 +202,7 @@ export default function ItemDetail({ product }: { product: Item }) {
                       router.push("/checkout");
                     }
                   }}
-                  className={`px-6 py-2 rounded-full font-medium text-sm flex items-center justify-center gap-2 transition-all duration-300 cursor-pointer ${
+                  className={`btn btn-primary rounded-full! text-xs! ${
                     added
                       ? "bg-orange-800 text-white scale-105"
                       : isInCart
@@ -205,7 +224,7 @@ export default function ItemDetail({ product }: { product: Item }) {
               ) : (
                 <button
                   onClick={handleAddToCart}
-                  className={`px-6 py-2 rounded-full font-medium text-sm flex items-center justify-center gap-2 transition-all duration-300 cursor-pointer ${
+                  className={`btn btn-primary rounded-full! text-xs! ${
                     added
                       ? "bg-orange-800 text-white scale-105"
                       : isInCart
@@ -225,10 +244,43 @@ export default function ItemDetail({ product }: { product: Item }) {
                   )}
                 </button>
               )}
+              {/* wishlist */}
+              <button
+                onClick={handleWishlist}
+                className="btn btn-gray rounded-full! text-xs!"
+              >
+                Wishlist
+              </button>{" "}
             </div>
 
             <div className="text-sm text-gray-500 space-y-1">
-              <p>Category: {product.category?.name}</p>
+              <p>
+                Category:{" "}
+                <Link
+                  target="_blank"
+                  title="relative items"
+                  className="text-orange-800"
+                  href={`/items?category=${product.category?.slug}&type=${product.type}`}
+                >
+                  {product.category?.name}
+                </Link>
+              </p>
+
+              <p>{product?.sku}</p>
+
+              <p>
+                Seller:{" "}
+                <Link
+                  target="_blank"
+                  title="Seller shop"
+                  className="text-orange-800"
+                  href={`/shops/${product?.shop?.slug}`}
+                >
+                  {product?.shop?.name}{" "}
+                  <span className="text-gray-500">from</span>{" "}
+                  {product?.shop?.country}
+                </Link>
+              </p>
             </div>
           </div>
         </div>

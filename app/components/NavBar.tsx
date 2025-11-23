@@ -208,15 +208,20 @@ function DesktopNavLinks() {
       icon: <Squares2X2Icon className="w-4 h-4" />,
     },
     {
-      label: "About Us",
-      href: "/about-us",
-      icon: <InformationCircleIcon className="w-4 h-4" />,
+      label: "Shops",
+      href: "/shops",
+      icon: <GiftIcon className="w-4 h-4" />,
     },
-    {
-      label: "Contact Us",
-      href: "/contact-us",
-      icon: <PhoneIcon className="w-4 h-4" />,
-    },
+    // {
+    //   label: "About Us",
+    //   href: "/about-us",
+    //   icon: <InformationCircleIcon className="w-4 h-4" />,
+    // },
+    // {
+    //   label: "Contact Us",
+    //   href: "/contact-us",
+    //   icon: <PhoneIcon className="w-4 h-4" />,
+    // },
     ...(user?.role === "customer"
       ? [
           {

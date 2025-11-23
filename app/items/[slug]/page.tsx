@@ -53,7 +53,6 @@ type PageParams = {
 
 
 export default async function ItemDetailPage({ params }: PageParams) {
-  // const { slug } = params;
   const awaitedParams = await params;
   const slug = awaitedParams.slug;
 

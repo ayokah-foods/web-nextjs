@@ -77,7 +77,7 @@ export default function CartDropdown() {
       </div>
 
       {cart.length > 0 && (
-        <div className="p-3 border-t">
+        <div className="p-3 border-t border-orange-300">
           <div className="flex justify-between items-center mb-4">
             <span className="text-gray-600 font-medium">Subtotal:</span>
             <span className="text-gray-900 font-bold text-lg">
@@ -155,7 +155,7 @@ function CartItem({ item, updateQty, removeFromCart }: CartItemProps) {
         </span>
         <button onClick={() => removeFromCart(item.id)}>
           <TrashIcon
-            className="w-5 h-5 hover:text-orange-800 cursor-pointer"
+            className="w-5 h-5 hover:text-orange-800 text-red-500 cursor-pointer"
             title="Remove"
           />
         </button>
@@ -176,8 +176,8 @@ function CartButton({
     "w-full py-2.5 rounded-full font-medium transition disabled:bg-gray-400 disabled:cursor-not-allowed";
 
   const variants = {
-    primary: "bg-orange-800 hover:bg-orange-600 text-white cursor-pointer",
-    secondary: "bg-gray-500 hover:bg-gray-600 text-white cursor-pointer",
+    primary: "btn btn-primary rounded-full! text-xs!",
+    secondary: "btn btn-gray rounded-full! text-xs!",
   };
 
   return (
@@ -189,7 +189,7 @@ function CartButton({
       {isLoading ? (
         <div className="flex justify-center items-center gap-2">
           <ClipLoader size={18} color="#fff" />
-          <span>Wait...</span>
+          <span>Processing...</span>
         </div>
       ) : (
         children

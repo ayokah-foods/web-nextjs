@@ -3,8 +3,8 @@ export default interface Item {
   title: string;
   slug: string;
   description: string;
-  sales_price: string;        
-  regular_price: string;      
+  sales_price: string;
+  regular_price: string;
   quantity: number;
   notify_user: boolean;
   images: string[];
@@ -18,6 +18,7 @@ export default interface Item {
   updated_at: string;
   category: Category;
   shop: Shop;
+  sku: string;
   reviews: [];
   average_rating: number;
   variations: Variation[];
@@ -38,6 +39,7 @@ export interface Shop {
   address: string;
   logo: string;
   banner: string;
+  country: string;
   description: string;
 }
 
