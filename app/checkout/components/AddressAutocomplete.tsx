@@ -1,7 +1,6 @@
 "use client";
 
 import GoogleAddress from "@/interfaces/googleAddress";
-import React from "react";
 import usePlacesAutocomplete, {
   getGeocode,
   getLatLng,
@@ -9,11 +8,11 @@ import usePlacesAutocomplete, {
 
 type Props = {
   onSelectAddress: (address: {
-    street?: string;
-    city?: string;
-    state?: string;
-    zip?: string;
-    country?: string;
+    street_address: string;
+    city: string;
+    state: string;
+    zip_code: string;
+    country: string;
     lat?: number;
     lng?: number;
   }) => void;
@@ -39,20 +38,32 @@ export default function AddressAutocomplete({ onSelectAddress }: Props) {
       const { lat, lng } = await getLatLng(results[0]);
 
       const components: Record<string, string> = {};
+
       results[0].address_components.forEach((comp: GoogleAddress) => {
-        const types = comp.types;
-        if (types.includes("street_number")) components.street = comp.long_name;
-        if (types.includes("route"))
+        if (comp.types.includes("street_number"))
+          components.street = comp.long_name;
+
+        if (comp.types.includes("route"))
           components.street = (components.street || "") + " " + comp.long_name;
-        if (types.includes("locality")) components.city = comp.long_name;
-        if (types.includes("administrative_area_level_1"))
+
+        if (comp.types.includes("locality")) components.city = comp.long_name;
+
+        if (comp.types.includes("administrative_area_level_1"))
           components.state = comp.short_name;
-        if (types.includes("postal_code")) components.zip = comp.long_name;
-        if (types.includes("country")) components.country = comp.long_name;
+
+        if (comp.types.includes("postal_code")) components.zip = comp.long_name;
+
+        if (comp.types.includes("country")) {
+          components.country = comp.short_name;
+        }
       });
 
       onSelectAddress({
-        ...components,
+        street_address: components.street || "",
+        city: components.city || "",
+        state: components.state || "",
+        zip_code: components.zip || "",
+        country: components.country || "",
         lat,
         lng,
       });
@@ -68,7 +79,7 @@ export default function AddressAutocomplete({ onSelectAddress }: Props) {
         disabled={!ready}
         onChange={(e) => setValue(e.target.value)}
         placeholder="Enter your address"
-        className="border border-gray-200 p-3 rounded w-full focus:outline-none focus:ring-orange-800 focus:border-orange-800 transition duration-150"
+        className="input"
       />
 
       {status === "OK" && (

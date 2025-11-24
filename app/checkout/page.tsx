@@ -5,13 +5,18 @@ import { useCart } from "@/context/CartContext";
 import OrderSummary from "../carts/components/Summary";
 import AddressAutocomplete from "./components/AddressAutocomplete";
 import Address from "@/interfaces/address";
-import { processOrder } from "@/lib/api/processOrder";
+import { shippingRate } from "@/lib/api/shippingRate";
 import toast from "react-hot-toast";
+import axios, { AxiosError } from "axios";
+import { ShippingRateResponse } from "@/interfaces/shippingRate";
 
 export default function CheckoutPage() {
   const { cart, clearCart } = useCart();
-  const [userIP] = useState<string>("102.0.14.104");
+  const [userIP] = useState<string>("178.238.11.6");
   const [loading, setLoading] = useState(false);
+  const [shippingRates, setShippingRates] =
+    useState<ShippingRateResponse | null>(null);
+const [shippingFee, setShippingFee] = useState(0);
 
   const [address, setAddress] = useState<Address>({
     street_address: "",
@@ -21,7 +26,6 @@ export default function CheckoutPage() {
     phone: "",
     address_label: "",
     country: "",
-    
   });
 
   const [firstname, setFirstname] = useState("");
@@ -31,7 +35,6 @@ export default function CheckoutPage() {
   const [serviceNote, setServiceNote] = useState("");
   const [preferredDate, setPreferredDate] = useState("");
 
-  // 🧠 Detect if cart has service items
   const isServiceOrder = useMemo(() => {
     return cart.some((item) => item.type === "services");
   }, [cart]);
@@ -39,7 +42,7 @@ export default function CheckoutPage() {
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
   const total = subtotal;
 
-  const handleAddressChange = (field: string, value: string) => {
+  const handleAddressChange = (field: keyof Address, value: string) => {
     setAddress((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -51,7 +54,7 @@ export default function CheckoutPage() {
       lastname,
       email,
       phone,
-      country: address.country || "NG",
+      country: address.country || "UK",
       ip: userIP,
       products: cart.map((item) => ({
         id: item.id,
@@ -77,21 +80,25 @@ export default function CheckoutPage() {
 
     try {
       setLoading(true);
-      const result = await processOrder(payload);
-      if (result?.redirect_whatsapp_link) {
-        clearCart();
-        window.location.href = result.redirect_whatsapp_link;
+      const response = await shippingRate(payload);
+      console.log(response);
+      if (response?.rate) {
+        setShippingRates(response.rate);
       }
-    } catch (error) {
-      console.error("Checkout failed:", error);
-      toast.error("Something went wrong during checkout.");
+    } catch (err) {
+      let message = "An error occurred while saving the item";
+      if (axios.isAxiosError(err)) {
+        const axiosErr = err as AxiosError<{ message: string }>;
+        message = axiosErr.response?.data?.message ?? axiosErr.message;
+      }
+      toast.error(message);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen py-8">
+    <div className="bg-gray-50  py-8">
       <div className="px-4 lg:px-8 flex flex-col lg:flex-row gap-8">
         {/* Checkout Form */}
         <div className="flex-1 bg-white p-6 rounded-lg shadow-md">
@@ -112,7 +119,7 @@ export default function CheckoutPage() {
               value={firstname}
               onChange={(e) => setFirstname(e.target.value)}
               required
-              className="border border-gray-200 p-3 rounded focus:ring-orange-800 focus:border-orange-800 transition duration-150 focus:outline-none"
+              className="input"
             />
             <input
               type="text"
@@ -120,7 +127,7 @@ export default function CheckoutPage() {
               value={lastname}
               onChange={(e) => setLastname(e.target.value)}
               required
-              className="border border-gray-200 p-3 rounded focus:ring-orange-800 focus:border-orange-800 transition duration-150 focus:outline-none"
+              className="input"
             />
             <input
               type="email"
@@ -128,7 +135,7 @@ export default function CheckoutPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="border border-gray-200 p-3 rounded focus:ring-orange-800 focus:border-orange-800 transition duration-150 focus:outline-none"
+              className="input"
             />
             <input
               type="text"
@@ -136,7 +143,7 @@ export default function CheckoutPage() {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               required
-              className="border border-gray-200 p-3 rounded focus:ring-orange-800 focus:border-orange-800 transition duration-150 focus:outline-none"
+              className="input"
             />
 
             {/* 👇 Conditional Fields */}
@@ -154,30 +161,41 @@ export default function CheckoutPage() {
                   placeholder="Street Address"
                   value={address.street_address}
                   onChange={(e) =>
-                    handleAddressChange("street", e.target.value)
+                    handleAddressChange("street_address", e.target.value)
                   }
-                  className="border border-gray-200 p-3 rounded md:col-span-2 focus:ring-orange-800 focus:border-orange-800 focus:outline-none duration-150 transition"
+                  className="input"
                 />
                 <input
                   type="text"
                   placeholder="City"
                   value={address.city}
                   onChange={(e) => handleAddressChange("city", e.target.value)}
-                  className="border border-gray-200 p-3 rounded focus:ring-orange-800 focus:border-orange-800 focus:outline-none transition duration-150"
+                  className="input"
                 />
                 <input
                   type="text"
                   placeholder="State"
                   value={address.state}
                   onChange={(e) => handleAddressChange("state", e.target.value)}
-                  className="border border-gray-200 p-3 rounded focus:ring-orange-800 focus:border-orange-800 focus:outline-none transition duration-150"
+                  className="input"
                 />
                 <input
                   type="text"
                   placeholder="Zip Code"
                   value={address.zip_code}
-                  onChange={(e) => handleAddressChange("zip", e.target.value)}
-                  className="border border-gray-200 p-3 rounded focus:ring-orange-800 focus:border-orange-800 focus:outline-none transition duration-150"
+                  onChange={(e) =>
+                    handleAddressChange("zip_code", e.target.value)
+                  }
+                  className="input"
+                />
+                <input
+                  type="text"
+                  placeholder="Zip Code"
+                  value={address.country}
+                  onChange={(e) =>
+                    handleAddressChange("country", e.target.value)
+                  }
+                  className="input"
                 />
               </>
             ) : (
@@ -205,9 +223,7 @@ export default function CheckoutPage() {
               type="submit"
               disabled={loading}
               className={`mt-2 w-full py-3 rounded-full font-medium md:col-span-2 transition ${
-                loading
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-orange-800 hover:bg-orange-600 text-white cursor-pointer"
+                loading ? "btn btn-gray" : "btn btn-primary"
               }`}
             >
               {loading
@@ -221,11 +237,11 @@ export default function CheckoutPage() {
 
         {/* Order Summary */}
         <OrderSummary
-          email={email}
           cart={cart}
           subtotal={subtotal}
-          discount={0}
-          total={total}
+          shippingRates={shippingRates}
+          onSelectRate={(fee) => setShippingFee(fee)}
+          shippingFee={shippingFee}
         />
       </div>
     </div>

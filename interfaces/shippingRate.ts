@@ -19,3 +19,17 @@ export interface ShippingRatePayload {
   preferred_date?: string;
   type?: string;
 }
+
+export interface RateOption {
+  service_code: string;
+  carrier: string;
+  total: number;
+  currency: string;
+  delivery_days: number;
+  estimated_delivery: string;
+}
+
+export interface ShippingRateResponse {
+  cheapest: RateOption;
+  fastest: RateOption;
+}

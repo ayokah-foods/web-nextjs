@@ -130,4 +130,25 @@ export const VALID_IMAGE_TYPES = [
   "image/jpg",
   "image/png",
   "image/webp",
-];
+]; 
+
+import { FaDhl } from "react-icons/fa6";
+import { SiFedex, SiUps, SiUsps, SiAmazon, SiDeliveroo } from "react-icons/si";
+import { MdLocalShipping } from "react-icons/md";
+
+export const carrierIcons: Record<
+  string,
+  { icon: React.ComponentType<any>; color: string }
+> = {
+  dhl: { icon: FaDhl, color: "#FFCC00" },
+  fedex: { icon: SiFedex, color: "#4D148C" },
+  ups: { icon: SiUps, color: "#180B02" },
+  usps: { icon: SiUsps, color: "#3333CC" },
+  amazon: { icon: SiAmazon, color: "#FF9900" },
+
+  // fallback carriers you may add later
+  deliveroo: { icon: SiDeliveroo, color: "#00CCBC" },
+
+  // default fallback
+  default: { icon: MdLocalShipping, color: "#FF9920" },
+};

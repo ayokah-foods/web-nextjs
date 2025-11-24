@@ -1,47 +1,38 @@
 "use client";
 
-import CartItem from "@/interfaces/cart";
-import { checkoutStripe } from "@/lib/api/checkout";
+import { useState } from "react";
+import { RateOption, ShippingRateResponse } from "@/interfaces/shippingRate";
 import { formatAmount } from "@/utils/formatCurrency";
 import Image from "next/image";
-import Link from "next/link";
-
-interface OrderSummaryProps {
-  email: string;
-  cart: CartItem[];
-  subtotal: number;
-  shippingFee?: number;
-  discount?: number;
-  total: number;
-}
+import { carrierIcons } from "@/setting";
 
 export default function OrderSummary({
-  email,
   cart,
   subtotal,
-  shippingFee = 0,
-  discount = 0,
-  total,
-}: OrderSummaryProps) {
-  const handleCheckout = async () => {
-    try {
-      const items = cart.map((item) => ({
-        id: item.id,
-        qty: item.qty,
-      }));
+  shippingRates,
+  onSelectRate,
+  shippingFee,
+}: {
+  cart: any[];
+  subtotal: number;
+  shippingRates: ShippingRateResponse | null;
+  onSelectRate: (fee: number) => void;
+  shippingFee: number;
+}) {
+  const [selected, setSelected] = useState<string | null>(null);
 
-      const res = await checkoutStripe(email, items, total);
-      if (res?.checkout_url) {
-        window.location.href = res.checkout_url;
-      }
-    } catch (err) {
-      console.error("Checkout error:", err);
-    }
+  const handlePick = (key: "cheapest" | "fastest", option: RateOption) => {
+    setSelected(key);
+    onSelectRate(option.total);
   };
-  return (
-    <div className="w-full lg:w-1/3 bg-white rounded-lg shadow-md p-6 h-fit lg:sticky lg:top-8">
-      <h3 className="text-lg font-semibold text-gray-800 mb-4">Summary</h3>
 
+  return (
+    <div className="w-full lg:w-96 bg-white p-6 rounded-lg shadow-md">
+      <h3 className="text-lg font-semibold mb-4 text-gray-700">
+        Order Summary
+      </h3>
+
+      {/* 🛒 CART ITEMS SECTION (RESTORED) */}
       <div className="space-y-4 max-h-60 overflow-y-auto border-b pb-4">
         {cart.map((item) => (
           <div key={item.id} className="flex items-center justify-between">
@@ -58,6 +49,7 @@ export default function OrderSummary({
                 <p className="text-xs text-gray-400">x{item.qty}</p>
               </div>
             </div>
+
             <span className="text-sm font-medium text-gray-800">
               {formatAmount(item.price * item.qty)}
             </span>
@@ -65,61 +57,73 @@ export default function OrderSummary({
         ))}
       </div>
 
-      <div className="mt-4 space-y-2 text-sm text-gray-600">
-        <div className="flex justify-between">
-          <span>Subtotal</span>
-          <span>{formatAmount(subtotal)}</span>
-        </div>
-
-        {shippingFee > 0 && (
-          <div className="flex justify-between">
-            <span>Shipping Fee</span>
-            <span>{formatAmount(shippingFee)}</span>
-          </div>
-        )}
-
-        {discount > 0 && (
-          <div className="flex justify-between text-orange-600 font-medium">
-            <span>Discount</span>
-            <span>- {formatAmount(discount)}</span>
-          </div>
-        )}
-
-        <div className="border-t border-gray-300 pt-3 flex justify-between font-semibold text-gray-800">
-          <span>Total</span>
-          <span>{formatAmount(total)}</span>
-        </div>
+      {/* Subtotal */}
+      <div className="flex justify-between py-3 text-gray-600">
+        <span>Subtotal</span>
+        <span>{formatAmount(subtotal)}</span>
       </div>
 
-      <div className="mt-4 flex items-start gap-2">
-        <span className="text-xs text-gray-500">
-          I have read and agreed to the website{" "}
-          <Link
-            href="/terms"
-            target="_blank"
-            className="text-orange-800 font-semibold"
-          >
-            terms{" "}
-          </Link>{" "}
-          and{" "}
-          <Link
-            href="/privacy"
-            target="_blank"
-            className="text-orange-800 font-semibold"
-          >
-            privacy{" "}
-          </Link>
+      {/* 🚚 SHIPPING OPTIONS */}
+      {shippingRates && (
+        <div className="mt-4 space-y-3">
+          {(["cheapest", "fastest"] as const).map((key) => {
+            const r = shippingRates[key];
+            if (!r) return null;
+
+            const active = selected === key;
+            const carrier = r.carrier.toLowerCase();
+            const { icon: CarrierIcon, color } =
+              carrierIcons[carrier] || carrierIcons["default"];
+
+            return (
+              <div
+                key={key}
+                onClick={() => handlePick(key, r)}
+                className={`flex gap-4 items-center p-4 rounded-lg border cursor-pointer transition
+                  ${
+                    active
+                      ? "border-orange-800 bg-blue-50 scale-[1.02]"
+                      : "border-gray-200 hover:border-gray-400 hover:scale-[1.01]"
+                  }
+                `}
+              >
+                <CarrierIcon
+                  className="w-10 h-10 transition-transform duration-150"
+                  style={{ color }}
+                />
+
+                <div className="flex-1">
+                  <p className="font-semibold text-gray-700 capitalize">
+                    {key}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    {r.delivery_days} days delivery
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Arrives: {new Date(r.estimated_delivery).toDateString()}
+                  </p>
+                </div>
+
+                <div className="text-right font-semibold text-gray-700">
+                  {formatAmount(r.total)}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Total — wait for selection */}
+      {/* Total */}
+      <div className="flex justify-between mt-6 pt-4 border-t border-orange-800 text-lg font-bold text-gray-800">
+        <span>Total</span>
+
+        <span>
+          {shippingFee > 0
+            ? formatAmount(subtotal + shippingFee)
+            : "Select a shipping option"}
         </span>
       </div>
-
-      {shippingFee > 0 && (
-        <button
-          onClick={handleCheckout}
-          className="mt-6 w-full bg-orange-800 hover:bg-orange-600 text-white py-3 rounded-full font-medium cursor-pointer"
-        >
-          Checkout
-        </button>
-      )}
     </div>
   );
 }
