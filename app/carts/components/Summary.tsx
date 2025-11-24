@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { useAuthStore } from "@/store/useAuthStore";
 import axios from "axios";
 import { CheckoutPayload, checkoutStripe } from "@/lib/api/checkout";
+import { useCart } from "@/context/CartContext";
 
 export default function OrderSummary({
   cart,
@@ -30,6 +31,7 @@ export default function OrderSummary({
   );
   const [loading, setLoading] = useState(false);
   const { user } = useAuthStore(); // get logged-in user
+  const { clearCart } = useCart();
 
   const handlePick = (key: "cheapest" | "fastest", option: RateOption) => {
     setSelected(key);
@@ -42,33 +44,35 @@ export default function OrderSummary({
     }
     const sessionEmail = sessionStorage.getItem("checkout_email");
 
-  const payload: CheckoutPayload = {
-    email: user?.email || sessionEmail!,
-    products: cart.map((item) => ({
-      id: item.id,
-      quantity: item.qty,
-    })),
-    shipping_fee: shippingFee,
-    shipping_carrier: selectedShipping.carrier,
-    estimated_delivery: selectedShipping.estimated_delivery,
-  };
+    const payload: CheckoutPayload = {
+      email: user?.email || sessionEmail!,
+      products: cart.map((item) => ({
+        id: item.id,
+        quantity: item.qty,
+      })),
+      shipping_fee: shippingFee,
+      shipping_carrier: selectedShipping.carrier,
+      estimated_delivery: selectedShipping.estimated_delivery,
+    };
 
-  try {
-    setLoading(true);
-    const response = await checkoutStripe(payload);
-    console.log(response.url)
-    if (response.url) {
-      sessionStorage.removeItem("checkout_email");
-      window.location.href = response.url;
+    try {
+      setLoading(true);
+      const response = await checkoutStripe(payload);
+      console.log(response.url);
+      if (response.url) {
+        sessionStorage.removeItem("checkout_email");
+        clearCart();
+
+        window.location.href = response.url;
+      }
+    } catch (err) {
+      const message = axios.isAxiosError(err)
+        ? err.response?.data?.message ?? err.message
+        : "An error occurred during checkout";
+      toast.error(message);
+    } finally {
+      setLoading(false);
     }
-  } catch (err) {
-    const message = axios.isAxiosError(err)
-      ? err.response?.data?.message ?? err.message
-      : "An error occurred during checkout";
-    toast.error(message);
-  } finally {
-    setLoading(false);
-  }
   };
 
   return (
@@ -146,7 +150,6 @@ export default function OrderSummary({
                     delivery
                   </p>
                   <p className="text-sm text-gray-500">
-                    {/* Arrives: {new Date(r.estimated_delivery).toDateString()} */}
                     Arrives: {formatHumanReadableDate(r.estimated_delivery)}
                   </p>
                 </div>

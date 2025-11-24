@@ -79,7 +79,7 @@ function SuccessContent() {
       <div className="text-center">
         <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-orange-500 mx-auto mb-4"></div>
         <h2 className="text-xl font-semibold text-gray-700">
-          Finalizing your shop setup...
+          Finalizing your order...
         </h2>
         <p className="text-gray-500 mt-2">
           Please wait while we confirm your payment.
@@ -116,22 +116,22 @@ function SuccessContent() {
         <CheckCircleIcon className="h-24 w-24 text-green-500 mx-auto relative z-10" />
       </div>
 
-      <h1 className="text-3xl font-bold text-gray-900 mb-2">You're all set!</h1>
+      <h1 className="text-3xl font-bold text-gray-900 mb-2">Thank you for your order!</h1>
       <p className="text-gray-600 mb-8">
-        Your subscription is active and your shop has been created successfully.
+        Your order payment is successfully.
       </p>
 
       <div className="bg-orange-50 border border-orange-100 rounded-lg p-4 mb-8">
         <p className="text-sm text-orange-800 font-medium">
-          Redirecting to your dashboard in {countdown}s...
+          Redirecting to your account in {countdown}s...
         </p>
       </div>
 
       <button
-        onClick={() => router.push("/dashboard")}
+        onClick={() => router.push("/account")}
         className="w-full flex items-center justify-center bg-black text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-all transform hover:scale-105 shadow-lg"
       >
-        Go to Dashboard Now
+        Go to account now
         <ArrowRightIcon className="h-5 w-5 ml-2" />
       </button>
     </div>
