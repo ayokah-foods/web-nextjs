@@ -51,6 +51,45 @@ export default function CheckoutPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Basic validation
+    if (!firstname.trim()) {
+      return toast.error("First name is required");
+    }
+    if (!lastname.trim()) {
+      return toast.error("Last name is required");
+    }
+    if (!email.trim()) {
+      return toast.error("Email is required");
+    }
+    if (!phone.trim()) {
+      return toast.error("Phone number is required");
+    }
+
+    if (!isServiceOrder) {
+      if (!address.street_address.trim()) {
+        return toast.error("Street address is required");
+      }
+      if (!address.city.trim()) {
+        return toast.error("City is required");
+      }
+      if (!address.state.trim()) {
+        return toast.error("State is required");
+      }
+      if (!address.zip_code.trim()) {
+        return toast.error("Zip code is required");
+      }
+      if (!address.country.trim()) {
+        return toast.error("Country is required");
+      }
+    } else {
+      if (!serviceNote.trim()) {
+        return toast.error("Service note is required");
+      }
+      if (!preferredDate.trim()) {
+        return toast.error("Preferred date is required");
+      }
+    }
+
     const basePayload = {
       firstname,
       lastname,
@@ -83,6 +122,11 @@ export default function CheckoutPage() {
     try {
       setLoading(true);
       const response = await shippingRate(payload);
+      // Save email to sessionStorage ONLY if different
+      const existingEmail = sessionStorage.getItem("checkout_email");
+      if (!existingEmail || existingEmail !== email) {
+        sessionStorage.setItem("checkout_email", email);
+      }
       if (response?.rate) {
         setShippingRates(response.rate);
       }
@@ -113,7 +157,7 @@ export default function CheckoutPage() {
             onSubmit={handleSubmit}
           >
             {/* Customer Info */}
-            {!firstname && (
+            {!user?.name && (
               <input
                 type="text"
                 placeholder="First name"
@@ -123,7 +167,8 @@ export default function CheckoutPage() {
                 className="input"
               />
             )}
-            {!lastname && (
+
+            {!user?.last_name && (
               <input
                 type="text"
                 placeholder="Last name"
@@ -133,7 +178,8 @@ export default function CheckoutPage() {
                 className="input"
               />
             )}
-            {!email && (
+
+            {!user?.email && (
               <input
                 type="email"
                 placeholder="Email address"
@@ -224,7 +270,6 @@ export default function CheckoutPage() {
               </>
             )}
 
-            {/* Submit */}
             {/* Submit */}
             <button
               type="submit"

@@ -6,6 +6,10 @@ import { formatAmount } from "@/utils/formatCurrency";
 import Image from "next/image";
 import { carrierIcons } from "@/setting";
 import { formatHumanReadableDate } from "@/utils/formatDate";
+import toast from "react-hot-toast";
+import { useAuthStore } from "@/store/useAuthStore";
+import axios from "axios";
+import { CheckoutPayload, checkoutStripe } from "@/lib/api/checkout";
 
 export default function OrderSummary({
   cart,
@@ -21,10 +25,50 @@ export default function OrderSummary({
   shippingFee: number;
 }) {
   const [selected, setSelected] = useState<string | null>(null);
+  const [selectedShipping, setSelectedShipping] = useState<RateOption | null>(
+    null
+  );
+  const [loading, setLoading] = useState(false);
+  const { user } = useAuthStore(); // get logged-in user
 
   const handlePick = (key: "cheapest" | "fastest", option: RateOption) => {
     setSelected(key);
     onSelectRate(option.total);
+    setSelectedShipping(option);
+  };
+  const handleCheckout = async () => {
+    if (!shippingFee || !selectedShipping) {
+      return toast.error("Please select a shipping option before checkout");
+    }
+    const sessionEmail = sessionStorage.getItem("checkout_email");
+
+  const payload: CheckoutPayload = {
+    email: user?.email || sessionEmail!,
+    products: cart.map((item) => ({
+      id: item.id,
+      quantity: item.qty,
+    })),
+    shipping_fee: shippingFee,
+    shipping_carrier: selectedShipping.carrier,
+    estimated_delivery: selectedShipping.estimated_delivery,
+  };
+
+  try {
+    setLoading(true);
+    const response = await checkoutStripe(payload);
+    console.log(response.url)
+    if (response.url) {
+      sessionStorage.removeItem("checkout_email");
+      window.location.href = response.url;
+    }
+  } catch (err) {
+    const message = axios.isAxiosError(err)
+      ? err.response?.data?.message ?? err.message
+      : "An error occurred during checkout";
+    toast.error(message);
+  } finally {
+    setLoading(false);
+  }
   };
 
   return (
@@ -98,7 +142,8 @@ export default function OrderSummary({
                     {key}
                   </p>
                   <p className="text-sm text-gray-500">
-                    {r.delivery_days} days delivery
+                    {r.delivery_days} {r.delivery_days === 1 ? "day" : "days"}{" "}
+                    delivery
                   </p>
                   <p className="text-sm text-gray-500">
                     {/* Arrives: {new Date(r.estimated_delivery).toDateString()} */}
@@ -127,10 +172,11 @@ export default function OrderSummary({
       </div>
       {shippingFee > 0 && (
         <button
-          type="submit"
-          className={`mt-2 w-full py-3 rounded-full font-medium md:col-span-2 transition  btn btn-primary`}
+          onClick={handleCheckout}
+          disabled={!shippingFee || !selectedShipping || loading}
+          className="mt-4 w-full py-3 rounded-full font-medium btn btn-primary"
         >
-          Checkout to Payment
+          {loading ? "Processing..." : "Checkout to Payment"}
         </button>
       )}
     </div>

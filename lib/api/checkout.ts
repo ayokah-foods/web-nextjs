@@ -1,20 +1,25 @@
+import Item from "@/interfaces/items";
 import api from "./axios";
  
-interface CheckoutItem {
-  id: number;
-  qty: number;
+export interface CheckoutPayload {
+  email: string;
+  products: CheckoutProduct[];
+  shipping_fee: number;
+  shipping_carrier: string;
+  estimated_delivery: string;
 }
 
-export const checkoutStripe = async (
-  email: string,
-  items: CheckoutItem[],
-  total: number
-) => {
-  const params = new URLSearchParams();
-  params.append("email", email);
-  params.append("items", JSON.stringify(items));
-  params.append("total", String(total));
 
-  const res = await api.get(`/checkout/stripe?${params.toString()}`);
+interface CheckoutProduct {
+  id: number;
+  quantity: number;
+}
+
+
+export const checkoutStripe = async (payload: CheckoutPayload) => {
+  const res = await api.post("/session/checkout", {
+    ...payload,
+    device_name: navigator.userAgent,
+  });
   return res.data;
 };

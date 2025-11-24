@@ -184,10 +184,6 @@ export default function CartPage() {
                     {formatAmount(Number(item.price) * Number(item.qty))}
                   </span>
                   <div className="flex items-center gap-2 mt-4">
-                    <button className="p-2 hover:text-orange-800">
-                      <HeartIcon className="h-5 w-5 cursor-pointer text-gray-500" />
-                    </button>
-
                     <button
                       onClick={() => setItemToDelete(item.id)}
                       className="p-2 hover:text-orange-800"
