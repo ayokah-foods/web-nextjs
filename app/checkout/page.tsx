@@ -9,14 +9,17 @@ import { shippingRate } from "@/lib/api/shippingRate";
 import toast from "react-hot-toast";
 import axios, { AxiosError } from "axios";
 import { ShippingRateResponse } from "@/interfaces/shippingRate";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export default function CheckoutPage() {
   const { cart, clearCart } = useCart();
+  const { user } = useAuthStore(); // get logged-in user
+
   const [userIP] = useState<string>("178.238.11.6");
   const [loading, setLoading] = useState(false);
   const [shippingRates, setShippingRates] =
     useState<ShippingRateResponse | null>(null);
-const [shippingFee, setShippingFee] = useState(0);
+  const [shippingFee, setShippingFee] = useState(0);
 
   const [address, setAddress] = useState<Address>({
     street_address: "",
@@ -28,10 +31,10 @@ const [shippingFee, setShippingFee] = useState(0);
     country: "",
   });
 
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+  const [firstname, setFirstname] = useState(user?.name || "");
+  const [lastname, setLastname] = useState(user?.last_name || "");
+  const [email, setEmail] = useState(user?.email || "");
+  const [phone, setPhone] = useState(user?.phone || "");
   const [serviceNote, setServiceNote] = useState("");
   const [preferredDate, setPreferredDate] = useState("");
 
@@ -40,7 +43,6 @@ const [shippingFee, setShippingFee] = useState(0);
   }, [cart]);
 
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
-  const total = subtotal;
 
   const handleAddressChange = (field: keyof Address, value: string) => {
     setAddress((prev) => ({ ...prev, [field]: value }));
@@ -81,7 +83,6 @@ const [shippingFee, setShippingFee] = useState(0);
     try {
       setLoading(true);
       const response = await shippingRate(payload);
-      console.log(response);
       if (response?.rate) {
         setShippingRates(response.rate);
       }
@@ -98,53 +99,50 @@ const [shippingFee, setShippingFee] = useState(0);
   };
 
   return (
-    <div className="bg-gray-50  py-8">
+    <div className="bg-gray-50 py-8">
       <div className="px-4 lg:px-8 flex flex-col lg:flex-row gap-8">
         {/* Checkout Form */}
-        <div className="flex-1 bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+        <div className="flex-1">
+          <h2 className="card text-xl font-semibold text-gray-800 mb-8">
             {isServiceOrder
               ? "Service Booking Information"
               : "Shipping Information"}
           </h2>
-
           <form
-            className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-500!"
+            className="grid grid-cols-1 bg-white p-6 rounded-lg shadow-md md:grid-cols-2 gap-4 text-gray-500!"
             onSubmit={handleSubmit}
           >
             {/* Customer Info */}
-            <input
-              type="text"
-              placeholder="First Name"
-              value={firstname}
-              onChange={(e) => setFirstname(e.target.value)}
-              required
-              className="input"
-            />
-            <input
-              type="text"
-              placeholder="Last Name"
-              value={lastname}
-              onChange={(e) => setLastname(e.target.value)}
-              required
-              className="input"
-            />
-            <input
-              type="email"
-              placeholder="Email Address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="input"
-            />
-            <input
-              type="text"
-              placeholder="Phone Number"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              required
-              className="input"
-            />
+            {!firstname && (
+              <input
+                type="text"
+                placeholder="First name"
+                value={firstname}
+                onChange={(e) => setFirstname(e.target.value)}
+                required
+                className="input"
+              />
+            )}
+            {!lastname && (
+              <input
+                type="text"
+                placeholder="Last name"
+                value={lastname}
+                onChange={(e) => setLastname(e.target.value)}
+                required
+                className="input"
+              />
+            )}
+            {!email && (
+              <input
+                type="email"
+                placeholder="Email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="input"
+              />
+            )}
 
             {/* 👇 Conditional Fields */}
             {!isServiceOrder ? (
@@ -158,7 +156,7 @@ const [shippingFee, setShippingFee] = useState(0);
                 </div>
                 <input
                   type="text"
-                  placeholder="Street Address"
+                  placeholder="Street address"
                   value={address.street_address}
                   onChange={(e) =>
                     handleAddressChange("street_address", e.target.value)
@@ -181,7 +179,7 @@ const [shippingFee, setShippingFee] = useState(0);
                 />
                 <input
                   type="text"
-                  placeholder="Zip Code"
+                  placeholder="Zip code"
                   value={address.zip_code}
                   onChange={(e) =>
                     handleAddressChange("zip_code", e.target.value)
@@ -190,11 +188,19 @@ const [shippingFee, setShippingFee] = useState(0);
                 />
                 <input
                   type="text"
-                  placeholder="Zip Code"
+                  placeholder="Country"
                   value={address.country}
                   onChange={(e) =>
                     handleAddressChange("country", e.target.value)
                   }
+                  className="input"
+                />
+                <input
+                  type="text"
+                  placeholder="Phone number"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  required
                   className="input"
                 />
               </>
@@ -219,18 +225,19 @@ const [shippingFee, setShippingFee] = useState(0);
             )}
 
             {/* Submit */}
+            {/* Submit */}
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || !!shippingFee} // disable if shippingFee exists
               className={`mt-2 w-full py-3 rounded-full font-medium md:col-span-2 transition ${
-                loading ? "btn btn-gray" : "btn btn-primary"
+                loading || !!shippingFee ? "btn btn-gray" : "btn btn-primary"
               }`}
             >
               {loading
                 ? "Processing..."
                 : isServiceOrder
                 ? "Book Service"
-                : "Proceed to Shipping"}
+                : "Get Shipping Rate"}
             </button>
           </form>
         </div>

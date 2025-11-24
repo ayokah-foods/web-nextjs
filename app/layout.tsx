@@ -63,7 +63,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${instrumentSans.variable}`}>
-      <body className={`antialiased bg-orange-50 h-full flex flex-col`}>
+      <body className={`antialiased bg-gray-50 h-full flex flex-col`}>
         <Script
           src="https://accounts.google.com/gsi/client"
           strategy="afterInteractive"

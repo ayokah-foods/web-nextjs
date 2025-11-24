@@ -5,6 +5,7 @@ import { RateOption, ShippingRateResponse } from "@/interfaces/shippingRate";
 import { formatAmount } from "@/utils/formatCurrency";
 import Image from "next/image";
 import { carrierIcons } from "@/setting";
+import { formatHumanReadableDate } from "@/utils/formatDate";
 
 export default function OrderSummary({
   cart,
@@ -100,7 +101,8 @@ export default function OrderSummary({
                     {r.delivery_days} days delivery
                   </p>
                   <p className="text-sm text-gray-500">
-                    Arrives: {new Date(r.estimated_delivery).toDateString()}
+                    {/* Arrives: {new Date(r.estimated_delivery).toDateString()} */}
+                    Arrives: {formatHumanReadableDate(r.estimated_delivery)}
                   </p>
                 </div>
 
@@ -113,9 +115,8 @@ export default function OrderSummary({
         </div>
       )}
 
-      {/* Total — wait for selection */}
       {/* Total */}
-      <div className="flex justify-between mt-6 pt-4 border-t border-orange-800 text-lg font-bold text-gray-800">
+      <div className="flex justify-between mt-6 pt-4 border-t border-orange-800 text-lg font-semibold text-gray-800">
         <span>Total</span>
 
         <span>
@@ -124,6 +125,14 @@ export default function OrderSummary({
             : "Select a shipping option"}
         </span>
       </div>
+      {shippingFee > 0 && (
+        <button
+          type="submit"
+          className={`mt-2 w-full py-3 rounded-full font-medium md:col-span-2 transition  btn btn-primary`}
+        >
+          Checkout to Payment
+        </button>
+      )}
     </div>
   );
 }

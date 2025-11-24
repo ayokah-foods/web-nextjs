@@ -30,25 +30,57 @@ export const formatTimeAgo = (timestamp: string): string => {
  * - Tue 5:21PM (same week)
  * - 3rd, January (older)
  */
+// export function formatHumanReadableDate(timestamp: string): string {
+//   const date = dayjs(timestamp);
+//   if (!date.isValid()) return "";
+
+//   if (date.isToday()) {
+//     return `Today, ${date.format("h:mma")}`;
+//   }
+
+//   if (date.isYesterday()) {
+//     return `Yesterday, ${date.format("h:mma")}`;
+//   }
+
+//   const now = dayjs();
+//   if (date.week() === now.week()) {
+//     return `${date.format("ddd")} ${date.format("h:mma")}`;
+//   }
+
+//   return date.format("Do, MMMM");
+// }
 export function formatHumanReadableDate(timestamp: string): string {
   const date = dayjs(timestamp);
   if (!date.isValid()) return "";
 
+  const now = dayjs();
+  const tomorrow = now.add(1, "day");
+
   if (date.isToday()) {
     return `Today, ${date.format("h:mma")}`;
+  }
+
+  // Check if the date is tomorrow
+  if (
+    date.date() === tomorrow.date() &&
+    date.month() === tomorrow.month() &&
+    date.year() === tomorrow.year()
+  ) {
+    return `Tomorrow, ${date.format("h:mma")}`;
   }
 
   if (date.isYesterday()) {
     return `Yesterday, ${date.format("h:mma")}`;
   }
 
-  const now = dayjs();
+  // Same week
   if (date.week() === now.week()) {
     return `${date.format("ddd")} ${date.format("h:mma")}`;
   }
 
   return date.format("Do, MMMM");
 }
+
 
 /**
  * Simple short formatting (e.g. "21 Feb")
