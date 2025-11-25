@@ -62,7 +62,6 @@ export default function OrderSummary({
       if (response.url) {
         sessionStorage.removeItem("checkout_email");
         clearCart();
-
         window.location.href = response.url;
       }
     } catch (err) {
