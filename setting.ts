@@ -9,7 +9,6 @@ import {
   LuShoppingBag,
   LuMegaphone,
   LuList,
-  LuLogOut,
 } from "react-icons/lu";
 
 interface NavItem {
@@ -101,15 +100,12 @@ export const MONTHS = [
 ];
 
 export const DIMENSION_OPTIONS = [
-  { label: "g", value: "g" },
-  { label: "kg", value: "kg" },
-  { label: "lbs", value: "lbs" },
-  { label: "oz", value: "oz" },
+  { label: "pound", value: "lbs" }, // ShipEngine expects "pound"
+  { label: "ounce", value: "oz" }, // ShipEngine expects "ounce"
 ];
+
 export const SIZE_UNIT_OPTIONS = [
-  { label: "cm", value: "cm" },
-  { label: "mm", value: "mm" },
-  { label: "in", value: "in" },
+  { label: "inch", value: "in" }, // ShipEngine expects "inch"
 ];
 
 export const PRICING_MODEL_OPTIONS = [
@@ -152,3 +148,5 @@ export const carrierIcons: Record<
   // default fallback
   default: { icon: MdLocalShipping, color: "#FF9920" },
 };
+
+export const UK_TIMEZONE = "Europe/London";

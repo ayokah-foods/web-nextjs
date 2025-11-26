@@ -91,7 +91,7 @@ export default function CartPage() {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen py-8">
+    <div className="bg-gray-50 py-8">
       {cart.length === 0 && (
         <div className="flex flex-col items-center justify-center py-20 text-center">
           {/* Empty Cart SVG */}

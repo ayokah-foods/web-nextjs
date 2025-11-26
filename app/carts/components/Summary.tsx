@@ -1,16 +1,50 @@
 "use client";
 
 import { useState } from "react";
-import { RateOption, ShippingRateResponse } from "@/interfaces/shippingRate";
-import { formatAmount } from "@/utils/formatCurrency";
 import Image from "next/image";
-import { carrierIcons } from "@/setting";
-import { formatHumanReadableDate } from "@/utils/formatDate";
 import toast from "react-hot-toast";
+import { formatAmount } from "@/utils/formatCurrency";
+import { formatHumanReadableDate } from "@/utils/formatDate";
+import { carrierIcons } from "@/setting";
 import { useAuthStore } from "@/store/useAuthStore";
-import axios from "axios";
-import { CheckoutPayload, checkoutStripe } from "@/lib/api/checkout";
 import { useCart } from "@/context/CartContext";
+import { CheckoutPayload, checkoutStripe } from "@/lib/api/checkout";
+import axios from "axios";
+
+interface CartItem {
+  id: number;
+  title: string;
+  image: string;
+  price: number;
+  qty: number;
+}
+
+interface VendorRate {
+  service_code: string;
+  carrier: string;
+  total: number;
+  currency: string;
+  delivery_days: number;
+  estimated_delivery: string;
+}
+
+interface RateOption {
+  total: number;
+  vendors: Record<string, VendorRate>;
+}
+
+interface ShippingRateResponse {
+  cheapest?: RateOption;
+  fastest?: RateOption;
+}
+
+interface OrderSummaryProps {
+  cart: CartItem[];
+  subtotal: number;
+  shippingRates: ShippingRateResponse | null;
+  onSelectRate: (fee: number) => void;
+  shippingFee: number;
+}
 
 export default function OrderSummary({
   cart,
@@ -18,47 +52,84 @@ export default function OrderSummary({
   shippingRates,
   onSelectRate,
   shippingFee,
-}: {
-  cart: any[];
-  subtotal: number;
-  shippingRates: ShippingRateResponse | null;
-  onSelectRate: (fee: number) => void;
-  shippingFee: number;
-}) {
-  const [selected, setSelected] = useState<string | null>(null);
+}: OrderSummaryProps) {
+  const [selected, setSelected] = useState<"cheapest" | "fastest" | null>(null);
   const [selectedShipping, setSelectedShipping] = useState<RateOption | null>(
     null
   );
   const [loading, setLoading] = useState(false);
-  const { user } = useAuthStore(); // get logged-in user
+
+  const { user } = useAuthStore();
   const { clearCart } = useCart();
+
+  // Aggregate vendor info: earliest delivery & combined carriers
+  const aggregateRate = (option: RateOption) => {
+    const vendors = Object.values(option.vendors);
+
+    // Earliest delivery days
+    const deliveryDays = vendors
+      .map((v) => v.delivery_days)
+      .filter((d): d is number => d != null);
+
+    const estimatedDelivery =
+      deliveryDays.length > 0
+        ? vendors.find((v) => v.delivery_days === Math.min(...deliveryDays))
+            ?.estimated_delivery
+        : vendors
+            .map((v) => v.estimated_delivery)
+            .filter(Boolean)
+            .sort()[0] || null;
+
+    const carriers = Array.from(new Set(vendors.map((v) => v.carrier))).join(
+      ", "
+    );
+
+    return { estimatedDelivery, carriers };
+  };
 
   const handlePick = (key: "cheapest" | "fastest", option: RateOption) => {
     setSelected(key);
-    onSelectRate(option.total);
     setSelectedShipping(option);
+    onSelectRate(option.total);
   };
+
   const handleCheckout = async () => {
     if (!shippingFee || !selectedShipping) {
       return toast.error("Please select a shipping option before checkout");
     }
+
     const sessionEmail = sessionStorage.getItem("checkout_email");
+
+    const vendorServiceCodes: Record<string, string> = Object.fromEntries(
+      Object.entries(selectedShipping.vendors).map(([vendorId, v]) => [
+        vendorId,
+        v.service_code,
+      ])
+    );
+
+    const vendorCarriers = Array.from(
+      new Set(Object.values(selectedShipping.vendors).map((v) => v.carrier))
+    ).join(", ");
+
+    // Earliest delivery across all vendors
+    const estimatedDelivery =
+      Object.values(selectedShipping.vendors)
+        .map((v) => v.estimated_delivery)
+        .filter(Boolean)
+        .sort()[0] || null;
 
     const payload: CheckoutPayload = {
       email: user?.email || sessionEmail!,
-      products: cart.map((item) => ({
-        id: item.id,
-        quantity: item.qty,
-      })),
+      products: cart.map((item) => ({ id: item.id, quantity: item.qty })),
       shipping_fee: shippingFee,
-      shipping_carrier: selectedShipping.carrier,
-      estimated_delivery: selectedShipping.estimated_delivery,
+      shipping_carrier: vendorCarriers,
+      estimated_delivery: estimatedDelivery!,
+      shipping_service_code: vendorServiceCodes,
     };
 
     try {
       setLoading(true);
       const response = await checkoutStripe(payload);
-      console.log(response.url);
       if (response.url) {
         sessionStorage.removeItem("checkout_email");
         clearCart();
@@ -67,7 +138,7 @@ export default function OrderSummary({
     } catch (err) {
       const message = axios.isAxiosError(err)
         ? err.response?.data?.message ?? err.message
-        : "An error occurred during checkout";
+        : "Checkout failed";
       toast.error(message);
     } finally {
       setLoading(false);
@@ -80,7 +151,7 @@ export default function OrderSummary({
         Order Summary
       </h3>
 
-      {/* 🛒 CART ITEMS SECTION (RESTORED) */}
+      {/* Cart Items */}
       <div className="space-y-4 max-h-60 overflow-y-auto border-b pb-4">
         {cart.map((item) => (
           <div key={item.id} className="flex items-center justify-between">
@@ -97,7 +168,6 @@ export default function OrderSummary({
                 <p className="text-xs text-gray-400">x{item.qty}</p>
               </div>
             </div>
-
             <span className="text-sm font-medium text-gray-800">
               {formatAmount(item.price * item.qty)}
             </span>
@@ -111,22 +181,24 @@ export default function OrderSummary({
         <span>{formatAmount(subtotal)}</span>
       </div>
 
-      {/* 🚚 SHIPPING OPTIONS */}
+      {/* Shipping Options */}
       {shippingRates && (
         <div className="mt-4 space-y-3">
           {(["cheapest", "fastest"] as const).map((key) => {
-            const r = shippingRates[key];
-            if (!r) return null;
+            const option = shippingRates[key];
+            if (!option) return null;
 
             const active = selected === key;
-            const carrier = r.carrier.toLowerCase();
+            const { estimatedDelivery, carriers } = aggregateRate(option);
+
+            const carrierKey = carriers.split(",")[0].toLowerCase();
             const { icon: CarrierIcon, color } =
-              carrierIcons[carrier] || carrierIcons["default"];
+              carrierIcons[carrierKey] || carrierIcons.default;
 
             return (
               <div
                 key={key}
-                onClick={() => handlePick(key, r)}
+                onClick={() => handlePick(key, option)}
                 className={`flex gap-4 items-center p-4 rounded-lg border cursor-pointer transition
                   ${
                     active
@@ -139,22 +211,23 @@ export default function OrderSummary({
                   className="w-10 h-10 transition-transform duration-150"
                   style={{ color }}
                 />
-
                 <div className="flex-1">
                   <p className="font-semibold text-gray-700 capitalize">
                     {key}
                   </p>
+                  <p className="text-sm text-gray-500">{carriers}</p>
                   <p className="text-sm text-gray-500">
-                    {r.delivery_days} {r.delivery_days === 1 ? "day" : "days"}{" "}
-                    delivery
+                    Arrives:{" "}
+                    {estimatedDelivery
+                      ? formatHumanReadableDate(estimatedDelivery)
+                      : "N/A"}
                   </p>
-                  <p className="text-sm text-gray-500">
-                    Arrives: {formatHumanReadableDate(r.estimated_delivery)}
+                  <p hidden className="text-sm text-gray-500">
+                    Total Vendors: {Object.keys(option.vendors).length}
                   </p>
                 </div>
-
                 <div className="text-right font-semibold text-gray-700">
-                  {formatAmount(r.total)}
+                  {formatAmount(option.total)}
                 </div>
               </div>
             );
@@ -165,13 +238,13 @@ export default function OrderSummary({
       {/* Total */}
       <div className="flex justify-between mt-6 pt-4 border-t border-orange-800 text-lg font-semibold text-gray-800">
         <span>Total</span>
-
         <span>
           {shippingFee > 0
             ? formatAmount(subtotal + shippingFee)
             : "Select a shipping option"}
         </span>
       </div>
+
       {shippingFee > 0 && (
         <button
           onClick={handleCheckout}
