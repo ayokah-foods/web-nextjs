@@ -6,6 +6,7 @@ import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import confetti from "canvas-confetti";
+import { verifyStripeSession } from "@/lib/api/checkout";
 
 function SuccessContent() {
   const router = useRouter();
@@ -25,10 +26,15 @@ function SuccessContent() {
 
     const verifyPayment = async () => {
       try {
-        await new Promise((resolve) => setTimeout(resolve, 5000));
+        // Call backend to verify session
+        const data = await verifyStripeSession(sessionId);
 
-        setStatus("success");
-        triggerConfetti();
+        if (data.status === "paid") {
+          setStatus("success");
+          triggerConfetti();
+        } else {
+          setStatus("error");
+        }
       } catch (err) {
         console.error("Verification failed", err);
         setStatus("error");
@@ -96,14 +102,14 @@ function SuccessContent() {
           Something went wrong
         </h2>
         <p className="text-gray-600 mb-6">
-          We couldn't verify your session ID. Please check your email for a
+          We couldn't verify your payment session. Please check your email for a
           receipt or contact support.
         </p>
         <Link
           href="/items"
           className="text-orange-600 font-medium hover:text-orange-700 underline"
         >
-          Return to Onboarding
+          Return to shop
         </Link>
       </div>
     );
@@ -116,10 +122,10 @@ function SuccessContent() {
         <CheckCircleIcon className="h-24 w-24 text-green-500 mx-auto relative z-10" />
       </div>
 
-      <h1 className="text-3xl font-bold text-gray-900 mb-2">Thank you for your order!</h1>
-      <p className="text-gray-600 mb-8">
-        Your order payment is successfully.
-      </p>
+      <h1 className="text-3xl font-bold text-gray-900 mb-2">
+        Thank you for your order!
+      </h1>
+      <p className="text-gray-600 mb-8">Your payment was successful.</p>
 
       <div className="bg-orange-50 border border-orange-100 rounded-lg p-4 mb-8">
         <p className="text-sm text-orange-800 font-medium">

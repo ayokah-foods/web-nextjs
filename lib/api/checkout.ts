@@ -24,3 +24,8 @@ export const checkoutStripe = async (payload: CheckoutPayload) => {
   });
   return res.data;
 };
+
+export const verifyStripeSession = async (sessionId: string) => {
+  const res = await api.get(`/session/verify?session_id=${sessionId}`);
+  return res.data;
+};

@@ -20,7 +20,20 @@ export interface ShippingRatePayload {
   type?: string;
 }
 
-export interface RateOption {
+// export interface RateOption {
+//   service_code: string;
+//   carrier: string;
+//   total: number;
+//   currency: string;
+//   delivery_days: number;
+//   estimated_delivery: string;
+// }
+
+export interface ShippingRateResponse {
+  cheapest: RateOption;
+  fastest: RateOption;
+}
+export interface VendorRate {
   service_code: string;
   carrier: string;
   total: number;
@@ -29,7 +42,8 @@ export interface RateOption {
   estimated_delivery: string;
 }
 
-export interface ShippingRateResponse {
-  cheapest: RateOption;
-  fastest: RateOption;
+export interface RateOption {
+  total: number;
+  vendors: Record<string, VendorRate>; 
 }
+ 
