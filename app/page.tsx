@@ -5,7 +5,7 @@ import TodaysDeal from "./components/TodaysDeal";
 
 export default function Home() {
   return (
-    <div className="bg-orange-50">
+    <div className="bg-gray-50">
       <BannerCarousel />
       <CategorySection />
       <RecommendedProducts />

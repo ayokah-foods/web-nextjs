@@ -17,7 +17,7 @@ import {
 const menuItems = [
   { name: "Account Overview", href: "/account", icon: FiUser },
   { name: "Orders", href: "/account/orders", icon: FiPackage },
-  { name: "Wishlist", href: "/account/wishlist", icon: FiHeart },
+  { name: "Wishlist", href: "/account/wishlists", icon: FiHeart },
   { name: "Address", href: "/account/address", icon: FiMapPin },
   { name: "Notification Setting", href: "/account/settings", icon: FiSettings },
   { name: "Support", href: "/account/support", icon: FiLifeBuoy },
