@@ -10,7 +10,7 @@ import truncate from "html-truncate";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Link from "next/link";
-import WishlistButton from "@/app/wishlists/components/WishlistButton";
+import WishlistButton from "@/app/(customer)/account/wishlists/components/WishlistButton";
 
 const reviews = [
   {

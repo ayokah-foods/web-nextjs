@@ -1,5 +1,5 @@
 import { ShippingRatePayload } from "@/interfaces/shippingRate";
-import api from "./axios";
+import api from "../axios";
 
 export const shippingRate = async (payload: ShippingRatePayload) => {
   const res = await api.post("/shipping/rates", {

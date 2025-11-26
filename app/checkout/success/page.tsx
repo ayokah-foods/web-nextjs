@@ -6,7 +6,7 @@ import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import confetti from "canvas-confetti";
-import { verifyStripeSession } from "@/lib/api/checkout";
+import { verifyStripeSession } from "@/lib/api/customer/checkout";
 
 function SuccessContent() {
   const router = useRouter();

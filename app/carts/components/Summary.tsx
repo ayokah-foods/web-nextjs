@@ -8,7 +8,7 @@ import { formatHumanReadableDate } from "@/utils/formatDate";
 import { carrierIcons } from "@/setting";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useCart } from "@/context/CartContext";
-import { CheckoutPayload, checkoutStripe } from "@/lib/api/checkout";
+import { CheckoutPayload, checkoutStripe } from "@/lib/api/customer/checkout";
 import axios from "axios";
 
 interface CartItem {

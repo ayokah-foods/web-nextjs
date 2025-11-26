@@ -10,7 +10,7 @@ import {
 import { CartItem, useCart } from "@/context/CartContext";
 import { useState } from "react";
 import Modal from "../components/common/Modal";
-import verifyCoupon from "@/lib/api/coupon";
+import verifyCoupon from "@/lib/api/customer/coupon";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import Coupon from "@/interfaces/coupon";
@@ -29,7 +29,8 @@ export default function CartPage() {
   const [itemToDelete, setItemToDelete] = useState<number | null>(null);
 
   const subtotal = cart.reduce(
-    (sum: number, item: CartItem) => sum + Number(item.price) * Number(item.qty),
+    (sum: number, item: CartItem) =>
+      sum + Number(item.price) * Number(item.qty),
     0
   );
   const total = Math.max(0, subtotal - discount);

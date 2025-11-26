@@ -5,7 +5,7 @@ import { useCart } from "@/context/CartContext";
 import OrderSummary from "../carts/components/Summary";
 import AddressAutocomplete from "./components/AddressAutocomplete";
 import Address from "@/interfaces/address";
-import { shippingRate } from "@/lib/api/shippingRate";
+import { shippingRate } from "@/lib/api/customer/shippingRate";
 import toast from "react-hot-toast";
 import axios, { AxiosError } from "axios";
 import { ShippingRateResponse } from "@/interfaces/shippingRate";

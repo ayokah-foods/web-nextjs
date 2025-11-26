@@ -1,6 +1,6 @@
 import Item from "@/interfaces/items";
-import api from "./axios";
- 
+import api from "../axios";
+
 export interface CheckoutPayload {
   email: string;
   products: CheckoutProduct[];
@@ -10,12 +10,10 @@ export interface CheckoutPayload {
   shipping_service_code: Record<number, string>; // vendor_id -> service_code
 }
 
-
 interface CheckoutProduct {
   id: number;
   quantity: number;
 }
-
 
 export const checkoutStripe = async (payload: CheckoutPayload) => {
   const res = await api.post("/session/checkout", {
@@ -26,8 +24,6 @@ export const checkoutStripe = async (payload: CheckoutPayload) => {
 };
 
 export const verifyStripeSession = async (sessionId: string) => {
-  const res = await api.get(
-    `/stripe/verify-session?session_id=${sessionId}`
-  );
+  const res = await api.get(`/stripe/verify-session?session_id=${sessionId}`);
   return res.data;
 };
