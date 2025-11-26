@@ -26,6 +26,8 @@ export const checkoutStripe = async (payload: CheckoutPayload) => {
 };
 
 export const verifyStripeSession = async (sessionId: string) => {
-  const res = await api.get(`/session/verify?session_id=${sessionId}`);
+  const res = await api.get(
+    `/stripe/verify-session?session_id=${sessionId}`
+  );
   return res.data;
 };
