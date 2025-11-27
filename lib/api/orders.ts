@@ -1,4 +1,4 @@
-import { OrderResponse, GraphPoint, OrderStatsType } from "@/interfaces/orders";
+import { OrderResponse, GraphPoint, OrderStatsType, CustomerOrdersResponse } from "@/interfaces/orders";
 import api from "./axios";
 
 export async function listOrders(
@@ -10,7 +10,7 @@ export async function listOrders(
   const response = await api.get("/orders", {
     params: { limit, offset, search, status },
   });
-  return response.data;
+  return response.data as CustomerOrdersResponse;
 }
 
 export async function getOrderDetail(orderId: string): Promise<OrderResponse> {

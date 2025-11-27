@@ -6,7 +6,6 @@ import Image from "next/image";
 import { updateUserProfile } from "@/lib/api/auth/profile";
 import toast from "react-hot-toast";
 import ShippingSection from "./ShippingSection";
-import RecentOrderSection from "./RecentOrderSection";
 
 export default function OverviewSection() {
   const user = useAuthStore((state) => state.user);
@@ -165,10 +164,7 @@ export default function OverviewSection() {
 
         {/* Shipping Address Card */}
         <ShippingSection user={user} />
-      </div>
-
-      {/* Recent Orders */}
-      <RecentOrderSection user={user} />
+      </div> 
     </div>
   );
 }
