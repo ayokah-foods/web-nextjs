@@ -6,12 +6,11 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 import {
-  FaBox,
   FaTruck,
-  FaShoppingCart,
   FaTimesCircle,
   FaUndo,
   FaHourglassHalf,
+  FaSpinner,
 } from "react-icons/fa";
 import { IconType } from "react-icons";
 
@@ -19,7 +18,7 @@ interface StatCardProps {
   title: string;
   value?: string | number;
   loading?: boolean;
-  icon: IconType; 
+  icon: IconType;
 }
 
 const StatCard: React.FC<StatCardProps> = ({
@@ -28,7 +27,8 @@ const StatCard: React.FC<StatCardProps> = ({
   loading,
   icon: Icon,
 }) => (
-  <div className="card border-b-4 border-orange-300 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/7 p-4 cursor-pointer hover:bg-orange-50 transition duration-300 ease-in-out hover:shadow-lg transform hover:-translate-y-1 rounded-lg">
+  // Removed explicit width classes here. The parent grid handles the layout now.
+  <div className="card border-b-4 border-orange-300 p-4 cursor-pointer hover:bg-orange-50 transition duration-300 ease-in-out hover:shadow-lg transform hover:-translate-y-1 rounded-lg">
     <div className="flex items-center justify-between mb-0">
       <div className="text-sm font-medium text-gray-500">{title}</div>
       <Icon className="text-xl text-orange-500" />
@@ -51,13 +51,13 @@ const StatCard: React.FC<StatCardProps> = ({
   </div>
 );
 
+// This interface strictly matches the provided API response structure:
 interface Stats {
-  total_orders: number;
-  new_orders: number;
-  ongoing_orders: number;
-  shipped_orders: number;
-  cancelled_orders: number;
-  returned_orders: string;
+  total_processing: number;
+  total_ongoing: number;
+  total_delivered: number;
+  total_cancelled: number;
+  total_returned: number;
 }
 
 interface OverviewProps {
@@ -76,6 +76,7 @@ const Overview: React.FC<OverviewProps> = ({ period }) => {
 
       try {
         const response = await getOverview(period);
+        console.log("here", response);
         setStats(response);
       } catch (err) {
         console.error("Failed to fetch stats:", err);
@@ -94,33 +95,40 @@ const Overview: React.FC<OverviewProps> = ({ period }) => {
     return <div className="card p-6 text-red-400">{error}</div>;
   }
 
-  // Map icons to the card data
   const statCards = [
-    { title: "Total Orders", value: stats?.total_orders, icon: FaShoppingCart },
-    { title: "New Orders", value: stats?.new_orders, icon: FaBox },
     {
-      title: "Ongoing Orders",
-      value: stats?.ongoing_orders,
+      title: "Total Processing",
+      value: stats?.total_processing,
+      icon: FaSpinner,
+    },
+    {
+      title: "Total Ongoing",
+      value: stats?.total_ongoing,
       icon: FaHourglassHalf,
     },
-    { title: "Shipped Orders", value: stats?.shipped_orders, icon: FaTruck },
     {
-      title: "Cancel. Orders",
-      value: stats?.cancelled_orders,
+      title: "Total Delivered",
+      value: stats?.total_delivered,
+      icon: FaTruck,
+    },
+    {
+      title: "Total Cancelled",
+      value: stats?.total_cancelled,
       icon: FaTimesCircle,
     },
-    { title: "Returned Orders", value: stats?.returned_orders, icon: FaUndo },
+    { title: "Total Returned", value: stats?.total_returned, icon: FaUndo },
   ];
 
   return (
-    <div className="flex flex-wrap gap-9">
+    // Replaced flex-wrap with a responsive grid layout
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
       {statCards.map((card) => (
         <StatCard
           key={card.title}
           title={card.title}
           value={card.value}
           loading={isLoading}
-          icon={card.icon} 
+          icon={card.icon}
         />
       ))}
     </div>

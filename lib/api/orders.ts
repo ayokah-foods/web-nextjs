@@ -1,4 +1,4 @@
-import { OrderResponse, GraphPoint, OrderStatsType, CustomerOrdersResponse } from "@/interfaces/orders";
+import { OrderStatsType, CustomerOrdersResponse, OrderListResponse } from "@/interfaces/orders";
 import api from "./axios";
 
 export async function listOrders(
@@ -12,9 +12,20 @@ export async function listOrders(
   });
   return response.data as CustomerOrdersResponse;
 }
+export async function listVendorOrders(
+  limit: number,
+  offset: number,
+  search?: string,
+  status?: string
+) {
+  const response = await api.get("/orders", {
+    params: { limit, offset, search, status },
+  });
+  return response.data as OrderListResponse;
+}
 
-export async function getOrderDetail(orderId: string): Promise<OrderResponse> {
-  const response = await api.get<OrderResponse>(`/orders/${orderId}`);
+export async function getOrderDetail(orderId: string) {
+  const response = await api.get(`/orders/${orderId}`);
   return response.data;
 }
 
@@ -30,15 +41,6 @@ export async function changeOrderPaymentStatus(
 ) {
   const response = await api.put(`/orders/${orderId}/payment-status`, {
     payment_status: status,
-  });
-  return response.data;
-}
-
-export async function getOrderGraph(
-  start_date?: string
-): Promise<GraphPoint[]> {
-  const response = await api.get<GraphPoint[]>(`/orders/graph`, {
-    params: { start_date },
   });
   return response.data;
 }

@@ -5,7 +5,7 @@ import { RecentReviews } from "./components/Review";
 import Overview from "./components/Overview";
 import SelectDropdown from "./components/commons/Fields/SelectDropdown";
 import AreaChart from "./components/commons/AreaChart";
-import RecentOrdersTable from "@/app/orders/components/RecentOrdersTable";
+// import RecentOrdersTable from "@/app/orders/components/RecentOrdersTable";
 import { LuLayoutDashboard } from "react-icons/lu";
 
 const periods = [
@@ -28,13 +28,7 @@ const DashboardPage: React.FC = () => {
             Seller Dashboard
           </h2>
           <SelectDropdown
-            options={[
-              { value: "all", label: "All" },
-              { value: "this_week", label: "This week" },
-              { value: "last_week", label: "Last week" },
-              { value: "last_month", label: "Last month" },
-              { value: "last_year", label: "Last year" },
-            ]}
+            options={periods}
             value={selectedPeriod}
             onChange={setSelectedPeriod}
           />
@@ -55,7 +49,7 @@ const DashboardPage: React.FC = () => {
             <RecentReviews />
           </div>
         </div>
-        <RecentOrdersTable limit={10} />
+        {/* <RecentOrdersTable limit={10} /> */}
       </div>
     </>
   );
