@@ -114,7 +114,9 @@ export default function Orders() {
                   <StatusBadge status={order.shipping_status} type="shipping" />
                 </span>
                 <span className="btn btn-gray">
-                  <Link target="_blank" href={`/account/orders/${order.id}`}>View detail</Link>
+                  <Link prefetch={true} href={`/account/orders/${order.id}`}>
+                    View detail
+                  </Link>
                 </span>
               </div>
 
@@ -153,7 +155,7 @@ export default function Orders() {
               {/* Order Items */}
               <div className="mt-4 border-t border-orange-200 pt-4 space-y-4">
                 {order.order_items.map((item) => (
-                  <Link target="_blank" href={`/items/${item.product.slug}`}>
+                  <Link href={`/items/${item.product.slug}`} prefetch={true}>
                     <div key={item.id} className="flex items-center gap-4">
                       <Image
                         width={64}

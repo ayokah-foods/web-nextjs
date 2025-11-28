@@ -34,7 +34,13 @@ export function Sidebar({
     >
       {/* Logo */}
       <div className="flex items-center justify-center h-16 border-b p-4">
-        <Image width={100} height={40} src="/logo.svg" alt="logo" className="h-10 w-auto" />
+        <Image
+          width={100}
+          height={40}
+          src="/logo.svg"
+          alt="logo"
+          className="h-10 w-auto"
+        />
       </div>
 
       {/* Nav */}
@@ -43,12 +49,13 @@ export function Sidebar({
           <Link
             key={item.id}
             href={item.href}
+            prefetch={true}
             className={`block p-3 rounded-lg text-sm font-medium ${
               currentPath.startsWith(item.href)
                 ? "bg-orange-100 text-orange-700"
                 : "text-gray-700 hover:bg-gray-100"
             }`}
-            onClick={toggleSidebar} 
+            onClick={toggleSidebar}
           >
             <item.icon className="inline-block w-5 h-5 mr-3" />
             {item.label}

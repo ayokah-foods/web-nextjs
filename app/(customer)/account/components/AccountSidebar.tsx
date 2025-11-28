@@ -44,6 +44,7 @@ export default function AccountSidebar() {
             <Link
               href={item.href}
               key={item.name}
+              prefetch={true}
               className={`flex items-center gap-3 px-3 py-2 rounded-lg whitespace-nowrap transition-all duration-200
                 ${
                   isActive
@@ -63,7 +64,7 @@ export default function AccountSidebar() {
 
         <button
           onClick={handleLogout}
-          className="mt-4 flex items-center justify-center gap-2 text-red-600 font-medium bg-red-50 px-3 py-2 rounded-lg
+          className="mt-8 flex items-center justify-center gap-2 text-red-600 font-medium bg-red-50 px-3 py-2 rounded-lg
           hover:bg-red-100 transition-all duration-200 w-full cursor-pointer"
         >
           Log out
