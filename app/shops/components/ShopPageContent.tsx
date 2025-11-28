@@ -21,7 +21,7 @@ export default function ShopPageContent() {
   const shops = data?.data || [];
 
   return (
-    <div className="px-4 py-10">
+    <div className="px-4 py-10 bg-white">
       <h2 className="text-2xl font-bold mb-6 text-gray-800">Our Shops</h2>
 
       {isLoading ? (
@@ -34,7 +34,7 @@ export default function ShopPageContent() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {shops.map((shop: any) => (
             <Link
-                preload={true}
+              prefetch={true}
               key={shop.slug}
               href={`/shops/${shop.slug}`}
               className="group bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition"
@@ -76,12 +76,12 @@ export default function ShopPageContent() {
                 </p>
 
                 {/* Location */}
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-gray-500 flex items-center">
                   <FaMapMarker />  {shop.city}, {shop.state}
                 </p>
 
                 {/* Visit Shop button */}
-                <button className="mt-4 w-full bg-orange-600 text-white py-2 rounded-lg font-medium hover:bg-orange-700 transition cursor-pointer">
+                <button className="mt-4 btn btn-primary">
                   Visit Shop
                 </button>
               </div>
