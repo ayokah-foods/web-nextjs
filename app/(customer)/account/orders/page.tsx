@@ -10,6 +10,7 @@ import { formatAmount } from "@/utils/formatCurrency";
 import { formatHumanReadableDate } from "@/utils/formatDate";
 import Link from "next/link";
 import Image from "next/image";
+import StatusBadge from "@/utils/StatusBadge";
 
 export default function Orders() {
   const [orders, setOrders] = useState<CustomerOrder[]>([]);
@@ -79,7 +80,7 @@ export default function Orders() {
       </div>
 
       {/* Search */}
-      <div className="mb-4">
+      <div className="mb-4" hidden>
         <input
           type="text"
           placeholder="Search orders by product name"
@@ -109,8 +110,11 @@ export default function Orders() {
                 <h3 className="font-semibold text-gray-800">
                   Order #{order.id}
                 </h3>
-                <span className="px-2 py-1 rounded text-xs bg-orange-100 text-orange-800">
-                  {order.shipping_status}
+                <span className="px-2 py-1 rounded text-xs ">
+                  <StatusBadge status={order.shipping_status} type="shipping" />
+                </span>
+                <span className="btn btn-gray">
+                  <Link target="_blank" href={`/account/orders/${order.id}`}>View detail</Link>
                 </span>
               </div>
 

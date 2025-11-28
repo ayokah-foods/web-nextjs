@@ -44,14 +44,14 @@ body,
 }
 
 .btn-primary {
-  @apply bg-orange-800 hover:bg-orange-500 text-white py-3 rounded-lg w-full font-semibold cursor-pointer;
+  @apply bg-orange-800 hover:bg-orange-500 text-white py-2.5 rounded-lg w-full font-semibold cursor-pointer;
 }
 .card {
   @apply p-6 bg-white rounded-xl shadow-sm;
 }
 /* Base button */
 .btn {
-  @apply py-2.5 px-5 rounded-lg font-semibold transition-colors duration-200 cursor-pointer;
+  @apply py-2.5 px-3 rounded-lg font-semibold transition-colors duration-200 cursor-pointer;
 }
 
 /* Primary / Orange button */

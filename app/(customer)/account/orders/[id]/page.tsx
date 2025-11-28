@@ -11,12 +11,6 @@ import { Order, OrderItem as OrderItemType } from "@/interfaces/orders";
 import Address from "@/interfaces/address";
 import { getOrderDetail } from "@/lib/api/orders";
 import { formatHumanReadableDate } from "@/utils/formatDate";
-interface OrderStats {
-  total_orders: number;
-  total_amount: string;
-  total_cancelled: number;
-  total_delivered: number;
-}
 
 // Define the overall API response structure
 interface OrderDetailResponse {
@@ -31,80 +25,24 @@ interface OrderDetailResponse {
   };
 }
 
-// --- OPTIONS (Kept the same) ---
-
-export const statusOptions = [
-  { label: "Processing", value: "processing" },
-  { label: "Ongoing", value: "ongoing" },
-  { label: "Returned", value: "returned" },
-  { label: "Delivered", value: "delivered" },
-  { label: "Cancelled", value: "cancelled" },
-];
-
-const paymentStatusOptions = [
-  { label: "Pending", value: "pending" },
-  { label: "Cancel", value: "cancelled" },
-  { label: "Completed", value: "completed" },
-  { label: "Refund", value: "refunded" },
-];
-
 function CustomerSummary({
   customer,
   address,
-  stats,
 }: {
   customer: User;
   address: Address;
-  stats: OrderStats | null;
 }) {
   if (!customer || !address) return null;
 
   return (
     <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 text-sm text-gray-700">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="flex flex-col gap-4 border-r md:border-r border-gray-100 pr-6">
-          <div className="flex items-center gap-4">
-            <div className="relative w-12 h-12 rounded-full overflow-hidden">
-              <Image
-                src={customer.profile_photo || "/default-avatar.png"}
-                alt={`${customer.name}`}
-                height={50}
-                width={50}
-                className="object-cover"
-              />
-            </div>
-            <div>
-              <p className="font-semibold text-gray-800 text-base">
-                {customer.name} {customer.last_name}
-              </p>
-              <p className="text-gray-500 text-xs">{customer.email}</p>
-            </div>
-          </div>
-
-          <div className="pt-2 space-y-2">
-            <p className="text-xs text-gray-500 font-medium uppercase tracking-wider">
-              Personal Info
-            </p>
-            <div className="flex justify-between">
-              <span className="font-medium text-gray-700">Phone:</span>
-              <span className="text-gray-600">{customer.phone ?? "N/A"}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="font-medium text-gray-700">Member Since:</span>
-              <span className="text-gray-600">
-                {dayjs(customer.created_at).format("DD MMM. YYYY")}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* 2. Shipping Address (Middle Column) */}
-        <div className="flex flex-col gap-2 border-r md:border-r border-gray-100 pr-6">
+      <div className="flex flex-col md:flex-row gap-6">
+        <div className="flex flex-col gap-2  md:pr-6">
           <p className="text-xs text-gray-500 font-medium uppercase tracking-wider mb-2">
-            Default Shipping Address
+            Delivery Shipping Address
           </p>
-          <div className="bg-gray-50 p-3 rounded-lg h-full">
-            <p className="text-gray-700 leading-snug font-medium">
+          <div className="bg-gray-50 p-3 rounded-lg">
+            <p className="text-gray-700 font-medium">
               {customer.name} {customer.last_name}
             </p>
             <p className="text-gray-600">
@@ -119,46 +57,9 @@ function CustomerSummary({
                 .join(", ")}
             </p>
             <p className="text-gray-600 mt-1">
-              Phone: {address.phone ?? "N/A"}
+              <span className="font-medium">Phone:</span>{" "}
+              {address.phone ?? "N/A"}
             </p>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <p className="text-xs text-gray-500 font-medium uppercase tracking-wider mb-2">
-            Lifetime Order Summary
-          </p>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="p-4 bg-orange-50 border-l-4 border-orange-500 rounded-lg text-center">
-              <p className="text-sm text-gray-600">Total Spent</p>
-              <p className="font-extrabold text-xl text-orange-800 mt-1">
-                {formatAmount(parseFloat(stats?.total_amount || "0"))}
-              </p>
-            </div>
-
-            {/* Total Orders */}
-            <div className="p-4 bg-gray-50 border-l-4 border-gray-300 rounded-lg text-center">
-              <p className="text-sm text-gray-600">Total Orders</p>
-              <p className="font-bold text-xl text-gray-800 mt-1">
-                {stats?.total_orders || 0}
-              </p>
-            </div>
-
-            {/* Delivered Orders */}
-            <div className="p-4 bg-green-50 border-l-4 border-green-500 rounded-lg text-center">
-              <p className="text-sm text-gray-600">Delivered</p>
-              <p className="font-bold text-xl text-green-700 mt-1">
-                {stats?.total_delivered || 0}
-              </p>
-            </div>
-
-            {/* Cancelled Orders */}
-            <div className="p-4 bg-red-50 border-l-4 border-red-500 rounded-lg text-center">
-              <p className="text-sm text-gray-600">Cancelled</p>
-              <p className="font-bold text-xl text-red-700 mt-1">
-                {stats?.total_cancelled || 0}
-              </p>
-            </div>
           </div>
         </div>
       </div>
@@ -243,33 +144,13 @@ function OrderItemsTable({ order }: { order: Order }) {
   );
 }
 
-// --- Main Component ---
-
 export default function OrderDetail() {
   const params = useParams();
   const orderId = params?.id as string | undefined;
 
   const [orderDetail, setOrderDetail] = useState<Order | null>(null);
-  const [stats, setStats] = useState<OrderStats | null>(null);
 
   const [loading, setLoading] = useState(true);
-  const [updating, setUpdating] = useState(false);
-
-  const initialShippingStatus = useMemo(() => {
-    const statusValue = orderDetail?.shipping_status || statusOptions[0].value;
-    return (
-      statusOptions.find((opt) => opt.value === statusValue) || statusOptions[0]
-    );
-  }, [orderDetail]);
-
-  const initialPaymentStatus = useMemo(() => {
-    const statusValue =
-      orderDetail?.payment_status || paymentStatusOptions[0].value;
-    return (
-      paymentStatusOptions.find((opt) => opt.value === statusValue) ||
-      paymentStatusOptions[0]
-    );
-  }, [orderDetail]);
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -279,12 +160,6 @@ export default function OrderDetail() {
         const response = (await getOrderDetail(orderId)) as OrderDetailResponse;
 
         setOrderDetail(response.data.order);
-        setStats({
-          total_orders: response.data.total_orders,
-          total_amount: response.data.total_amount,
-          total_cancelled: response.data.total_cancelled,
-          total_delivered: response.data.total_delivered,
-        });
       } catch (err) {
         console.error("Failed to load order detail", err);
       } finally {
@@ -310,20 +185,36 @@ export default function OrderDetail() {
   return (
     <div className="p-0 text-gray-600 space-y-4">
       {/* Header */}
-      <div className="flex justify-between items-center">
-        <h1 className="text-xl font-semibold text-gray-800">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+        {/* Left: title */}
+        <h1 className="text-lg md:text-xl font-semibold text-gray-800">
           Order Details - #{orderMeta.id}
         </h1>
-        <div className="flex items-center gap-2">
-          {orderMeta.shipping_status === "processing" &&
-            orderMeta.payment_status === "pending" && (
-              <button className="bg-red-100 text-red-600 px-4 py-1 rounded-md text-sm font-medium">
-                Eligible for refund
+
+        {/* Right: buttons — stays on one line on md+ */}
+        <div className="flex items-center flex-nowrap space-x-3">
+          {/* 1: Buy Again (only when payment completed) */}
+          {orderMeta.payment_status === "completed" && (
+            <button className="btn btn-primary min-w-[100px] text-xs!">
+              Buy Again
+            </button>
+          )}
+
+          {/* 2 & 3: Cancel / Track (only when shipping ongoing) */}
+          {orderMeta.shipping_status === "ongoing" && (
+            <>
+              <button className="btn btn-gray min-w-[100px] text-xs!">
+                Cancel Order
               </button>
-            )}
+              <button className="btn btn-primary min-w-[90px] text-xs!">
+                Track Order
+              </button>
+            </>
+          )}
         </div>
       </div>
-      <CustomerSummary customer={customer} address={address} stats={stats} />
+
+      <CustomerSummary customer={customer} address={address} />
       <OrderItemsTable order={orderDetail} />
 
       <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
@@ -397,17 +288,9 @@ export default function OrderDetail() {
             </div>
 
             <div className="flex justify-between items-start">
-              <p className="font-medium text-gray-600 w-1/2">
-                Vendor Settlement:
-              </p>
-              <p
-                className={`font-semibold w-1/2 text-right ${
-                  orderMeta.vendor_payment_settlement_status === "unpaid"
-                    ? "text-red-700"
-                    : "text-green-700"
-                }`}
-              >
-                {orderMeta.vendor_payment_settlement_status.toUpperCase()}
+              <p className="font-medium text-gray-600 w-1/2">Shipping Date:</p>
+              <p className={`font-semibold w-1/2 text-right`}>
+                {formatHumanReadableDate(orderMeta?.shipping_date || "")}
               </p>
             </div>
           </div>
