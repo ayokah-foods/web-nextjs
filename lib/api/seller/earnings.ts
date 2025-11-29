@@ -17,7 +17,9 @@ export async function withdrawRequest(amount: number) {
   return response.data;
 }
 
-export async function getWithdrawalHistory() {
-  const response = await api.get("/vendor/withdrawal/history");
+export async function getWithdrawalHistory(offset: number, limit: number) {
+  const response = await api.get("/vendor/withdrawal/history", {
+    params: { offset, limit },
+  });
   return response.data;
 }

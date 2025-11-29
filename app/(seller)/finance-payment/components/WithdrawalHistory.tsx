@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { getWithdrawalHistory } from "@/lib/api/seller/earnings";
 import { formatAmount } from "@/utils/formatCurrency";
+import { formatHumanReadableDate } from "@/utils/formatDate";
+import { FiClock } from "react-icons/fi";
 
 interface SettlementAccount {
   name: string;
@@ -31,35 +33,41 @@ export default function WithdrawalHistory() {
   const [loading, setLoading] = useState<boolean>(true);
   const [loadingMore, setLoadingMore] = useState<boolean>(false);
   const [offset, setOffset] = useState<number>(0);
-  const [limit] = useState<number>(10);
+  const [limit] = useState<number>(3);
   const [total, setTotal] = useState<number>(0);
 
-  async function fetchWithdrawals(loadMore = false) {
-    try {
-      if (loadMore) {
-        setLoadingMore(true);
-      } else {
-        setLoading(true);
-        setOffset(0);
-      }
-
-      const response: ApiResponse = await getWithdrawalHistory();
-      if (response.status === "success") {
-        setTotal(response.total);
-        if (loadMore) {
-          setWithdrawals((prev) => [...prev, ...response.data]);
-        } else {
-          setWithdrawals(response.data);
-        }
-        setOffset((prev) => prev + limit);
-      }
-    } catch (err) {
-      console.error("Failed to fetch withdrawal history:", err);
-    } finally {
-      setLoading(false);
-      setLoadingMore(false);
+async function fetchWithdrawals(loadMore = false) {
+  try {
+    if (loadMore) {
+      setLoadingMore(true);
+    } else {
+      setLoading(true);
+      setOffset(0);
     }
+
+    const currentOffset = loadMore ? offset : 0;
+    const response: ApiResponse = await getWithdrawalHistory(
+      currentOffset,
+      limit
+    );
+
+    if (response.status === "success") {
+      setTotal(response.total);
+      if (loadMore) {
+        setWithdrawals((prev) => [...prev, ...response.data]);
+      } else {
+        setWithdrawals(response.data);
+      }
+      setOffset(currentOffset + limit);
+    }
+  } catch (err) {
+    console.error("Failed to fetch withdrawal history:", err);
+  } finally {
+    setLoading(false);
+    setLoadingMore(false);
   }
+}
+
 
   useEffect(() => {
     fetchWithdrawals();
@@ -97,7 +105,7 @@ export default function WithdrawalHistory() {
               <p className="text-sm text-gray-600">
                 Status:{" "}
                 <span
-                  className={`font-medium ${
+                  className={`font-bold ${
                     w.status === "approved"
                       ? "text-green-600"
                       : w.status === "declined"
@@ -109,13 +117,13 @@ export default function WithdrawalHistory() {
                 </span>
               </p>
               <p className="text-sm text-gray-600">
-                Account: {w.settlement_account.account_name} |{" "}
+                <b>Settlement Account:</b> {w.settlement_account.account_name} |{" "}
                 {w.settlement_account.account_number} (
                 {w.settlement_account.name})
               </p>
             </div>
-            <div className="text-xs text-gray-400">
-              {new Date(w.created_at).toLocaleDateString()}
+            <div className="text-xs text-orange-800 flex items-center">
+            <FiClock />  {formatHumanReadableDate(w.created_at)}
             </div>
           </div>
         ))
