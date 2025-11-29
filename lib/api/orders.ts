@@ -39,6 +39,7 @@ export async function changeOrderStatus(orderId: number, status: string) {
   });
   return response.data;
 }
+
 export async function changeOrderPaymentStatus(
   orderId: number,
   status: string
@@ -53,6 +54,7 @@ export async function orderStats(): Promise<OrderStatsType> {
   const response = await api.get<OrderStatsType>(`/orders/stats`);
   return response.data;
 }
+
 export async function bookingStats(): Promise<OrderStatsType> {
   const response = await api.get<OrderStatsType>(`/bookings/stats`);
   return response.data;
@@ -71,7 +73,7 @@ export async function getStats(period: string) {
 export async function submitReview(payload: FormData) {
   const response = await api.post("/customer/review/create", payload, {
     headers: {
-      "Content-Type": "multipart/form-data", // required for FormData
+      "Content-Type": "multipart/form-data", 
     },
   });
 
