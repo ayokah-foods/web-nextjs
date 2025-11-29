@@ -1,6 +1,6 @@
 "use client";
 
-import { listOrders } from "@/lib/api/orders";
+import { listOrders, submitReview } from "@/lib/api/orders";
 import { debounce } from "lodash";
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { FiPackage } from "react-icons/fi";
@@ -11,6 +11,9 @@ import { formatHumanReadableDate } from "@/utils/formatDate";
 import Link from "next/link";
 import Image from "next/image";
 import StatusBadge from "@/utils/StatusBadge";
+import Modal from "@/app/components/common/Modal";
+import ConfirmationModal from "@/app/(seller)/dashboard/components/commons/ConfirmationModal";
+import SelectDropdown from "@/app/(seller)/dashboard/components/commons/Fields/SelectDropdown";
 
 export default function Orders() {
   const PAGE_SIZE = 2;
@@ -22,6 +25,16 @@ export default function Orders() {
   const [search, setSearch] = useState<string>("");
   const [offset, setOffset] = useState(0);
   const [totalOrders, setTotalOrders] = useState(0);
+
+  // --- Modal states ---
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [reviewingOrder, setReviewingOrder] = useState<CustomerOrder | null>(
+    null
+  );
+  const [reviewRating, setReviewRating] = useState<number>(0);
+  const [reviewComment, setReviewComment] = useState<string>("");
+  const [reviewLoading, setReviewLoading] = useState(false);
+  const [reviewImages, setReviewImages] = useState<File[]>([]);
 
   const fetchOrders = useCallback(
     async (offsetValue: number, searchValue: string, isLoadMore = false) => {
@@ -41,6 +54,13 @@ export default function Orders() {
         }
 
         setTotalOrders(response.total);
+
+        // --- Automatically show modal if any order is yet_to_review ---
+        const toReviewOrder = response.data.find((o) => o.yet_to_review);
+        if (toReviewOrder) {
+          setReviewingOrder(toReviewOrder);
+          setIsModalOpen(true);
+        }
       } catch (err) {
         console.error(err);
         setError("An error occurred while fetching orders.");
@@ -72,6 +92,46 @@ export default function Orders() {
     setLoadingMore(true);
 
     await fetchOrders(newOffset, search, true);
+  };
+
+  // --- Handle Review Submit ---
+  const handleReviewSubmit = async () => {
+    if (!reviewingOrder) return;
+
+    try {
+      setReviewLoading(true);
+
+      const formData = new FormData();
+      formData.append("order_id", reviewingOrder.id.toString());
+      formData.append(
+        "product_id",
+        reviewingOrder.order_items[0].product.id.toString()
+      ); // first product
+      formData.append("rating", reviewRating.toString());
+      formData.append("comment", reviewComment);
+      // Append images if any
+      reviewImages.forEach((file, index) => {
+        formData.append("images[]", file); // backend expects 'images' as array
+      });
+      await submitReview(formData);
+
+      // Close modal
+      setIsModalOpen(false);
+
+      // Refresh orders to update yet_to_review
+      fetchOrders(0, search);
+
+      // Reset review states
+      setReviewRating(0);
+      setReviewComment("");
+      setReviewImages([]); // reset images
+      setReviewingOrder(null);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to submit review.");
+    } finally {
+      setReviewLoading(false);
+    }
   };
 
   return (
@@ -208,6 +268,159 @@ export default function Orders() {
           )}
         </div>
       )}
+
+      {/* review model */}
+      {/* review modal */}
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setReviewImages([]);
+        }}
+        title="Leave a Review"
+      >
+        <div className="space-y-3">
+          <p className="text-sm text-gray-500">
+            Please review your recent order #{reviewingOrder?.id}.
+          </p>
+
+          {/* Rating */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Rating
+            </label>
+            <SelectDropdown
+              options={[
+                { label: "Select rating", value: "0" },
+                { label: "1 Star", value: "1" },
+                { label: "2 Stars", value: "2" },
+                { label: "3 Stars", value: "3" },
+                { label: "4 Stars", value: "4" },
+                { label: "5 Stars", value: "5" },
+              ]}
+              value={{
+                label:
+                  reviewRating === 0
+                    ? "Select rating"
+                    : `${reviewRating} Star${reviewRating > 1 ? "s" : ""}`,
+                value: reviewRating.toString(),
+              }}
+              onChange={(option) => setReviewRating(Number(option.value))}
+              className="mt-1 block w-full"
+              placeholder="Select rating"
+            />
+          </div>
+
+          {/* Comment */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Comment
+            </label>
+            <textarea
+              value={reviewComment}
+              onChange={(e) => {
+                if (e.target.value.length <= 250)
+                  setReviewComment(e.target.value);
+              }}
+              rows={3}
+              className="mt-1 block input w-full border rounded px-2 py-1"
+              placeholder="Write your comment..."
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              {reviewComment.length}/250 characters
+            </p>
+          </div>
+
+          {/* Custom Image Upload */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Upload Images (optional, max 3)
+            </label>
+
+            <div className="mt-1 flex flex-wrap gap-2">
+              {/* Image Previews */}
+              {reviewImages.map((file, index) => (
+                <div
+                  key={index}
+                  className="relative w-20 h-20 border rounded overflow-hidden"
+                >
+                  <img
+                    src={URL.createObjectURL(file)}
+                    alt={`Preview ${index + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setReviewImages((prev) =>
+                        prev.filter((_, i) => i !== index)
+                      )
+                    }
+                    className="absolute top-1 right-1 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
+                  >
+                    &times;
+                  </button>
+                </div>
+              ))}
+
+              {/* Upload Placeholder */}
+              {reviewImages.length < 3 && (
+                <label
+                  htmlFor="review-image-upload"
+                  className="w-20 h-20 border border-dashed rounded flex flex-col items-center justify-center cursor-pointer text-gray-400 hover:text-gray-600"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 mb-1"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 15a4 4 0 104 4H3v-4zM7 9V3m0 0l4 4m-4-4L3 7"
+                    />
+                  </svg>
+                  <span className="text-xs text-center">Add Image</span>
+                  <input
+                    type="file"
+                    id="review-image-upload"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      if (!e.target.files) return;
+                      const files = Array.from(e.target.files).slice(
+                        0,
+                        3 - reviewImages.length
+                      );
+                      setReviewImages((prev) => [...prev, ...files]);
+                    }}
+                  />
+                </label>
+              )}
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="mt-4 flex justify-end gap-3">
+            <button
+              className="btn btn-gray"
+              onClick={() => setIsModalOpen(false)}
+            >
+              Cancel
+            </button>
+            <button
+              className="btn btn-primary"
+              onClick={handleReviewSubmit}
+              disabled={reviewLoading || reviewRating === 0}
+            >
+              {reviewLoading ? "Submitting..." : "Submit Review"}
+            </button>
+          </div>
+        </div>
+      </ConfirmationModal>
     </div>
   );
 }

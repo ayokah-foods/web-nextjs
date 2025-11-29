@@ -142,6 +142,7 @@ export interface CustomerOrder {
   customer_id: number;
   address_id: number;
   shipping_service_code: string | null;
+  yet_to_review: boolean
 
   order_items: CustomerOrderItem[];
 }

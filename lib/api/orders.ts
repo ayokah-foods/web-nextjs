@@ -1,4 +1,8 @@
-import { OrderStatsType, CustomerOrdersResponse, OrderListResponse } from "@/interfaces/orders";
+import {
+  OrderStatsType,
+  CustomerOrdersResponse,
+  OrderListResponse,
+} from "@/interfaces/orders";
 import api from "./axios";
 
 export async function listOrders(
@@ -61,5 +65,15 @@ export async function getSalesGraph(period: string) {
 
 export async function getStats(period: string) {
   const response = await api.get(`/stats?start_date=${period}`);
+  return response.data;
+}
+
+export async function submitReview(payload: FormData) {
+  const response = await api.post("/customer/review/create", payload, {
+    headers: {
+      "Content-Type": "multipart/form-data", // required for FormData
+    },
+  });
+
   return response.data;
 }
