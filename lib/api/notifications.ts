@@ -14,7 +14,7 @@ export async function saveCommunicationSettings(payload: NotificationPayload) {
   return response.data;
 }
 
-export async function listNotifications(offset = 0, limit = 10) {
+export async function listNotifications(offset:number, limit:number) {
   const res = await api.get(`/notifications?offset=${offset}&limit=${limit}`);
   return res.data;
 }

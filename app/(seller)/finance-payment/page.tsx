@@ -99,7 +99,7 @@ export default function Orders() {
         )}
 
         {/* EMPTY */}
-        {!loading && reviews.length === 0 && (
+        {!loading && reviews.length < 3 && (
           <div className="py-6 card text-center text-orange-800 text-sm">
             No customer reviews yet.
           </div>
