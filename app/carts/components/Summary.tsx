@@ -5,7 +5,7 @@ import Image from "next/image";
 import toast from "react-hot-toast";
 import { formatAmount } from "@/utils/formatCurrency";
 import { formatHumanReadableDate } from "@/utils/formatDate";
-import { carrierIcons } from "@/setting";
+import { CARRIER_ICONS } from "@/setting";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useCart } from "@/context/CartContext";
 import { CheckoutPayload, checkoutStripe } from "@/lib/api/customer/checkout";
@@ -193,7 +193,7 @@ export default function OrderSummary({
 
             const carrierKey = carriers.split(",")[0].toLowerCase();
             const { icon: CarrierIcon, color } =
-              carrierIcons[carrierKey] || carrierIcons.default;
+              CARRIER_ICONS[carrierKey] || CARRIER_ICONS.default;
 
             return (
               <div

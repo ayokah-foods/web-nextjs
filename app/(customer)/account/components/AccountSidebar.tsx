@@ -3,25 +3,10 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
+import { CUSTOMER_MENU } from "@/setting";
+import { FiLogOut } from "react-icons/fi";
 
-import {
-  FiUser,
-  FiPackage,
-  FiHeart,
-  FiMapPin,
-  FiSettings,
-  FiLifeBuoy,
-  FiLogOut,
-} from "react-icons/fi";
 
-const menuItems = [
-  { name: "Account Overview", href: "/account", icon: FiUser },
-  { name: "Orders", href: "/account/orders", icon: FiPackage },
-  { name: "Wishlist", href: "/account/wishlists", icon: FiHeart },
-  { name: "Address", href: "/account/address", icon: FiMapPin },
-  { name: "Setting", href: "/account/settings", icon: FiSettings },
-  { name: "Support", href: "/account/support", icon: FiLifeBuoy },
-];
 
 export default function AccountSidebar() {
   const pathname = usePathname();
@@ -36,7 +21,7 @@ export default function AccountSidebar() {
   return (
     <aside className="md:sticky md:top-28 bg-white rounded-xl shadow-sm p-4 overflow-x-auto md:overflow-visible">
       <nav className="flex md:block gap-3 md:space-y-1 min-w-max md:min-w-0">
-        {menuItems.map((item) => {
+        {CUSTOMER_MENU.map((item) => {
           const isActive = pathname === item.href;
           const Icon = item.icon;
 

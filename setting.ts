@@ -1,3 +1,16 @@
+import { FaDhl } from "react-icons/fa6";
+import { SiFedex, SiUps, SiUsps, SiAmazon, SiDeliveroo } from "react-icons/si";
+import { MdLocalShipping } from "react-icons/md";
+
+import {
+  FiUser,
+  FiPackage,
+  FiHeart,
+  FiMapPin,
+  FiSettings,
+  FiLifeBuoy,
+} from "react-icons/fi";
+
 import {
   LuLayoutDashboard,
   LuPackage,
@@ -84,6 +97,14 @@ export const NAVIGATION: NavItem[] = [
   },
 ];
 
+export const CUSTOMER_MENU = [
+  { name: "Account Overview", href: "/account", icon: FiUser },
+  { name: "Orders", href: "/account/orders", icon: FiPackage },
+  { name: "Wishlist", href: "/account/wishlists", icon: FiHeart },
+  { name: "Address", href: "/account/address", icon: FiMapPin },
+  { name: "Setting", href: "/account/settings", icon: FiSettings },
+  { name: "Support", href: "/account/support", icon: FiLifeBuoy },
+];
 export const MONTHS = [
   "January",
   "February",
@@ -126,13 +147,9 @@ export const VALID_IMAGE_TYPES = [
   "image/jpg",
   "image/png",
   "image/webp",
-]; 
+];
 
-import { FaDhl } from "react-icons/fa6";
-import { SiFedex, SiUps, SiUsps, SiAmazon, SiDeliveroo } from "react-icons/si";
-import { MdLocalShipping } from "react-icons/md";
-
-export const carrierIcons: Record<
+export const CARRIER_ICONS: Record<
   string,
   { icon: React.ComponentType<any>; color: string }
 > = {
