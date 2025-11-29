@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from "react";
 import {
-  getVendorBank,
   getVendorEarnings,
-  getVendorEarningsGraph,
+  getWithdrawalHistory,
 } from "@/lib/api/seller/earnings";
 import { LuMessageCircle } from "react-icons/lu";
-import { formatAmount } from "@/utils/formatCurrency";
 import WalletCard from "./components/WalletCard";
+import SalesGraph from "./components/SalesGraph";
+import WithdrawalHistory from "./components/WithdrawalHistory";
 
 interface Earnings {
   id: number;
@@ -28,8 +28,7 @@ export default function FinancePaymentPage() {
       setLoading(true);
 
       const earnings = await getVendorEarnings();
-      // const earningGraph = await getVendorEarningsGraph(); // will use later
-      // const settlementBank = await getVendorBank();        // will use later
+      const history = await getWithdrawalHistory();        // will use later
 
       setWallet(earnings?.data || null);
     } catch (err) {
@@ -48,7 +47,7 @@ export default function FinancePaymentPage() {
       {/* HEADER CARD */}
       <div className="card mb-6 hover:shadow-lg transition-all duration-300 rounded-xl bg-white cursor-default p-4">
         <div className="flex justify-between items-center">
-          <h2 className="text-lg font-semibold flex items-center gap-2 text-orange-800">
+          <h2 className="text-lg font-semibold flex items-center gap-2 text-orange-800!">
             <LuMessageCircle /> Finance & Payments
           </h2>
         </div>
@@ -58,10 +57,9 @@ export default function FinancePaymentPage() {
         </p>
       </div>
 
-      <WalletCard
-        wallet={wallet}
-        loading={loading} 
-      />
+      <WalletCard wallet={wallet} loading={loading} />
+      <SalesGraph />
+      <WithdrawalHistory />
     </div>
   );
 }

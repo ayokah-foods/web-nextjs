@@ -16,3 +16,8 @@ export async function withdrawRequest(amount: number) {
   const response = await api.post("/vendor/withdrawal/request", { amount });
   return response.data;
 }
+
+export async function getWithdrawalHistory() {
+  const response = await api.get("/vendor/withdrawal/history");
+  return response.data;
+}
