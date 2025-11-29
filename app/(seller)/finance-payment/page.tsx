@@ -1,64 +1,47 @@
 "use client";
 
-import { Review } from "@/interfaces/reviews";
-import { listVendorReviews } from "@/lib/api/seller/reviews";
-import { formatHumanReadableDate } from "@/utils/formatDate";
 import { useEffect, useState } from "react";
+import {
+  getVendorBank,
+  getVendorEarnings,
+  getVendorEarningsGraph,
+} from "@/lib/api/seller/earnings";
 import { LuMessageCircle } from "react-icons/lu";
+import { formatAmount } from "@/utils/formatCurrency";
+import WalletCard from "./components/WalletCard";
 
+interface Earnings {
+  id: number;
+  user_id: number;
+  total_earning: string;
+  available_to_withdraw: string;
+  pending: number;
+}
 
-export default function Orders() {
-  const LIMIT = 3; 
-
-  const [reviews, setReviews] = useState<Review[]>([]);
+export default function FinancePaymentPage() {
+  const [wallet, setWallet] = useState<Earnings | undefined>(undefined);
   const [loading, setLoading] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
 
-  const [offset, setOffset] = useState(0);
-  const [total, setTotal] = useState(0);
-
-  /** FETCH REVIEWS */
-  async function fetchReviews(loadMore = false) {
+  /** FETCH WALLET + BANK + GRAPH */
+  async function fetchFinance() {
     try {
-      if (loadMore) {
-        setLoadingMore(true);
-      } else {
-        setLoading(true);
-        setOffset(0);
-      }
+      setLoading(true);
 
-      const response = await listVendorReviews({
-        limit: LIMIT,
-        offset: offset - 1,
-      });
+      const earnings = await getVendorEarnings();
+      // const earningGraph = await getVendorEarningsGraph(); // will use later
+      // const settlementBank = await getVendorBank();        // will use later
 
-      const data = response?.data || [];
-
-      setTotal(response.total || 0);
-
-      if (loadMore) {
-        setReviews((prev) => [...prev, ...data]);
-      } else {
-        setReviews(data);
-      }
-
-      // Only increase offset if we actually received data
-      if (data.length > 0) {
-        setOffset((prev) => prev + LIMIT);
-      }
+      setWallet(earnings?.data || null);
     } catch (err) {
-      console.error("Error loading reviews:", err);
+      console.error("Error loading finance data:", err);
     } finally {
       setLoading(false);
-      setLoadingMore(false);
     }
   }
 
   useEffect(() => {
-    fetchReviews(false);
+    fetchFinance();
   }, []);
-
-  const hasMore = reviews.length < total;
 
   return (
     <div>
@@ -66,103 +49,19 @@ export default function Orders() {
       <div className="card mb-6 hover:shadow-lg transition-all duration-300 rounded-xl bg-white cursor-default p-4">
         <div className="flex justify-between items-center">
           <h2 className="text-lg font-semibold flex items-center gap-2 text-orange-800">
-            <LuMessageCircle /> Customer Feedback
+            <LuMessageCircle /> Finance & Payments
           </h2>
         </div>
         <p className="text-sm mt-1 text-gray-600">
-          From your dashboard, you can easily access and control your recent
-          <span className="text-orange-800"> customer reviews</span>.
+          From your dashboard, you can manage your sales, payouts, and bank
+          settlements.
         </p>
       </div>
 
-      <div className="space-y-6 mt-6">
-        {/* INITIAL SKELETON LOADING */}
-        {loading && (
-          <>
-            {[1, 2, 3].map((n) => (
-              <div
-                key={n}
-                className="bg-white p-4 rounded-xl shadow-sm border animate-pulse"
-              >
-                <div className="flex gap-4">
-                  <div className="w-20 h-20 bg-gray-200 rounded-lg" />
-
-                  <div className="flex-1 space-y-3">
-                    <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-                    <div className="h-3 bg-gray-200 rounded w-full"></div>
-                    <div className="h-3 bg-gray-200 rounded w-1/2"></div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </>
-        )}
-
-        {/* EMPTY */}
-        {!loading && reviews.length < 3 && (
-          <div className="py-6 card text-center text-orange-800 text-sm">
-            No customer reviews yet.
-          </div>
-        )}
-
-        {/* REVIEWS LIST */}
-        {!loading &&
-          reviews.map((review) => (
-            <div
-              key={review.id}
-              className="bg-white p-4 rounded-xl shadow-sm border hover:shadow-md transition cursor-pointer"
-            >
-              <div className="flex gap-4">
-                <img
-                  src={review.product?.images?.[0] || "/placeholder.svg"}
-                  alt={review.product?.title}
-                  className="w-20 h-20 object-cover rounded-lg bg-gray-100"
-                />
-
-                <div className="flex-1">
-                  <h3 className="font-semibold text-gray-800">
-                    {review.product?.title}
-                  </h3>
-
-                  {/* RATING */}
-                  <div className="flex items-center gap-1 mt-1">
-                    {Array.from({ length: 5 }).map((_, index) => (
-                      <span
-                        key={index}
-                        className={`text-lg ${
-                          index < review.rating
-                            ? "text-yellow-500"
-                            : "text-gray-300"
-                        }`}
-                      >
-                        ★
-                      </span>
-                    ))}
-                  </div>
-
-                  <p className="text-sm mt-2 text-gray-700">{review.comment}</p>
-
-                  <p className="text-xs text-gray-500 mt-2">
-                    {formatHumanReadableDate(review.created_at)}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
-
-        {/* LOAD MORE BUTTON */}
-        {!loading && hasMore && (
-          <div className="flex justify-center mt-6">
-            <button
-              onClick={() => fetchReviews(true)}
-              disabled={loadingMore}
-              className="btn btn-primary"
-            >
-              {loadingMore ? "Loading..." : "Load more reviews"}
-            </button>
-          </div>
-        )}
-      </div>
+      <WalletCard
+        wallet={wallet}
+        loading={loading} 
+      />
     </div>
   );
 }

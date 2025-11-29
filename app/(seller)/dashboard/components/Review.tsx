@@ -51,7 +51,7 @@ function ReviewCard({ review }: { review: ReviewType }) {
           </p>{" "}
         </div>
         <StarRating rating={review.rating} />
-        <p className="mt-1 text-sm text-gray-500 truncate w-56">
+        <p className="mt-1 text-sm text-gray-500 truncate w-50">
           {review.comment}
         </p>
       </div>
@@ -90,10 +90,10 @@ export function RecentReviews() {
       <div className="card flex justify-between items-center mb-6">
         <h2 className="text-lg font-medium">Recent Reviews</h2>
         <Link
-          href="/reviews"
-          className="text-sm btn btn-gray flex items-center"
+          href="/customer-feedback"
+          className="btn btn-gray flex items-center text-xs!"
         >
-          See all <FaExternalLinkAlt className="ml-2" />
+          See all  
         </Link>
       </div>
       <div className="mb-6 card">
@@ -108,7 +108,7 @@ export function RecentReviews() {
             reviews.map((review) => (
               <div
                 key={review.id}
-                className="cursor-pointer hover:bg-hub-secondary-50/50 rounded-lg p-1"
+                className="border-b border-orange-50"
               >
                 <ReviewCard review={review} />
               </div>

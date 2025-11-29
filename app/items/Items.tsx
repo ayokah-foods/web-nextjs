@@ -136,7 +136,7 @@ const Items: FC<ItemsProps> = ({}) => {
                 alt={categoryInfo.name}
                 width={150}
                 height={150}
-                className="w-36 h-36 rounded-full object-cover border-4 border-orange-100 flex-shrink-0"
+                className="w-36 h-36 rounded-full object-cover border-4 border-orange-100 shrink-0"
               />
             )}
             <div className="text-center md:text-left">
