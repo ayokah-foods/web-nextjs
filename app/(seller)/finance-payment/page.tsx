@@ -22,14 +22,10 @@ export default function FinancePaymentPage() {
   const [wallet, setWallet] = useState<Earnings | undefined>(undefined);
   const [loading, setLoading] = useState(true);
 
-  /** FETCH WALLET + BANK + GRAPH */
   async function fetchFinance() {
     try {
       setLoading(true);
-
       const earnings = await getVendorEarnings();
-      const history = await getWithdrawalHistory();        // will use later
-
       setWallet(earnings?.data || null);
     } catch (err) {
       console.error("Error loading finance data:", err);
