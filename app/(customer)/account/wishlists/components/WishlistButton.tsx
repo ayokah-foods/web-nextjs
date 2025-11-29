@@ -34,10 +34,9 @@ export default function WishlistButton({ product }: Props) {
     }
 
     if (wishlisted) {
-      router.push("/wishlists");
+      router.push("/account/wishlists");
       return;
     }
-    console.log(product);
 
     addToWishlist({
         id: product.id,

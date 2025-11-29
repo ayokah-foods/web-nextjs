@@ -118,7 +118,7 @@ const Items: FC<ItemsProps> = ({}) => {
     ));
 
   return (
-    <div className="p-4 bg-orange-50 h-full">
+    <div className="p-4 bg-white  h-full">
       {loading ? (
         // Skeleton for the header
         <div className="mb-6 bg-white p-6 rounded-lg shadow-md">

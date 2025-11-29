@@ -13,57 +13,65 @@ import Image from "next/image";
 import StatusBadge from "@/utils/StatusBadge";
 
 export default function Orders() {
+  const PAGE_SIZE = 2;
+
   const [orders, setOrders] = useState<CustomerOrder[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [loadingMore, setLoadingMore] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState<string>("");
-  const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: 5,
-  });
+  const [offset, setOffset] = useState(0);
   const [totalOrders, setTotalOrders] = useState(0);
 
   const fetchOrders = useCallback(
-    async (pageIndex: number, search: string) => {
+    async (offsetValue: number, searchValue: string, isLoadMore = false) => {
       try {
-        setLoading(true);
-        const offset = pageIndex * pagination.pageSize;
+        if (!isLoadMore) setLoading(true);
 
         const response: CustomerOrdersResponse = await listOrders(
-          pagination.pageSize,
-          offset,
-          search
+          PAGE_SIZE,
+          offsetValue,
+          searchValue
         );
-        setOrders(response.data);
+
+        if (isLoadMore) {
+          setOrders((prev) => [...prev, ...response.data]);
+        } else {
+          setOrders(response.data);
+        }
+
         setTotalOrders(response.total);
       } catch (err) {
         console.error(err);
         setError("An error occurred while fetching orders.");
       } finally {
         setLoading(false);
+        setLoadingMore(false);
       }
     },
-    [pagination.pageSize]
+    []
   );
 
-  const debouncedFetchOrders = useMemo(
+  const debouncedFetch = useMemo(
     () =>
-      debounce((pageIndex: number, search: string) => {
-        fetchOrders(pageIndex, search);
+      debounce((off, srch) => {
+        fetchOrders(off, srch);
       }, 300),
     [fetchOrders]
   );
 
   useEffect(() => {
-    debouncedFetchOrders(pagination.pageIndex, search);
-    return () => {
-      debouncedFetchOrders.cancel();
-    };
-  }, [pagination.pageIndex, debouncedFetchOrders, search]);
+    setOffset(0);
+    debouncedFetch(0, search);
+    return () => debouncedFetch.cancel();
+  }, [search]);
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value);
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  const handleLoadMore = async () => {
+    const newOffset = offset + PAGE_SIZE;
+    setOffset(newOffset);
+    setLoadingMore(true);
+
+    await fetchOrders(newOffset, search, true);
   };
 
   return (
@@ -85,13 +93,13 @@ export default function Orders() {
           type="text"
           placeholder="Search orders by product name"
           value={search}
-          onChange={handleSearchChange}
+          onChange={(e) => setSearch(e.target.value)}
           className="border border-orange-200 rounded-lg px-3 py-2 w-full focus:outline-none"
         />
       </div>
 
-      {/* Loading state */}
-      {loading ? (
+      {/* Loading (Initial) */}
+      {loading && orders.length === 0 ? (
         <div className="space-y-4">
           {[...Array(3)].map((_, i) => (
             <SkeletonOrderCard key={i} />
@@ -105,35 +113,40 @@ export default function Orders() {
         <div className="space-y-4">
           {orders.map((order) => (
             <div key={order.id} className="card">
-              {/* Order Header */}
+              {/* Header */}
               <div className="flex justify-between items-center">
                 <h3 className="font-semibold text-gray-800">
                   Order #{order.id}
                 </h3>
-                <span className="px-2 py-1 rounded text-xs! ">
-                  <StatusBadge status={order.shipping_status} type="shipping" />
-                </span>
-                <span className="btn btn-gray text-xs!">
-                  <Link prefetch={true} href={`/account/orders/${order.id}`}>
-                    View detail
-                  </Link>
-                </span>
+
+                <StatusBadge status={order.shipping_status} type="shipping" />
+
+                <Link
+                  prefetch={true}
+                  href={`/account/orders/${order.id}`}
+                  className="btn btn-gray text-xs"
+                >
+                  View detail
+                </Link>
               </div>
 
-              {/* Order Meta */}
+              {/* Meta */}
               <div className="mt-2 text-sm space-y-1">
                 <p>
                   Total: <strong>{formatAmount(order.total)}</strong>
                 </p>
                 <p>Payment: {order.payment_status}</p>
+
                 {order.delivery_date && (
                   <p>
                     Delivery: {formatHumanReadableDate(order.delivery_date)}
                   </p>
                 )}
+
                 {order.shipping_fee && (
                   <p>Shipping Fee: {formatAmount(order.shipping_fee)}</p>
                 )}
+
                 {order.tracking_number && (
                   <p>
                     Tracking:{" "}
@@ -152,11 +165,15 @@ export default function Orders() {
                 )}
               </div>
 
-              {/* Order Items */}
+              {/* Items */}
               <div className="mt-4 border-t border-orange-200 pt-4 space-y-4">
                 {order.order_items.map((item) => (
-                  <Link href={`/items/${item.product.slug}`} prefetch={true}>
-                    <div key={item.id} className="flex items-center gap-4">
+                  <Link
+                    key={item.id}
+                    href={`/items/${item.product.slug}`}
+                    prefetch={true}
+                  >
+                    <div className="flex items-center gap-4">
                       <Image
                         width={64}
                         height={64}
@@ -176,74 +193,19 @@ export default function Orders() {
               </div>
             </div>
           ))}
-        </div>
-      )}
 
-      {/* Fancy Pagination */}
-      {!loading && totalOrders > pagination.pageSize && (
-        <div className="flex justify-center mt-6">
-          <div className="flex items-center gap-2">
-            {/* Previous */}
-            <button
-              disabled={pagination.pageIndex === 0}
-              onClick={() =>
-                setPagination((prev) => ({
-                  ...prev,
-                  pageIndex: prev.pageIndex - 1,
-                }))
-              }
-              className={`btn btn-gray ${
-                pagination.pageIndex === 0
-                  ? "opacity-40 cursor-not-allowed"
-                  : "hover:bg-gray-100"
-              }`}
-            >
-              Prev
-            </button>
-
-            {/* Page numbers */}
-            {Array.from(
-              { length: Math.ceil(totalOrders / pagination.pageSize) },
-              (_, i) => (
-                <button
-                  key={i}
-                  onClick={() =>
-                    setPagination((prev) => ({
-                      ...prev,
-                      pageIndex: i,
-                    }))
-                  }
-                  className={`px-3 py-2 rounded-md border border-gray-200 ${
-                    pagination.pageIndex === i
-                      ? "bg-orange-800 text-white"
-                      : "hover:bg-gray-100 cursor-pointer"
-                  }`}
-                >
-                  {i + 1}
-                </button>
-              )
-            )}
-
-            {/* Next */}
-            <button
-              disabled={
-                (pagination.pageIndex + 1) * pagination.pageSize >= totalOrders
-              }
-              onClick={() =>
-                setPagination((prev) => ({
-                  ...prev,
-                  pageIndex: prev.pageIndex + 1,
-                }))
-              }
-              className={`btn btn-gray ${
-                (pagination.pageIndex + 1) * pagination.pageSize >= totalOrders
-                  ? "opacity-40 cursor-not-allowed"
-                  : "hover:bg-gray-100"
-              }`}
-            >
-              Next
-            </button>
-          </div>
+          {/* LOAD MORE */}
+          {orders.length < totalOrders && (
+            <div className="flex justify-center mt-6">
+              <button
+                onClick={handleLoadMore}
+                disabled={loadingMore}
+                className="btn btn-primary  w-full sm:w-1/2"
+              >
+                {loadingMore ? "Loading..." : "Load More"}
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

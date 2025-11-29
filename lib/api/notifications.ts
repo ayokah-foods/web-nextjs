@@ -13,3 +13,8 @@ export async function saveCommunicationSettings(payload: NotificationPayload) {
   const response = await api.post(`/communication/create`, payload);
   return response.data;
 }
+
+export async function listNotifications(offset = 0, limit = 10) {
+  const res = await api.get(`/notifications?offset=${offset}&limit=${limit}`);
+  return res.data;
+}

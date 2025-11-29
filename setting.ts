@@ -9,6 +9,7 @@ import {
   FiMapPin,
   FiSettings,
   FiLifeBuoy,
+  FiBell,
 } from "react-icons/fi";
 
 import {
@@ -100,11 +101,14 @@ export const NAVIGATION: NavItem[] = [
 export const CUSTOMER_MENU = [
   { name: "Account Overview", href: "/account", icon: FiUser },
   { name: "Orders", href: "/account/orders", icon: FiPackage },
+  { name: "Track Order", href: "/account/tracking-order", icon: FiMapPin },
   { name: "Wishlist", href: "/account/wishlists", icon: FiHeart },
   { name: "Address", href: "/account/address", icon: FiMapPin },
-  { name: "Setting", href: "/account/settings", icon: FiSettings },
+  { name: "Notifications", href: "/account/notifications", icon: FiBell },
   { name: "Support", href: "/account/support", icon: FiLifeBuoy },
+  { name: "Setting", href: "/account/settings", icon: FiSettings },
 ];
+
 export const MONTHS = [
   "January",
   "February",

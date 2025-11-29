@@ -1,11 +1,9 @@
 import React from "react";
 import { FaCheckCircle } from "react-icons/fa";
-import { clsx } from "clsx"; // A tiny utility for constructing className strings conditionally
+import { clsx } from "clsx"; 
 
-// Define the possible statuses for type safety
 export type ShippingStatus = "processing" | "ongoing" | "delivered";
 
-// Define the Order type
 export interface Order {
   id: number;
   shipping_status: ShippingStatus;
