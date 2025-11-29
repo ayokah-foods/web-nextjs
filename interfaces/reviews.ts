@@ -20,3 +20,14 @@ export interface ReviewMetricType {
     count: number;
 }
  
+
+export interface Review {
+  id: number;
+  rating: number;
+  comment: string;
+  created_at: string;
+  product: {
+    title: string;
+    images: string[];
+  };
+}

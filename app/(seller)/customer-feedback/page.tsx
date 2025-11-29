@@ -1,20 +1,11 @@
 "use client";
 
+import { Review } from "@/interfaces/reviews";
 import { listVendorReviews } from "@/lib/api/seller/reviews";
 import { formatHumanReadableDate } from "@/utils/formatDate";
 import { useEffect, useState } from "react";
 import { LuMessageCircle } from "react-icons/lu";
 
-interface Review {
-  id: number;
-  rating: number;
-  comment: string;
-  created_at: string;
-  product: {
-    title: string;
-    images: string[];
-  };
-}
 
 export default function Orders() {
   const LIMIT = 3; 
