@@ -20,15 +20,20 @@ export default function OverviewSection() {
     phone: user?.phone || "",
   });
 
-  const greeting = useMemo(() => {
-    const ukTime = new Date().toLocaleString("en-GB", {
-      timeZone: "Europe/London",
-    });
-    const hour = new Date(ukTime).getHours();
-    if (hour < 12) return "Good morning";
-    if (hour < 18) return "Good afternoon";
-    return "Good evening";
-  }, []);
+ const greeting = useMemo(() => {
+   const ukFormatter = new Intl.DateTimeFormat("en-GB", {
+     timeZone: "Europe/London",
+     hour: "numeric",
+     hour12: false,
+   });
+
+   const hour = Number(ukFormatter.format(new Date()));
+
+   if (hour < 12) return "Good morning";
+   if (hour < 18) return "Good afternoon";
+   return "Good evening";
+ }, []);
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
