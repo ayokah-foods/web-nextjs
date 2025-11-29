@@ -129,7 +129,7 @@ export default function OverviewSection() {
               />
               <div className="flex gap-2 justify-center mt-2">
                 <button
-                  className="btn btn-orange"
+                  className="btn btn-primary"
                   onClick={handleSave}
                   disabled={loading}
                 >
@@ -164,7 +164,7 @@ export default function OverviewSection() {
 
         {/* Shipping Address Card */}
         <ShippingSection user={user} />
-      </div> 
+      </div>
     </div>
   );
 }

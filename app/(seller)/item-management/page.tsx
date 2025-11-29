@@ -25,7 +25,7 @@ export default function ProductManagementPage() {
           <button
             onClick={() => setDrawerOpen(true)}
             className="
-              btn btn-orange 
+              btn btn-primary 
               flex items-center 
               p-2 lg:py-2 lg:px-4 lg:gap-1 
               sm:rounded-xl

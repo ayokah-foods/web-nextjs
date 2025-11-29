@@ -226,7 +226,7 @@ export default function OrderDetail() {
           {/* 1. Shipping Details Group */}
           <div className="space-y-3 pr-4 border-r md:border-r border-gray-200">
             <h4 className="font-bold text-base text-gray-900 mb-2">
-              Shipping Information
+              Shipping Info
             </h4>
 
             <div className="flex justify-between items-start">
@@ -244,7 +244,7 @@ export default function OrderDetail() {
                 Tracking Number:
               </p>
               <p className="text-gray-800 w-1/2 text-right">
-                {orderMeta.tracking_number ?? "N/A"}
+                {orderMeta.tracking_number ?? "Not yet"}
               </p>
             </div>
 
@@ -263,7 +263,7 @@ export default function OrderDetail() {
           {/* 2. Payment & Settlement Group */}
           <div className="space-y-3 pl-4">
             <h4 className="font-bold text-base text-gray-900 mb-2">
-              Payment & Vendor Info
+              Payment Info
             </h4>
 
             <div className="flex justify-between items-start">

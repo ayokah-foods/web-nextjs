@@ -257,7 +257,7 @@ export default function ShippingSection({ user }: ShippingSectionProps) {
 
           <div className="flex gap-2 mt-2">
             <button
-              className="btn btn-orange"
+              className="btn btn-primary"
               onClick={handleSave}
               disabled={loading}
             >
@@ -278,8 +278,8 @@ export default function ShippingSection({ user }: ShippingSectionProps) {
             {user?.name} {user?.last_name ?? "Guest"}
           </p>
           <p className="text-gray-700 text-sm">
-            {formData.street_address || ""}{" "}
-            {formData.city}, {formData.state}, {formData.country}
+            {formData.street_address || ""} {formData.city}, {formData.state},{" "}
+            {formData.country}
           </p>
           <p className="text-gray-700 text-sm">
             {formData.phone || "(no phone number)"}

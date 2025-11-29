@@ -110,10 +110,10 @@ export default function Orders() {
                 <h3 className="font-semibold text-gray-800">
                   Order #{order.id}
                 </h3>
-                <span className="px-2 py-1 rounded text-xs ">
+                <span className="px-2 py-1 rounded text-xs! ">
                   <StatusBadge status={order.shipping_status} type="shipping" />
                 </span>
-                <span className="btn btn-gray">
+                <span className="btn btn-gray text-xs!">
                   <Link prefetch={true} href={`/account/orders/${order.id}`}>
                     View detail
                   </Link>
