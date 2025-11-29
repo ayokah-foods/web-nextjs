@@ -6,6 +6,7 @@ import Image from "next/image";
 import { updateUserProfile } from "@/lib/api/auth/profile";
 import toast from "react-hot-toast";
 import ShippingSection from "./ShippingSection";
+import useUKGreeting from "@/hooks/useUKGreeting";
 
 export default function OverviewSection() {
   const user = useAuthStore((state) => state.user);
@@ -20,19 +21,7 @@ export default function OverviewSection() {
     phone: user?.phone || "",
   });
 
- const greeting = useMemo(() => {
-   const ukFormatter = new Intl.DateTimeFormat("en-GB", {
-     timeZone: "Europe/London",
-     hour: "numeric",
-     hour12: false,
-   });
-
-   const hour = Number(ukFormatter.format(new Date()));
-
-   if (hour < 12) return "Good morning";
-   if (hour < 18) return "Good afternoon";
-   return "Good evening";
- }, []);
+    const greeting = useUKGreeting();
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
