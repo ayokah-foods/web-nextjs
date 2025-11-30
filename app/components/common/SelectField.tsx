@@ -10,7 +10,7 @@ import {
 } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/24/outline";
 
-type DefaultOption = { id: number; name: string };
+export type DefaultOption = { id: number; name: string };
 
 type SelectFieldProps<T extends DefaultOption> = {
   label?: string;
@@ -47,7 +47,7 @@ export default function SelectField<T extends DefaultOption>({
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <ListboxOptions className="absolute mt-1 max-h-60 w-full overflow-auto rounded-lg bg-white py-2 text-sm shadow-lg ring-1 ring-black/5 focus:outline-none z-40">
+            <ListboxOptions className="absolute mt-1 max-h-60 w-full overflow-auto rounded-lg bg-white py-2 text-sm shadow-lg ring-1  ring-black/5 focus:outline-none z-40">
               {options.map((option) => (
                 <ListboxOption
                   key={option.id}
@@ -61,7 +61,7 @@ export default function SelectField<T extends DefaultOption>({
                   {({ selected }) => (
                     <>
                       <span
-                        className={`block truncate ${
+                        className={`block truncate  ${
                           selected ? "font-medium" : "font-normal"
                         }`}
                       >

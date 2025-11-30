@@ -34,6 +34,7 @@ interface OrderDetailResponse {
 // --- OPTIONS (Kept the same) ---
 
 export const statusOptions = [
+  { label: "All Status", value: "" },
   { label: "Processing", value: "processing" },
   { label: "Ongoing", value: "ongoing" },
   { label: "Returned", value: "returned" },

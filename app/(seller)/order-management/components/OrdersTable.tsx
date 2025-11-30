@@ -6,7 +6,6 @@ import { ColumnDef } from "@tanstack/react-table";
 import { debounce } from "lodash";
 import StatusBadge from "@/utils/StatusBadge";
 import { formatHumanReadableDate } from "@/utils/formatDate";
-// 🚀 CORRECTION: Import the specific types (Order and OrderListResponse)
 import { listVendorOrders } from "@/lib/api/orders";
 import TanStackTable from "@/app/(seller)/dashboard/components/commons/TanStackTable";
 import { Order, OrderListResponse } from "@/interfaces/orders";

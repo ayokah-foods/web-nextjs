@@ -5,8 +5,8 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 import {
-  FaTruck, 
-  FaShoppingCart, 
+  FaTruck,
+  FaShoppingCart,
   FaTimesCircle,
   FaUndo,
   FaHourglassHalf,
@@ -60,7 +60,7 @@ interface Stats {
   inactive_products: number;
   reviewed_products: number;
   ordered_products: number;
-  views: string; 
+  views: string;
 }
 
 const ItemOverview: React.FC = () => {
@@ -97,11 +97,11 @@ const ItemOverview: React.FC = () => {
 
   const statCards = [
     { title: "Total Items", value: stats?.total_products, icon: FaTruck },
-    {
-      title: "Active Items",
-      value: stats?.active_products,
-      icon: FaHourglassHalf,
-    },
+    // {
+    //   title: "Active Items",
+    //   value: stats?.active_products,
+    //   icon: FaHourglassHalf,
+    // },
     {
       title: "Inactive Items",
       value: stats?.inactive_products,
@@ -121,8 +121,16 @@ const ItemOverview: React.FC = () => {
   ];
 
   return (
-    <div className="p-0"> 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+    <div className="p-0">
+      <div
+        className="
+      flex gap-8 
+      overflow-x-auto pb-2 
+      flex-nowrap 
+      sm:flex-wrap sm:overflow-visible
+    "
+      >
+        {" "}
         {statCards.map((card) => (
           <StatCard
             key={card.title}

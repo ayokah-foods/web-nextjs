@@ -61,16 +61,6 @@ export const NAVIGATION: NavItem[] = [
     icon: LuWallet,
   },
   {
-    id: 7,
-    label: "Accounts & Settings",
-    href: "/accounts-settings",
-    icon: LuSettings,
-    children: [
-      // Assuming sub-settings links
-    ],
-  },
-  { id: 8, label: "Vendor Support", href: "/vendor-support", icon: LuUsers },
-  {
     id: 9,
     label: "Shop Management",
     href: "/shop-management",
@@ -96,6 +86,16 @@ export const NAVIGATION: NavItem[] = [
       },
     ],
   },
+  {
+    id: 7,
+    label: "Accounts & Settings",
+    href: "/accounts-settings",
+    icon: LuSettings,
+    children: [
+      // Assuming sub-settings links
+    ],
+  },
+  { id: 8, label: "Vendor Support", href: "/vendor-support", icon: LuUsers },
 ];
 
 export const CUSTOMER_MENU = [
@@ -171,3 +171,15 @@ export const CARRIER_ICONS: Record<
 };
 
 export const UK_TIMEZONE = "Europe/London";
+
+export const ALLOWED_COUNTRIES = [
+  "GB", // United Kingdom
+  "KE", // Kenya
+  "NG", // Nigeria
+  "GH", // Ghana
+  "ZA", // South Africa
+  "MA", // Morocco
+  "UG", // Uganda
+  "TZ", // Tanzania
+  "RW", // Rwanda
+];
