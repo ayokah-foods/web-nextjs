@@ -89,7 +89,7 @@ export const NAVIGATION: NavItem[] = [
   {
     id: 7,
     label: "Accounts & Settings",
-    href: "/accounts-settings",
+    href: "/account-settings",
     icon: LuSettings,
     children: [
       // Assuming sub-settings links
