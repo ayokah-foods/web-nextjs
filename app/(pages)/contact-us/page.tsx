@@ -340,7 +340,7 @@ const ContactUsPage: React.FC = () => {
             {/* Map Placeholder */}
             <div className="bg-white p-6 rounded-xl shadow-xl h-68 flex items-center justify-center text-gray-400 border border-gray-100 overflow-hidden">
               <iframe
-                src="https://www.google.com/maps/embed?pb=..."
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2493.8930236389942!2d0.43961977603890146!3d51.31309242488024!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47df34f2f3dc85f5%3A0xe6609bba8567e171!2s77%20The%20Lakes%2C%20Larkfield%2C%20Aylesford%20ME20%206SJ%2C%20UK!5e0!3m2!1sen!2ske!4v1764603232601!5m2!1sen!2ske"
                 className="w-full h-56 sm:h-64 md:h-72 lg:h-80"
                 style={{ border: 0 }}
                 loading="lazy"
