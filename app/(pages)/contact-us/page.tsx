@@ -1,6 +1,7 @@
 "use client";
 
 import contactUs from "@/lib/api/contact";
+import { COMPANY_CONTACT_INFO } from "@/setting";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaBuilding, FaPhoneAlt, FaPaperPlane } from "react-icons/fa";
@@ -13,12 +14,7 @@ interface FormData {
   subject: string;
   message: string;
 }
-const COMPANY_CONTACT_INFO = {
-  address: "43, Fagbile Estate Road Ijegun",
-  phone: "07078849739",
-  email: "info@elwifra.com",
-  companyName: "EL-WIFRA VENTURES Ltd.",
-};
+
 
 const ContactForm: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
@@ -150,7 +146,7 @@ const ContactForm: React.FC = () => {
           onChange={handleChange}
           required
           disabled={isSubmitting}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-[#1B412C] focus:border-[#1B412C] transition duration-150 focus:outline-none"
+          className="input"
         />
       </div>
 
@@ -171,7 +167,7 @@ const ContactForm: React.FC = () => {
             onChange={handleChange}
             required
             disabled={isSubmitting}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-[#1B412C] focus:border-[#1B412C] transition duration-150 focus:outline-none"
+            className="input"
           />
         </div>
 
@@ -190,7 +186,7 @@ const ContactForm: React.FC = () => {
             onChange={handleChange}
             required
             disabled={isSubmitting}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-[#1B412C] focus:border-[#1B412C] transition duration-150 focus:outline-none"
+            className="input"
           />
         </div>
       </div>
@@ -211,7 +207,7 @@ const ContactForm: React.FC = () => {
           onChange={handleChange}
           required
           disabled={isSubmitting}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-[#1B412C] focus:border-[#1B412C] transition duration-150 focus:outline-none"
+          className="input"
         />
       </div>
 
@@ -231,7 +227,8 @@ const ContactForm: React.FC = () => {
           onChange={handleChange}
           required
           disabled={isSubmitting}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#1B412C] focus:border-[#1B412C] transition duration-150 focus:outline-none"
+          maxLength={255}
+          className="input"
         />
       </div>
 
@@ -249,27 +246,25 @@ const ContactForm: React.FC = () => {
           required
           disabled={isSubmitting}
           placeholder="Your answer"
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-[#1B412C] focus:border-[#1B412C] transition duration-150 focus:outline-none"
+          className="input"
         />
       </div>
 
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B412C] disabled:opacity-50 transition duration-150 shadow-md cursor-pointer"
+        className="btn btn-primary w-full flex justify-center items-center"
       >
         {isSubmitting ? (
-          <>
-            <div className="flex justify-center items-center gap-2">
-              <ClipLoader size={20} color="#fff" />
-              <span>Processing...</span>
-            </div>
-          </>
+          <div className="flex justify-center items-center gap-2">
+            <ClipLoader size={20} color="#fff" />
+            <span>Processing...</span>
+          </div>
         ) : (
-          <>
-            <FaPaperPlane className="w-5 h-5 mr-2" />
-            Submit Message
-          </>
+          <div className="flex justify-center items-center gap-2">
+            <FaPaperPlane className="w-5 h-5" />
+            <span>Submit Message</span>
+          </div>
         )}
       </button>
     </form>
@@ -278,17 +273,18 @@ const ContactForm: React.FC = () => {
 
 const ContactUsPage: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gray-50 font-sans p-4 sm:p-8">
+    <div className=" bg-gray-50 font-sans p-4 sm:p-8">
       <div className="max-w-6xl mx-auto">
         {/* Header Section */}
         <header className="text-center py-16 bg-white rounded-xl shadow-lg mb-12">
           <h1 className="text-5xl font-extrabold text-gray-900 tracking-tight mb-4">
-            Contact <span className="text-emerald-600">EL-WIFRA</span>
+            Contact{" "}
+            <span className="text-orange-600">
+              {COMPANY_CONTACT_INFO.companyName}
+            </span>
           </h1>
           <p className="text-xl text-gray-700 max-w-3xl mx-auto">
-            We are here to help! Reach out to us for inquiries related to any of
-            our business sectors: Supermarket, Event Center, Real Estate, or
-            Water Factory.
+            {COMPANY_CONTACT_INFO.companyDescription}
           </p>
         </header>
 
@@ -296,7 +292,7 @@ const ContactUsPage: React.FC = () => {
         <div className="grid lg:grid-cols-3 gap-10">
           {/* Contact Info Sidebar (2/3) */}
           <div className="lg:col-span-1 space-y-8 p-6 lg:p-0">
-            <div className="bg-emerald-50 p-6 rounded-xl shadow-md border-l-4 border-emerald-600">
+            <div className="bg-orange-50 p-6 rounded-xl shadow-md border-l-4 border-orange-600">
               <h2 className="text-2xl font-bold text-gray-900 mb-4">
                 Get in Touch
               </h2>
@@ -307,7 +303,7 @@ const ContactUsPage: React.FC = () => {
 
               {/* Address */}
               <div className="flex items-start mb-4">
-                <FaBuilding className="w-6 h-6 text-emerald-600 mt-1 flex-shrink-0" />
+                <FaBuilding className="w-6 h-6 text-orange-600 mt-1 shrink-0" />
                 <div className="ml-3">
                   <p className="text-sm font-semibold text-gray-900">
                     Physical Address
@@ -320,7 +316,7 @@ const ContactUsPage: React.FC = () => {
 
               {/* Phone */}
               <div className="flex items-start mb-4">
-                <FaPhoneAlt className="w-6 h-6 text-emerald-600 mt-1 flex-shrink-0" />
+                <FaPhoneAlt className="w-6 h-6 text-orange-600 mt-1 shrink-0" />
                 <div className="ml-3">
                   <p className="text-sm font-semibold text-gray-900">
                     Contact Number
@@ -331,7 +327,7 @@ const ContactUsPage: React.FC = () => {
 
               {/* Email (Derived) */}
               <div className="flex items-start">
-                <FaPaperPlane className="w-6 h-6 text-emerald-600 mt-1 flex-shrink-0" />
+                <FaPaperPlane className="w-6 h-6 text-orange-600 mt-1 shrink-0" />
                 <div className="ml-3">
                   <p className="text-sm font-semibold text-gray-900">
                     Email Address
@@ -344,7 +340,7 @@ const ContactUsPage: React.FC = () => {
             {/* Map Placeholder */}
             <div className="bg-white p-6 rounded-xl shadow-xl h-68 flex items-center justify-center text-gray-400 border border-gray-100">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3964.046802224197!2d3.265855599999999!3d6.515760599999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x103b8f7b217a748f%3A0x9784f11837aca67e!2s43%20Fagbile%20Rd%2C%20Ijegun%2C%20Lagos%20102213%2C%20Lagos%2C%20Nigeria!5e0!3m2!1sen!2ske!4v1760771157327!5m2!1sen!2ske"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2493.8930236389942!2d0.43961977603890146!3d51.31309242488024!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47df34f2f3dc85f5%3A0xe6609bba8567e171!2s77%20The%20Lakes%2C%20Larkfield%2C%20Aylesford%20ME20%206SJ%2C%20UK!5e0!3m2!1sen!2ske!4v1764603232601!5m2!1sen!2ske"
                 width="350"
                 height="230"
                 loading="lazy"

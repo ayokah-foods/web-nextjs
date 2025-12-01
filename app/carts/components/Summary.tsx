@@ -107,6 +107,9 @@ export default function OrderSummary({
       ])
     );
 
+    const vendorShippingDetails: Record<string, VendorRate> =
+      selectedShipping.vendors;
+
     const vendorCarriers = Array.from(
       new Set(Object.values(selectedShipping.vendors).map((v) => v.carrier))
     ).join(", ");
@@ -124,7 +127,9 @@ export default function OrderSummary({
       shipping_fee: shippingFee,
       shipping_carrier: vendorCarriers,
       estimated_delivery: estimatedDelivery!,
+
       shipping_service_code: vendorServiceCodes,
+      // shipping_service_code: vendorShippingDetails, // FULL OBJECT
     };
 
     try {

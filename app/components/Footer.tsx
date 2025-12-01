@@ -5,6 +5,7 @@ import { FaFacebookF, FaEnvelope } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 
 import Image from "next/image";
+import { COMPANY_CONTACT_INFO } from "@/setting";
 
 export default function Footer() {
   return (
@@ -14,7 +15,7 @@ export default function Footer() {
           {/* Logo */}
           <div className="col-span-2 flex flex-col gap-4">
             <div className="flex items-center gap-2">
-              <Link href={'/'}>
+              <Link href={"/"}>
                 <Image
                   src="/images/logo.svg"
                   alt="African Market Hub"
@@ -26,9 +27,7 @@ export default function Footer() {
                 />
               </Link>
             </div>
-            <span className="text-sm">
-              Your No 1 African marketplace online platform.
-            </span>
+            <span className="text-sm truncate">{COMPANY_CONTACT_INFO.companyDescription}</span>
           </div>
 
           {/* About */}
@@ -41,15 +40,15 @@ export default function Footer() {
           {/* Privacy */}
           <div className="flex flex-col gap-2">
             <span className="font-extrabold mb-2 ">Privacy</span>
-            <Link href="#">Terms of Privacy</Link>
-            <Link href="#">Privacy Policy</Link>
+            <Link href="/terms-condition">Terms of Privacy</Link>
+            <Link href="/privacy-policy">Privacy Policy</Link>
           </div>
 
           {/* FAQ */}
           <div className="flex flex-col gap-2">
             <span className="font-extrabold mb-2 ">FAQ</span>
-            <Link href="#">FAQs</Link>
-            <Link href="#">Shipping</Link>
+            <Link href="/faqs">FAQs</Link>
+            <Link href="/shipping">Shipping</Link>
           </div>
         </div>
 
