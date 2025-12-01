@@ -95,7 +95,7 @@ export const NAVIGATION: NavItem[] = [
       // Assuming sub-settings links
     ],
   },
-  { id: 8, label: "Vendor Support", href: "/vendor-support", icon: LuUsers },
+  // { id: 8, label: "Vendor Support", href: "/vendor-support", icon: LuUsers },
 ];
 
 export const CUSTOMER_MENU = [
