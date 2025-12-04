@@ -6,6 +6,7 @@ import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import confetti from "canvas-confetti";
+import { verifyStripeSession } from "@/lib/api/customer/checkout";
 
 function SuccessContent() {
   const router = useRouter();
@@ -23,17 +24,23 @@ function SuccessContent() {
       return;
     }
 
-    const verifyPayment = async () => {
-      try {
-        await new Promise((resolve) => setTimeout(resolve, 5000));
-
-        setStatus("success");
-        triggerConfetti();
-      } catch (err) {
-        console.error("Verification failed", err);
-        setStatus("error");
-      }
-    };
+   const verifyPayment = async () => {
+     try {
+       const data = await verifyStripeSession(sessionId);
+       if (data.status === "paid") {
+         setStatus("success");
+         triggerConfetti();
+        //  destory the session, force the user to login again
+        
+       } else {
+         setStatus("error");
+       }
+       triggerConfetti();
+     } catch (err) {
+       console.error("Verification failed", err);
+       setStatus("error");
+     }
+   };
 
     verifyPayment();
   }, [sessionId]);
