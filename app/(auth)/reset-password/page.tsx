@@ -65,7 +65,7 @@ export default function ResetPassword() {
   };
 
   return (
-    <div className="flex">
+    <div className="flex max-h-screen">
       {/* Left Column: Image */}
       <div className="relative hidden lg:block h-full w-1/2">
         <Image

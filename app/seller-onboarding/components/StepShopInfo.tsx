@@ -421,7 +421,7 @@ export default function StepShopInfo({ onNext }: StepProps) {
             <button
               type="submit"
               disabled={isFormDisabled}
-              className={`w-full h-11 rounded bg-red-600 text-white font-semibold ${
+              className={`btn btn-primary w-full ${
                 isFormDisabled
                   ? "opacity-60 cursor-not-allowed"
                   : "hover:bg-red-700"
