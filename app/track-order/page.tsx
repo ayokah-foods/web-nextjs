@@ -39,42 +39,55 @@ const TrackOrderPage: React.FC = () => {
       setLoading(false);
     }
   };
-
+ 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
       <div className="bg-white rounded-2xl shadow-sm w-full max-w-lg p-8">
         <div className="mb-8">
           <h2 className="text-xl font-bold text-gray-900">Track Your Order</h2>
           <p className="text-sm text-gray-500 mt-1">
             Enter your email to view your latest order status.
           </p>
+          <form
+            onSubmit={handleSearch}
+            className="w-full mt-5 mb-8 space-y-3 md:space-y-0 md:flex md:items-end md:gap-3"
+          >
+            <div className="flex-1 w-full">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Enter your tracking number
+              </label>
 
-          <form onSubmit={handleSearch} className="flex mt-5 gap-3">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="your@mail.com"
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-800 transition text-gray-700"
-              required
-            />
+              <input
+                type="text"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="TRA1238"
+                className="input"
+                required
+              />
+            </div>
+
             <button
               type="submit"
               disabled={loading}
-              className="cursor-pointer px-6 py-2 bg-[#1B412C] text-white font-semibold rounded-lg hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-800 disabled:bg-orange-300 disabled:cursor-not-allowed transition"
+              className="btn btn-primary w-full md:w-auto"
             >
               {loading ? "Searching..." : "Track"}
             </button>
           </form>
+
+          {order && <OrderStatusTracker order={order} />}
+
+          {!order && !loading && (
+            <div className="text-center py-10 border-2 border-dashed border-yellow-200 rounded-lg">
+              <p className="text-gray-500">
+                Your order status will appear here.
+              </p>
+            </div>
+          )}
         </div>
-        {order && <OrderStatusTracker order={order} />}
-        {!order && !loading && (
-          <div className="text-center py-10 border-2 border-dashed rounded-lg">
-            <p className="text-gray-500">Your order status will appear here.</p>
-          </div>
-        )}
       </div>
-    </main>
+    </div>
   );
 };
 
