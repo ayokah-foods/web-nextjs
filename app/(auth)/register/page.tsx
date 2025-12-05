@@ -5,12 +5,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import GoogleSignInButton from "@/app/components/common/GoogleSignInButton";
-import { registerUser } from "@/lib/api/auth/auth";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { AxiosError } from "axios";
 import { ROLE_OPTIONS } from "@/setting";
 import { RadioGroup } from "@headlessui/react";
+import { registerUser } from "@/lib/api/auth/auth";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");

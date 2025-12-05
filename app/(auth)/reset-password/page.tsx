@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
-import { resetPassword } from "@/lib/api/auth/auth";
 import Link from "next/link";
 import Image from "next/image";
+import { resetPassword } from "@/lib/api/auth/auth";
 
 type ResetErrorResponse = {
   message?: string;

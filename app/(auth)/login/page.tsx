@@ -5,11 +5,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import GoogleSignInButton from "@/app/components/common/GoogleSignInButton";
-import { loginUser } from "@/lib/api/auth/auth";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { AxiosError } from "axios";
+import { loginUser } from "@/lib/api/auth/auth";
 
 declare global {
   interface Window {

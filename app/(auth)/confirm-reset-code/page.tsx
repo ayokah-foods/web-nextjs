@@ -3,9 +3,9 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { confirmResetCode } from "@/lib/api/auth/auth";
 import Link from "next/link";
 import Image from "next/image";
+import { confirmResetCode } from "@/lib/api/auth/auth";
 
 type ErrorResponse = {
   message?: string;

@@ -202,3 +202,7 @@ Ayokah Foods & Services is a modern food and service marketplace designed to mak
   `,
 };
 
+export const ROLE_OPTIONS = [
+  { value: "customer", label: "Register as Customer" },
+  { value: "vendor", label: "Register as Seller" },
+];
