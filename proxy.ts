@@ -1,55 +1,62 @@
-// proxy.ts — Next.js 16 Middleware Replacement
-
-const protectedRoutes = [
-  "/account",
-  "/orders",
-  "/wishlist",
-  "/addresses",
-  "/notifications",
-  "/dashboard",
-  "/products",
-  "/seller/orders",
-];
-
 export default async function proxy(req: Request) {
   const url = new URL(req.url);
   const pathname = url.pathname;
-
-  const isProtected = protectedRoutes.some((route) =>
-    pathname.startsWith(route)
-  );
-
-  if (!isProtected) {
-    return; // allow request to continue
-  }
 
   // ----- READ COOKIES -----
   const cookieHeader = req.headers.get("cookie") || "";
   const token = extractCookie(cookieHeader, "token");
   const role = extractCookie(cookieHeader, "role");
 
-  // Not authenticated → redirect to login
-  if (!token) {
-    const redirectUrl = new URL("/login", url.origin);
-    redirectUrl.searchParams.set("redirect", pathname);
-    return Response.redirect(redirectUrl.toString(), 302);
+  const isCustomerRoute = pathname.startsWith("/account");
+  const isVendorRoute = pathname.startsWith("/dashboard");
+  const isAuthRoute =
+    pathname.startsWith("/login") || pathname.startsWith("/register");
+
+  // ----------------------------------------------------
+  // 1. Prevent authenticated users from accessing /login or /register
+  // ----------------------------------------------------
+  if (isAuthRoute && token) {
+    const redirectPath = role === "vendor" ? "/dashboard" : "/account";
+    return Response.redirect(`${url.origin}${redirectPath}`, 302);
   }
 
-  // Customer-only routes
-  if (pathname.startsWith("/account") && role !== "customer") {
-    return Response.redirect(`${url.origin}/unauthorized`, 302);
+  // ----------------------------------------------------
+  // 2. Customer protected routes
+  // ----------------------------------------------------
+  if (isCustomerRoute) {
+    if (!token) {
+      const redirectUrl = new URL("/login", url.origin);
+      redirectUrl.searchParams.set("redirect", pathname);
+      return Response.redirect(redirectUrl.toString(), 302);
+    }
+
+    if (role !== "customer") {
+      return Response.redirect(`${url.origin}/unauthorized`, 302);
+    }
   }
 
-  // Vendor-only routes
-  if (pathname.startsWith("/dashboard") && role !== "vendor") {
-    return Response.redirect(`${url.origin}/unauthorized`, 302);
+  // ----------------------------------------------------
+  // 3. Vendor protected routes
+  // ----------------------------------------------------
+  if (isVendorRoute) {
+    if (!token) {
+      const redirectUrl = new URL("/login", url.origin);
+      redirectUrl.searchParams.set("redirect", pathname);
+      return Response.redirect(redirectUrl.toString(), 302);
+    }
+
+    if (role !== "vendor") {
+      return Response.redirect(`${url.origin}/unauthorized`, 302);
+    }
   }
 
-  // allowed
+  // ----------------------------------------------------
+  // 4. Public routes → allowed
+  // ----------------------------------------------------
   return;
 }
 
-// --- Helper for reading cookies ---
+// ----- Cookie Reader -----
 function extractCookie(cookieString: string, name: string): string | null {
   const match = cookieString.match(new RegExp("(^|;\\s*)" + name + "=([^;]*)"));
   return match ? decodeURIComponent(match[2]) : null;
@@ -57,13 +64,18 @@ function extractCookie(cookieString: string, name: string): string | null {
 
 export const config = {
   matcher: [
+    // Auth pages
+    "/login",
+    "/register",
+    "/forget-password",
+    "/reset-password",
+    "/confirm-email",
+    "/confirm-reset-code",
+
+    // Customer section
     "/account/:path*",
-    "/orders/:path*",
-    "/wishlist/:path*",
-    "/addresses/:path*",
-    "/notifications/:path*",
+
+    // Vendor section
     "/dashboard/:path*",
-    "/products/:path*",
-    "/seller/orders/:path*",
   ],
 };

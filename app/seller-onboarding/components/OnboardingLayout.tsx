@@ -20,7 +20,7 @@ export default function OnboardingLayout({
   steps,
 }: LayoutProps) {
   return (
-    <div className="bg-orange-50">
+    <div className="bg-gray-50">
       <div className="w-full mb-2">
         <Image
           src="/store-bg.jpg"
@@ -39,12 +39,10 @@ export default function OnboardingLayout({
         <StepIndicator
           steps={steps}
           activeStep={currentStep}
-          setActiveStep={() => {}} 
+          setActiveStep={() => {}}
         />
 
-        <div className="mt-10 bg-white p-6 rounded-xl shadow-sm border">
-          {children}
-        </div>
+        <div className="mt-10 p-6 mb-10 card">{children}</div>
       </div>
     </div>
   );

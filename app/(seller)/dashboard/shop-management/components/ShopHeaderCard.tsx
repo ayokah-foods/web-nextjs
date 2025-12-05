@@ -1,7 +1,5 @@
-// components/ShopHeaderCard.tsx
 "use client";
 
-import React from "react";
 import { LuShoppingBag } from "react-icons/lu";
 
 export default function ShopHeaderCard({ subtitle }: { subtitle?: string }) {

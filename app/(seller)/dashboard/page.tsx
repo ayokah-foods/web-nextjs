@@ -5,7 +5,6 @@ import { RecentReviews } from "./components/Review";
 import Overview from "./components/Overview";
 import SelectDropdown from "./components/commons/Fields/SelectDropdown";
 import AreaChart from "./components/commons/AreaChart";
-// import RecentOrdersTable from "@/app/orders/components/RecentOrdersTable";
 import { LuLayoutDashboard } from "react-icons/lu";
 
 const periods = [

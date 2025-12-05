@@ -12,15 +12,15 @@ import { numverifyValidatePhone } from "@/lib/api/ip/route";
 import toast from "react-hot-toast";
 import { BeatLoader } from "react-spinners";
 import { StepProps } from "@/interfaces/StepProps";
-import { FaPencil } from "react-icons/fa6";
-import ShopHeaderCard from "@/app/(seller)/shop-management/components/ShopHeaderCard";
-import CategorySelector from "@/app/(seller)/shop-management/components/CategorySelector";
-import FadeSlide from "@/app/(seller)/shop-management/components/FadeSlide";
-import GoogleAddressAutocomplete from "@/app/(seller)/shop-management/components/GoogleAddressAutocomplete";
-import PhoneInput from "@/app/(seller)/shop-management/components/PhoneInput";
-import TextareaField from "@/app/(seller)/shop-management/components/TextareaField";
-import TextInput from "@/app/(seller)/shop-management/components/TextInput";
+import { FaPencil } from "react-icons/fa6"; 
 import { DefaultOption } from "@/app/components/common/SelectField";
+import CategorySelector from "@/app/(seller)/dashboard/shop-management/components/CategorySelector";
+import FadeSlide from "@/app/(seller)/dashboard/shop-management/components/FadeSlide";
+import GoogleAddressAutocomplete from "@/app/(seller)/dashboard/shop-management/components/GoogleAddressAutocomplete";
+import PhoneInput from "@/app/(seller)/dashboard/shop-management/components/PhoneInput";
+import ShopHeaderCard from "@/app/(seller)/dashboard/shop-management/components/ShopHeaderCard";
+import TextareaField from "@/app/(seller)/dashboard/shop-management/components/TextareaField";
+import TextInput from "@/app/(seller)/dashboard/shop-management/components/TextInput";
 
 export interface Option extends DefaultOption {}
 
@@ -75,48 +75,7 @@ export default function StepShopInfo({ onNext }: StepProps) {
   const [bannerFile, setBannerFile] = useState<File | null>(null);
 
   const LIMIT = 5000;
-
-  // load shop
-  // useEffect(() => {
-  //   let cancelled = false;
-  //   const load = async () => {
-  //     setInitialLoading(true);
-  //     try {
-  //       const res = await getMyShop();
-  //       if (cancelled) return;
-  //       if (res?.status === "success") {
-  //         const shop = res.data;
-  //         setName(shop.name);
-  //         setShopId(shop.id ?? null);
-  //         setAddressLine(shop.address || "");
-  //         setDescription(shop.description || "");
-  //         setPhoneNumber(shop.phone || "");
-  //         setLogoUrl(shop.logo ?? null);
-  //         setBannerUrl(shop.banner ?? null);
-  //         if (shop.category)
-  //           setSelectedCategory({
-  //             id: shop.category.id,
-  //             name: shop.category.name,
-  //           });
-
-  //         if (shop.city) setCity(shop.city);
-  //         if (shop.zip) setZip(shop.zip);
-  //         if (shop.country) setCountryCode(shop.country);
-  //         if (shop.state) setStateCode(shop.state);
-  //       }
-  //     } catch (err) {
-  //       console.error("load shop failed", err);
-  //     } finally {
-  //       setInitialLoading(false);
-  //     }
-  //   };
-  //   load();
-  //   return () => {
-  //     cancelled = true;
-  //   };
-  // }, []);
-
-  // load categories on type change
+ 
   useEffect(() => {
     let cancelled = false;
     const loadCats = async () => {

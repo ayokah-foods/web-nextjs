@@ -38,32 +38,32 @@ export const NAVIGATION: NavItem[] = [
   {
     id: 2,
     label: "Item Management",
-    href: "/item-management",
+    href: "/dashboard/item-management",
     icon: LuPackage,
     children: [],
   },
   {
     id: 3,
     label: "Order Management",
-    href: "/order-management",
+    href: "/dashboard/order-management",
     icon: LuShoppingCart,
   },
   {
     id: 4,
     label: "Customer Feedback",
-    href: "/customer-feedback",
+    href: "/dashboard/customer-feedback",
     icon: LuMessageCircle,
   },
   {
     id: 5,
     label: "Finance & Payment",
-    href: "/finance-payment",
+    href: "/dashboard/finance-payment",
     icon: LuWallet,
   },
   {
     id: 9,
     label: "Shop Management",
-    href: "/shop-management",
+    href: "/dashboard/shop-management",
     icon: LuShoppingBag,
     children: [
       {
@@ -89,7 +89,7 @@ export const NAVIGATION: NavItem[] = [
   {
     id: 7,
     label: "Accounts & Settings",
-    href: "/account-settings",
+    href: "/dashboard/account-settings",
     icon: LuSettings,
     children: [
       // Assuming sub-settings links

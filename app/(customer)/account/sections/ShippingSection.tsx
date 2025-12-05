@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import { User } from "@/interfaces/user";
 import Address from "@/interfaces/address";
 import { updateAddress, getAddresses } from "@/lib/api/auth/shipping";
-import toast from "react-hot-toast";
-import GoogleAddressAutocomplete from "@/app/(seller)/shop-management/components/GoogleAddressAutocomplete";
-import PhoneInput from "@/app/(seller)/shop-management/components/PhoneInput";
-import TextInput from "@/app/(seller)/shop-management/components/TextInput";
+import toast from "react-hot-toast"; 
 import { countryCodeToFlag } from "@/utils/countryFlag";
+import GoogleAddressAutocomplete from "@/app/(seller)/dashboard/shop-management/components/GoogleAddressAutocomplete";
+import PhoneInput from "@/app/(seller)/dashboard/shop-management/components/PhoneInput";
+import TextInput from "@/app/(seller)/dashboard/shop-management/components/TextInput";
 
 interface ShippingSectionProps {
   user: User | null;
