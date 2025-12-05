@@ -1,7 +1,13 @@
 "use client";
 
 import { Fragment } from "react";
-import { Listbox, ListboxButton, ListboxOption, ListboxOptions, Transition } from "@headlessui/react";
+import {
+  Listbox,
+  ListboxButton,
+  ListboxOption,
+  ListboxOptions,
+  Transition,
+} from "@headlessui/react";
 import { ChevronUpDownIcon, CheckIcon } from "@heroicons/react/20/solid";
 
 type Option = { label: string; value: string; children?: Option[] };
@@ -12,7 +18,7 @@ type SelectDropdownProps = {
   onChange: (value: Option) => void;
   className?: string;
   disabled?: boolean;
-  placeholder?: string;  
+  placeholder?: string;
 };
 
 export default function SelectDropdown({
@@ -22,13 +28,12 @@ export default function SelectDropdown({
   className = "w-40",
   placeholder = "Select an item",
 }: SelectDropdownProps) {
-    const displayLabel = value.value === "" ? placeholder : value.label;
+  const displayLabel = value.value === "" ? placeholder : value.label;
   return (
- 
     <Listbox value={value} onChange={onChange}>
       <div className="relative">
         <ListboxButton
-          className={`relative w-full cursor-default rounded-lg border border-gray-300 bg-white py-3 pl-3 pr-10 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 text-sm transition duration-150 ${className} ${
+          className={`relative w-full cursor-default rounded-lg border border-gray-300 bg-white py-3 pl-3 pr-10 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-yellow-800 focus:border-yellow-800 text-sm transition duration-150 ${className} ${
             value.value === "" ? "text-gray-500" : "text-gray-900"
           }`}
         >

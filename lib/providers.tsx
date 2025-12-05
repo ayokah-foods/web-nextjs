@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect } from "react";
-import { ContinueWithGoogle } from "./api/auth/login";
 import toast from "react-hot-toast";
 import router from "next/router";
 import { useAuthStore } from "@/store/useAuthStore";
+import { ContinueWithGoogle } from "./api/auth/auth";
 
 declare global {
   interface Window {

@@ -6,9 +6,8 @@ import { formatHumanReadableDate } from "@/utils/formatDate";
 import { useEffect, useState } from "react";
 import { LuMessageCircle } from "react-icons/lu";
 
-
 export default function Orders() {
-  const LIMIT = 3; 
+  const LIMIT = 3;
 
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
@@ -131,7 +130,7 @@ export default function Orders() {
                         key={index}
                         className={`text-lg ${
                           index < review.rating
-                            ? "text-yellow-500"
+                            ? "text-yellow-800"
                             : "text-gray-300"
                         }`}
                       >

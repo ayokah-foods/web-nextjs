@@ -83,7 +83,7 @@ export default function ItemTabs({
                             key={i}
                             className={`w-4 h-4 ${
                               i < review.rating
-                                ? "text-yellow-500"
+                                ? "text-yellow-800"
                                 : "text-gray-600"
                             }`}
                           />

@@ -62,7 +62,7 @@ export default function ItemForm({ onClose, item }: ItemFormProps) {
   // form state
   const [title, setTitle] = useState(item?.title ?? "");
   const [description, setDescription] = useState(item?.description ?? "");
-  
+
   const [salesPrice, setSalesPrice] = useState<string>(
     item?.sales_price ? String(item.sales_price) : ""
   );
@@ -431,7 +431,7 @@ export default function ItemForm({ onClose, item }: ItemFormProps) {
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Category <span className="text-yellow-500">(required)</span>
+          Category <span className="text-yellow-800">(required)</span>
         </label>
 
         <SelectDropdown
@@ -446,7 +446,7 @@ export default function ItemForm({ onClose, item }: ItemFormProps) {
       {selectedCategory.children && selectedCategory.children.length > 0 && (
         <div className="mt-4">
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Subcategory <span className="text-yellow-500">(required)</span>
+            Subcategory <span className="text-yellow-800">(required)</span>
           </label>
 
           <SelectDropdown

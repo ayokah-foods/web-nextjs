@@ -110,7 +110,7 @@ export default function Orders() {
       formData.append("comment", reviewComment);
       // Append images if any
       reviewImages.forEach((file, index) => {
-        formData.append("images[]", file); 
+        formData.append("images[]", file);
       });
       await submitReview(formData);
 
@@ -165,8 +165,8 @@ export default function Orders() {
           ))}
         </div>
       ) : error ? (
-        <div className="flex flex-col items-center justify-center py-10 text-yellow-500">
-          <FiPackage className="text-yellow-500 text-xl mr-2" size={24} />
+        <div className="flex flex-col items-center justify-center py-10 text-yellow-800">
+          <FiPackage className="text-yellow-800 text-xl mr-2" size={24} />
 
           <p className="text-lg font-medium">{error}</p>
         </div>

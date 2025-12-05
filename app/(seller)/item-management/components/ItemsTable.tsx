@@ -90,7 +90,7 @@ function ProductActionCell({
         />
 
         <button
-          className="bg-yellow-500 text-white p-1.5 rounded-md hover:bg-yellow-600 flex items-center gap-1 cursor-pointer"
+          className="bg-yellow-800 text-white p-1.5 rounded-md hover:bg-yellow-600 flex items-center gap-1 cursor-pointer"
           onClick={() => onEdit(productId)}
         >
           <PencilSquareIcon className="w-4 h-4" /> Update
@@ -198,7 +198,7 @@ const ItemsTable: React.FC<ProductTableProps> = ({ limit, offset, status }) => {
                 <StarIcon
                   key={index}
                   className={`w-4 h-4 ${
-                    index < stars ? "text-yellow-500" : "text-gray-300"
+                    index < stars ? "text-yellow-800" : "text-gray-300"
                   }`}
                 />
               ))}
@@ -386,9 +386,12 @@ const ItemsTable: React.FC<ProductTableProps> = ({ limit, offset, status }) => {
           setEditingProduct(null);
         }}
         title={editingProduct ? "Edit Item" : "Add Item"}
-      > 
+      >
         {editingProduct && (
-          <ItemForm item={editingProduct} onClose={() => setDrawerOpen(false)} />
+          <ItemForm
+            item={editingProduct}
+            onClose={() => setDrawerOpen(false)}
+          />
         )}
       </Drawer>
     </div>

@@ -144,12 +144,12 @@ function MobileNavLinks() {
     {
       label: "Products",
       href: "/items?type=products",
-      icon: <CubeIcon className="w-4 h-4 text-yellow-500" />,
+      icon: <CubeIcon className="w-4 h-4 text-yellow-800" />,
     },
     {
       label: "Order to Call",
       href: "/contact-us",
-      icon: <PhoneIcon className="w-4 h-4 text-yellow-500" />,
+      icon: <PhoneIcon className="w-4 h-4 text-yellow-800" />,
     },
     ...(user?.role === "customer"
       ? [
@@ -157,7 +157,7 @@ function MobileNavLinks() {
             label: "Become a Seller",
             href: "/seller-onboarding",
             icon: (
-              <BuildingStorefrontIcon className="w-4 h-4 text-yellow-500" />
+              <BuildingStorefrontIcon className="w-4 h-4 text-yellow-800" />
             ),
           },
         ]
