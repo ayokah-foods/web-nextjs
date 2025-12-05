@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRightCircleIcon } from "@heroicons/react/24/outline";
 import toast from "react-hot-toast";
-import { ContinueWithGoogle } from "@/lib/api/auth/login";
 import { useAuthStore } from "@/store/useAuthStore";
+import { ContinueWithGoogle } from "@/lib/api/auth/auth";
 
 interface GoogleUserPayload {
   name: string;

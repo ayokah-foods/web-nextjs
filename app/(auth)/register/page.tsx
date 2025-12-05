@@ -176,7 +176,7 @@ export default function RegisterPage() {
                         `relative flex items-center gap-3 p-4 border rounded-xl cursor-pointer transition 
                           ${
                             checked
-                              ? "border-red-500 bg-red-50"
+                              ? "border-yellow-500 bg-yellow-50"
                               : "border-gray-200 bg-white hover:bg-gray-50"
                           }`
                                       }
@@ -185,7 +185,7 @@ export default function RegisterPage() {
                                         <>
                                           <div
                                             className={`h-4 w-4 rounded-full border 
-                              ${checked ? "border-red-600 bg-red-600" : "border-gray-400"}
+                              ${checked ? "border-yellow-600 bg-yellow-600" : "border-gray-400"}
                             `}
                           />
                           <span className="text-sm text-gray-800">
