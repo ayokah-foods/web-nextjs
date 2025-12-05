@@ -109,7 +109,8 @@ export default function ResetPassword() {
                 type="email"
                 value={email}
                 readOnly
-                className="w-full border border-gray-300 rounded-md px-4 py-2 bg-gray-100 cursor-not-allowed"
+                className="input"
+                autoComplete="email"
               />
             </div>
 
@@ -125,6 +126,7 @@ export default function ResetPassword() {
                   placeholder="Enter new password"
                   className="input"
                   required
+                  autoComplete="new-password"
                 />
                 <button
                   type="button"

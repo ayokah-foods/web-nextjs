@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import GoogleSignInButton from "@/app/components/common/GoogleSignInButton";
@@ -115,6 +114,7 @@ export default function RegisterPage() {
                 onChange={(e) => setName(e.target.value)}
                 className="input"
                 placeholder="John"
+                autoComplete="given-name"
               />
             </div>
 
@@ -130,6 +130,7 @@ export default function RegisterPage() {
                 onChange={(e) => setLastName(e.target.value)}
                 className="input"
                 placeholder="Doe"
+                autoComplete="family-name"
               />
             </div>
 
@@ -214,6 +215,7 @@ export default function RegisterPage() {
                   placeholder="••••••••"
                   className="input"
                   required
+                  autoComplete="new-password"
                 />
                 <button
                   type="button"
