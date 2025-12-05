@@ -14,14 +14,18 @@ import {
 import toast from "react-hot-toast";
 import { Product } from "@/interfaces/products";
 import { formatHumanReadableDate } from "@/utils/formatDate";
-import TanStackTable from "../../dashboard/components/commons/TanStackTable";
+
 import { deleteItem, listSellerItems, updateItemStatus } from "@/lib/api/items";
-import SelectDropdown from "../../dashboard/components/commons/Fields/SelectDropdown";
+
 import { getStockBadgeClass } from "@/utils/StockBadge";
-import ConfirmationModal from "../../dashboard/components/commons/ConfirmationModal";
-import Drawer from "../../dashboard/components/commons/Drawer";
+
+
 import ItemForm from "./ItemForm";
 import { formatAmount } from "@/utils/formatCurrency";
+import ConfirmationModal from "../../components/commons/ConfirmationModal";
+import Drawer from "../../components/commons/Drawer";
+import SelectDropdown from "../../components/commons/Fields/SelectDropdown";
+import TanStackTable from "../../components/commons/TanStackTable";
 
 interface ProductTableProps {
   limit: number;

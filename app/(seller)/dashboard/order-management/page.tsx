@@ -3,8 +3,8 @@
 import { useState } from "react";
 import OrdersTable from "./components/OrdersTable";
 import { LuShoppingCart } from "react-icons/lu";
-import SelectDropdown from "../dashboard/components/commons/Fields/SelectDropdown";
 import { statusOptions } from "./[id]/page";
+import SelectDropdown from "../components/commons/Fields/SelectDropdown";
 
 export default function Orders() {
   const [selectedStatus, setSelectedStatus] = useState(statusOptions[0]);

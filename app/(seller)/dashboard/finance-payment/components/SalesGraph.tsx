@@ -7,7 +7,6 @@ import { MONTHS } from "@/setting";
 import { getVendorEarningsGraph } from "@/lib/api/seller/earnings";
 import { formatDate } from "@/utils/formatDate";
 import { formatAmount } from "@/utils/formatCurrency";
-import SelectDropdown from "../../dashboard/components/commons/Fields/SelectDropdown";
 import AreaChartSkeleton from "@/app/components/common/skeletons/AreaChartSkeleton";
 
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {

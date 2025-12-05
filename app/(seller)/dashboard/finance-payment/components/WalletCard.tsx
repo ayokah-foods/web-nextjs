@@ -3,8 +3,8 @@
 import { formatAmount } from "@/utils/formatCurrency";
 import React, { useState } from "react";
 import { withdrawRequest } from "@/lib/api/seller/earnings";
-import ConfirmationModal from "../../dashboard/components/commons/ConfirmationModal";
 import toast from "react-hot-toast";
+import ConfirmationModal from "../../components/commons/ConfirmationModal";
 
 interface Wallet {
   total_earning: string | number;

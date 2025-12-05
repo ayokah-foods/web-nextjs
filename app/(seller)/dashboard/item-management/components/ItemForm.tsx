@@ -4,12 +4,11 @@ import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { HiOutlineUpload, HiOutlineXCircle } from "react-icons/hi";
-import { SubmitButton as OriginalSubmitButton } from "../../dashboard/components/commons/SubmitButton";
+import { SubmitButton as OriginalSubmitButton } from "../../components/commons/SubmitButton";
 import { listCategories } from "@/lib/api/category";
 import { addItem, updateItem } from "@/lib/api/items";
 import { getMyShop } from "@/lib/api/seller/shop";
 import Category from "@/interfaces/category";
-import SelectDropdown from "../../dashboard/components/commons/Fields/SelectDropdown";
 import {
   DIMENSION_OPTIONS,
   PRICING_MODEL_OPTIONS,
@@ -22,6 +21,7 @@ import {
 import { Editor as TinyMCEEditor } from "@tinymce/tinymce-react";
 import { capitalizeWords } from "@/utils/formatWord";
 import axios, { AxiosError } from "axios";
+import SelectDropdown from "../../components/commons/Fields/SelectDropdown";
 
 function FallbackSubmitButton({
   loading,

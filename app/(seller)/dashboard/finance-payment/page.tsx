@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import {
   getVendorEarnings,
-  getWithdrawalHistory,
 } from "@/lib/api/seller/earnings";
 import { LuMessageCircle } from "react-icons/lu";
 import WalletCard from "./components/WalletCard";

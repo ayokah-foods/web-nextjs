@@ -4,9 +4,9 @@ import { useState } from "react";
 import { LuPackage, LuPlus } from "react-icons/lu";
 import ItemOverview from "./components/ItemOverview";
 import ItemsTable from "./components/ItemsTable";
-import Drawer from "../dashboard/components/commons/Drawer";
 import ItemForm from "./components/ItemForm";
 import { Product } from "@/interfaces/products";
+import Drawer from "../components/commons/Drawer";
 
 export default function ProductManagementPage() {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
