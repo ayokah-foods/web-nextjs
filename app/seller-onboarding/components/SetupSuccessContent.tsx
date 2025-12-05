@@ -29,30 +29,34 @@ export default function SuccessContent() {
   const { clearAuth } = useAuthStore();
 
   // Verify Stripe payment
-  useEffect(() => {
-    if (!sessionId) {
-      setStatus("error");
-      return;
-    }
+ useEffect(() => {
+   // Wait until searchParams loads
+   if (sessionId === null) return;
 
-    const verifyPayment = async () => {
-      try {
-        const data = await verifyStripeSession(sessionId);
-        if (data.status === "paid") {
-          setStatus("success");
-          triggerConfetti();
-          clearAuth();
-        } else {
-          setStatus("error");
-        }
-      } catch (err) {
-        console.error("Verification failed", err);
-        setStatus("error");
-      }
-    };
+   // If loaded but empty → invalid
+   if (!sessionId) {
+     setStatus("error");
+     return;
+   }
 
-    verifyPayment();
-  }, [sessionId, clearAuth]);
+   const verifyPayment = async () => {
+     try {
+       const data = await verifyStripeSession(sessionId);
+       if (data.status === "paid") {
+         setStatus("success");
+         triggerConfetti();
+         clearAuth();
+       } else {
+         setStatus("error");
+       }
+     } catch (err) {
+       console.error("Verification failed", err);
+       setStatus("error");
+     }
+   };
+
+   verifyPayment();
+ }, [sessionId, clearAuth]);
 
   // Countdown to dashboard
   useEffect(() => {
