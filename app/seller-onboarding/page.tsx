@@ -10,8 +10,7 @@ import StepSubscription from "./components/StepSubscription";
 import { getMyShop } from "@/lib/api/seller/shop";
 
 const STEPS = [
-  { id: 1, label: "Shop Info" },
-  { id: 2, label: "Shop Images" },
+  { id: 1, label: "Shop Info" }, 
   { id: 3, label: "Bank Info" },
   { id: 4, label: "Shop Sub" },
 ];
@@ -68,23 +67,8 @@ function OnboardingContent() {
       case 1:
         return <StepShopInfo onNext={handleNextStep} />;
       case 2:
-        if (!shopId) {
-          return (
-            <div className="text-center p-6">
-              <p className="text-red-500 mb-4">Shop data is missing.</p>
-              <button
-                onClick={() => setCurrentStep(1)}
-                className="text-blue-600 underline"
-              >
-                Go back to Step 1
-              </button>
-            </div>
-          );
-        }
-        return <StepImages shopId={shopId} onNext={handleNextStep} />;
-      case 3:
         return <StepBankInfo onNext={handleNextStep} />;
-      case 4:
+      case 3:
         return <StepSubscription onNext={handleNextStep} />;
       default:
         return null;
