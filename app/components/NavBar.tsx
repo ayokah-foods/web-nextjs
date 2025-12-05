@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, JSX } from "react";
+import { Fragment, JSX, useState } from "react";
 import { Menu, MenuButton, MenuItems, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
@@ -12,7 +12,6 @@ import {
   GiftIcon,
   PhoneIcon,
   Squares2X2Icon,
-  InformationCircleIcon,
   HomeIcon,
   BuildingStorefrontIcon,
 } from "@heroicons/react/24/outline";
@@ -35,7 +34,7 @@ const iconMap: Record<string, JSX.Element> = {
 
 export default function NavBar() {
   return (
-    <nav className="bg-orange-900 text-white">
+    <nav className="bg-yellow-900 text-white">
       <div className="container mx-auto flex items-center justify-between px-2">
         <Menu as="div" className="relative">
           <MenuButton className="flex items-center gap-2 bg-yellow-700 text-white px-3 py-3 text-sm font-medium rounded-full hover:bg-yellow-600 active:scale-95 transition-all duration-200 shadow-md focus:outline-none cursor-pointer">
@@ -56,19 +55,8 @@ export default function NavBar() {
             leaveTo="transform opacity-0 translate-y-1 scale-95"
           >
             <MenuItems className="absolute left-0 mt-2 w-56 origin-top-left border border-yellow-100 bg-white/95 backdrop-blur-md text-gray-700 shadow-xl rounded-xl focus:outline-none z-50 overflow-hidden">
-              <div className="border-t border-gray-100  ">
+              <div className="border-t border-gray-100 ">
                 <CategoryList />
-              </div>
-
-              {/* Footer link */}
-              <div className="border-t border-gray-100 bg-yellow-50/80 px-4 py-2 text-center">
-                <Link
-                  href="/categories"
-                  className="text-yellow-700 text-sm font-medium hover:underline flex justify-center items-center gap-1"
-                >
-                  See all categories
-                  <ChevronRightIcon className="w-4 h-4" />
-                </Link>
               </div>
             </MenuItems>
           </Transition>
@@ -88,6 +76,8 @@ function CategoryList() {
     queryFn: () => listCategories(10, 0, undefined, "products"),
   });
 
+  const [showAll, setShowAll] = useState(false);
+
   if (isLoading) {
     return (
       <div className="p-2 space-y-2">
@@ -100,43 +90,49 @@ function CategoryList() {
     return <p className="px-4 py-2 text-sm text-gray-500">No categories</p>;
   }
 
+  const categoriesToShow = showAll
+    ? data.categories
+    : data.categories.slice(0, 10);
+
   return (
     <div className="py-2">
-      {data.categories.length === 0 ? (
-        <p className="text-gray-500 text-sm px-4 py-2">No categories found.</p>
-      ) : (
-        data.categories.map((cat: Category) => {
-          // Pick an icon automatically
-          const key = cat.name.toLowerCase();
-          const icon = iconMap[key] || iconMap.default;
+      {categoriesToShow.map((cat: Category) => {
+        const key = cat.name.toLowerCase();
+        const icon = iconMap[key] || iconMap.default;
 
-          return (
-            <motion.div
-              key={cat.id}
-              whileHover={{ x: 5, scale: 1.02 }}
-              transition={{ type: "spring", stiffness: 200, damping: 15 }}
+        return (
+          <motion.div
+            key={cat.id}
+            whileHover={{ x: 5, scale: 1.02 }}
+            transition={{ type: "spring", stiffness: 200, damping: 15 }}
+          >
+            <Link
+              href={`/items?category=${cat.slug}&type=products`}
+              className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-yellow-50 hover:text-yellow-700 rounded-md transition-all duration-200"
             >
-              <Link
-                href={`/items?category=${cat.slug}&type=products`}
-                className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-yellow-50 hover:text-yellow-700 rounded-md transition-all duration-200"
-              >
-                {icon}
-                <span className="truncate">{cat.name}</span>
-              </Link>
-            </motion.div>
-          );
-        })
-      )}
+              {icon}
+              <span className="truncate">{cat.name}</span>
+            </Link>
+          </motion.div>
+        );
+      })}
 
-      <div className="border-t border-gray-100 mt-2 pt-2">
-        <motion.div
-          whileHover={{ scale: 1.03 }}
-          transition={{ type: "spring", stiffness: 300, damping: 12 }}
-        ></motion.div>
-      </div>
+      {/* View All button */}
+      {data.categories.length > 15 && (
+        <div className="flex justify-center mt-2">
+          <Link
+            href="/categories"
+            className="text-sm text-yellow-700 hover:underline flex items-center bg-yellow-50 p-3 rounded-md gap-1"
+          >
+            View All Categories
+            <ChevronRightIcon className="w-4 h-4" />
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
+
 function MobileNavLinks() {
   const { user } = useAuthStore();
 
@@ -144,21 +140,19 @@ function MobileNavLinks() {
     {
       label: "Products",
       href: "/items?type=products",
-      icon: <CubeIcon className="w-4 h-4 text-yellow-800" />,
+      icon: <CubeIcon className="w-4 h-4 text-yellow-500" />,
     },
     {
       label: "Order to Call",
       href: "/contact-us",
-      icon: <PhoneIcon className="w-4 h-4 text-yellow-800" />,
+      icon: <PhoneIcon className="w-4 h-4 text-yellow-500" />,
     },
     ...(user?.role === "customer"
       ? [
           {
             label: "Become a Seller",
             href: "/seller-onboarding",
-            icon: (
-              <BuildingStorefrontIcon className="w-4 h-4 text-yellow-800" />
-            ),
+            icon: <BuildingStorefrontIcon className="w-4 h-4 text-yellow-500" />,
           },
         ]
       : []),
@@ -212,16 +206,6 @@ function DesktopNavLinks() {
       href: "/shops",
       icon: <GiftIcon className="w-4 h-4" />,
     },
-    // {
-    //   label: "About Us",
-    //   href: "/about-us",
-    //   icon: <InformationCircleIcon className="w-4 h-4" />,
-    // },
-    // {
-    //   label: "Contact Us",
-    //   href: "/contact-us",
-    //   icon: <PhoneIcon className="w-4 h-4" />,
-    // },
     ...(user?.role === "customer"
       ? [
           {
@@ -249,9 +233,7 @@ function DesktopNavLinks() {
               href={link.href}
               title={link.label}
               className={`flex items-center gap-1.5 transition-colors duration-200 ${
-                isActive
-                  ? "text-yellow-400"
-                  : "text-gray-100 hover:text-yellow-200"
+                isActive ? "text-yellow-400" : "text-gray-100 hover:text-yellow-200"
               }`}
             >
               <span className="text-yellow-300">{link.icon}</span>
