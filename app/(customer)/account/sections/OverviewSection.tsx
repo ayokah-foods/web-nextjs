@@ -19,6 +19,7 @@ export default function OverviewSection() {
     name: user?.name || "",
     last_name: user?.last_name || "",
     phone: user?.phone || "",
+    email: user?.email || "",
   });
 
     const greeting = useUKGreeting();
@@ -38,6 +39,7 @@ export default function OverviewSection() {
         name: updatedUser.name || "",
         last_name: updatedUser.last_name || "",
         phone: updatedUser.phone || "",
+        email: updatedUser.email || "",
       });
 
       setIsEditing(false);
@@ -55,6 +57,7 @@ export default function OverviewSection() {
       name: user?.name || "",
       last_name: user?.last_name || "",
       phone: user?.phone || "",
+      email: user?.email || "",
     });
   }, [user]);
 
@@ -63,6 +66,7 @@ export default function OverviewSection() {
       name: user?.name || "",
       last_name: user?.last_name || "",
       phone: user?.phone || "",
+      email: user?.email || "",
     });
     setIsEditing(false);
   };
@@ -115,6 +119,13 @@ export default function OverviewSection() {
               />
               <input
                 className="input w-full"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                readOnly
+              />
+              <input
+                className="input w-full"
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
@@ -123,14 +134,14 @@ export default function OverviewSection() {
               />
               <div className="flex gap-2 justify-center mt-2">
                 <button
-                  className="btn btn-primary"
+                  className="btn btn-primary w-full"
                   onClick={handleSave}
                   disabled={loading}
                 >
                   {loading ? "Saving..." : "Save"}
                 </button>
                 <button
-                  className="btn btn-gray"
+                  className="btn btn-gray w-full"
                   onClick={handleCancel}
                   disabled={loading}
                 >
