@@ -33,6 +33,7 @@ function OnboardingContent() {
           const res = await getMyShop();
           if (res?.data?.id) {
             setShopId(res.data.id);
+            router.replace("/shop-management");
           }
         } catch (error) {
           console.error("Could not recover shop ID", error);
