@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { StarIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
+import parse from "html-react-parser"; // new
 
 interface Review {
   id: number;
@@ -25,14 +26,14 @@ export default function ItemTabs({
   );
 
   return (
-    <div className=" bg-white pb-8">
+    <div className="bg-white pb-8">
       {/* Tabs */}
       <div className="flex justify-center border-b border-gray-700">
         <button
           onClick={() => setActiveTab("description")}
           className={`px-4 py-2 text-sm font-medium cursor-pointer ${
             activeTab === "description"
-              ? "border-b-2 border-orange-800 text-orange-800"
+              ? "border-b-2 border-red-800 text-red-800"
               : "text-gray-400 hover:text-gray-200"
           }`}
         >
@@ -42,7 +43,7 @@ export default function ItemTabs({
           onClick={() => setActiveTab("reviews")}
           className={`px-4 py-2 text-sm font-medium cursor-pointer ${
             activeTab === "reviews"
-              ? "border-b-2 border-orange-800 text-orange-800"
+              ? "border-b-2 border-red-800 text-red-800"
               : "text-gray-400 hover:text-gray-200"
           }`}
         >
@@ -51,17 +52,17 @@ export default function ItemTabs({
       </div>
 
       {/* Content */}
-      <div className="mt-4 p-4">
+      <div className="mt-4 p-4 text-gray-400">
         {activeTab === "description" && (
-          <div className="text-gray-400 whitespace-pre-line">
-            <span dangerouslySetInnerHTML={{ __html: description }} />
+          <div className="prose prose-invert max-w-none">
+            {parse(description)}
           </div>
         )}
 
         {activeTab === "reviews" && (
           <div className="space-y-6">
             {reviews.length === 0 ? (
-              <p className="text-gray-400">No reviews yet.</p>
+              <p>No reviews yet.</p>
             ) : (
               reviews.map((review) => (
                 <div key={review.id} className="border-b border-gray-700 pb-4">
@@ -83,7 +84,7 @@ export default function ItemTabs({
                             key={i}
                             className={`w-4 h-4 ${
                               i < review.rating
-                                ? "text-yellow-800"
+                                ? "text-yellow-500"
                                 : "text-gray-600"
                             }`}
                           />

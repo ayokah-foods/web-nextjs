@@ -36,12 +36,16 @@ export interface Shop {
   id: number;
   name: string;
   slug: string;
-  address: string;
-  logo: string;
-  banner: string;
-  country: string;
-  description: string;
+  description: string | null;
+  logo: string | null;
+  banner: string | null;
+  address?: string | null;
+  city?: string | null;
+  state?: string | null;
+  country?: string | null;
+  phone?: string | null;
 }
+
 
 export interface Variation {
   id?: number;
