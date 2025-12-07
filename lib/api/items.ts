@@ -53,7 +53,9 @@ export async function getItemStatictics() {
 }
 
 export async function updateItemStatus(productId: number, status: string) {
-  const response = await api.patch(`/vendor/product/${productId}/status/${status}`);
+  const response = await api.patch(
+    `/vendor/product/${productId}/status/${status}`
+  );
   return response.data;
 }
 
@@ -68,7 +70,7 @@ export async function addItem(formData: FormData) {
 }
 
 export async function updateItem(ItemId: number, formData: FormData) {
-  formData.append("_method", "PUT");  
+  formData.append("_method", "PUT");
   const response = await api.post(`/vendor/item/${ItemId}/update`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
@@ -77,8 +79,15 @@ export async function updateItem(ItemId: number, formData: FormData) {
   return response.data;
 }
 
-
 export async function deleteItem(productId: number) {
   const { data } = await api.delete(`/vendor/item/delete/${productId}`);
+  return data.data;
+}
+
+export async function deleteItemPhoto(productId: number, imageId: string) {
+  const { data } = await api.delete(`/vendor/item/image/delete/${productId}`, {
+    data: { imageId },
+  });
+
   return data.data;
 }

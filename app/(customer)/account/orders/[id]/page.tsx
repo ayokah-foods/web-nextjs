@@ -4,7 +4,6 @@ import { useEffect, useState, useMemo } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import Skeleton from "react-loading-skeleton";
-import dayjs from "dayjs";
 import { formatAmount } from "@/utils/formatCurrency";
 import { User } from "@/interfaces/user";
 import { Order, OrderItem as OrderItemType } from "@/interfaces/orders";
@@ -134,7 +133,7 @@ function OrderItemsTable({ order }: { order: Order }) {
             <span>Shipping Fee ({order.shipping_method}):</span>
             <span>{formatAmount(parseFloat(order.shipping_fee))}</span>
           </div>
-          <div className="flex justify-between text-lg font-bold border-t pt-2 border-gray-300 text-orange-700">
+          <div className="flex justify-between text-lg font-bold border-t pt-2 border-gray-300 text-red-700">
             <span>Order Total:</span>
             <span>{formatAmount(parseFloat(order.total))}</span>
           </div>
@@ -241,10 +240,22 @@ export default function OrderDetail() {
 
             <div className="flex justify-between items-start">
               <p className="font-medium text-gray-600 w-1/2">
-                Tracking Number:
+                Tracking Detail:
               </p>
               <p className="text-gray-800 w-1/2 text-right">
-                {orderMeta.tracking_number ?? "Not yet"}
+                {orderMeta.tracking_url ? (
+                  <a
+                    href={orderMeta.tracking_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-red-600 underline truncate block max-w-full"
+                    title={orderMeta.tracking_url}
+                  >
+                    {orderMeta.tracking_url}
+                  </a>
+                ) : (
+                  orderMeta.tracking_number
+                )}
               </p>
             </div>
 

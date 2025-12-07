@@ -10,6 +10,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useCart } from "@/context/CartContext";
 import { CheckoutPayload, checkoutStripe } from "@/lib/api/customer/checkout";
 import axios from "axios";
+import { ShippingRateResponse, RateOption } from "@/interfaces/shippingRate";
 
 interface CartItem {
   id: number;
@@ -17,25 +18,6 @@ interface CartItem {
   image: string;
   price: number;
   qty: number;
-}
-
-interface VendorRate {
-  service_code: string;
-  carrier: string;
-  total: number;
-  currency: string;
-  delivery_days: number;
-  estimated_delivery: string;
-}
-
-interface RateOption {
-  total: number;
-  vendors: Record<string, VendorRate>;
-}
-
-interface ShippingRateResponse {
-  cheapest?: RateOption;
-  fastest?: RateOption;
 }
 
 interface OrderSummaryProps {
@@ -100,19 +82,26 @@ export default function OrderSummary({
 
     const sessionEmail = sessionStorage.getItem("checkout_email");
 
-    const vendorServiceCodes: Record<string, string> = Object.fromEntries(
-      Object.entries(selectedShipping.vendors).map(([vendorId, v]) => [
-        vendorId,
-        v.service_code,
-      ])
-    );
-
-    const vendorShippingDetails: Record<string, VendorRate> =
-      selectedShipping.vendors;
+    const vendorIds = Object.keys(selectedShipping.vendors);
+    const vendor_id = vendorIds[0];
 
     const vendorCarriers = Array.from(
       new Set(Object.values(selectedShipping.vendors).map((v) => v.carrier))
     ).join(", ");
+
+    const shippingServiceCodes = Object.values(selectedShipping.vendors).map(
+      (v) => ({
+        vendor_id: Number(vendor_id),
+        total: v.total,
+        service_code: v.service_code,
+        carrier: v.carrier,
+        currency: v.currency,
+        delivery_days: v.delivery_days,
+        estimated_delivery: v.estimated_delivery,
+        shipment_id: v.shipment_id,
+        rate_id: v.rate_id,
+      })
+    );
 
     // Earliest delivery across all vendors
     const estimatedDelivery =
@@ -127,9 +116,7 @@ export default function OrderSummary({
       shipping_fee: shippingFee,
       shipping_carrier: vendorCarriers,
       estimated_delivery: estimatedDelivery!,
-
-      shipping_service_code: vendorServiceCodes,
-      // shipping_service_code: vendorShippingDetails, // FULL OBJECT
+      shipping_service_code: shippingServiceCodes,
     };
 
     try {
@@ -207,7 +194,7 @@ export default function OrderSummary({
                 className={`flex gap-4 items-center p-4 rounded-lg border cursor-pointer transition
                   ${
                     active
-                      ? "border-orange-800 bg-blue-50 scale-[1.02]"
+                      ? "border-red-800 bg-blue-50 scale-[1.02]"
                       : "border-gray-200 hover:border-gray-400 hover:scale-[1.01]"
                   }
                 `}
@@ -227,9 +214,6 @@ export default function OrderSummary({
                       ? formatHumanReadableDate(estimatedDelivery)
                       : "N/A"}
                   </p>
-                  <p hidden className="text-sm text-gray-500">
-                    Total Vendors: {Object.keys(option.vendors).length}
-                  </p>
                 </div>
                 <div className="text-right font-semibold text-gray-700">
                   {formatAmount(option.total)}
@@ -241,7 +225,7 @@ export default function OrderSummary({
       )}
 
       {/* Total */}
-      <div className="flex justify-between mt-6 pt-4 border-t border-orange-800 text-lg font-semibold text-gray-800">
+      <div className="flex justify-between mt-6 pt-4 border-t border-red-800 text-lg font-semibold text-gray-800">
         <span>Total</span>
         <span>
           {shippingFee > 0
