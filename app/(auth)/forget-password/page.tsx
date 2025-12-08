@@ -101,7 +101,7 @@ export default function ForgetPassword() {
             <div className="flex items-center justify-between gap-4">
               <button
                 type="submit"
-                className={`btn btn-primary ${
+                className={`btn btn-primary w-full ${
                   loading ? "opacity-70 cursor-not-allowed" : ""
                 }`}
                 disabled={loading}
@@ -111,8 +111,8 @@ export default function ForgetPassword() {
 
               <button
                 type="button"
-                className="btn btn-gray "
-                onClick={() => router.push("/login")}
+                className="btn btn-gray w-full "
+                onClick={() => router.replace("/login")}
               >
                 Back to login
               </button>
