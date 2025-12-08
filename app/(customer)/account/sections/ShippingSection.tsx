@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { User } from "@/interfaces/user";
 import Address from "@/interfaces/address";
 import { updateAddress, getAddresses } from "@/lib/api/auth/shipping";
-import toast from "react-hot-toast"; 
+import toast from "react-hot-toast";
 import { countryCodeToFlag } from "@/utils/countryFlag";
 import GoogleAddressAutocomplete from "@/app/(seller)/dashboard/shop-management/components/GoogleAddressAutocomplete";
 import PhoneInput from "@/app/(seller)/dashboard/shop-management/components/PhoneInput";
@@ -220,9 +220,17 @@ export default function ShippingSection({ user }: ShippingSectionProps) {
             {user?.name} {user?.last_name ?? "Guest"}
           </p>
           <p className="text-gray-700 text-sm">
-            {formData.street_address}, {formData.city}, {formData.state},{" "}
-            {formData.zip_code}, {formData.country}
+            {[
+              formData.street_address,
+              formData.city,
+              formData.state,
+              formData.zip_code,
+              formData.country,
+            ]
+              .filter(Boolean)
+              .join(", ")}
           </p>
+
           <p className="text-gray-700 text-sm">
             {formData.phone || "(no phone number)"}
           </p>

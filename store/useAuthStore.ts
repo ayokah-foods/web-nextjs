@@ -20,7 +20,17 @@ export const useAuthStore = create<AuthStore>()(
       _hasHydrated: false,
 
       setAuth: (token, user) => set({ token, user }),
-      clearAuth: () => set({ token: null, user: null }),
+      clearAuth: () => {
+        // Clear Zustand
+        set({ token: null, user: null });
+
+        // Clear cookies
+        document.cookie.split(";").forEach((cookie) => {
+          const name = cookie.split("=")[0].trim();
+          document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+        });
+      },
+      
       setHasHydrated: (state) => set({ _hasHydrated: state }),
 
       updateUser: (userUpdate: Partial<User>) =>

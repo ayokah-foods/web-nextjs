@@ -23,7 +23,7 @@ export function Header({ toggleSidebar }: { toggleSidebar: () => void }) {
 
   const handleLogout = () => {
     clearAuth();
-    router.push("/login");
+    router.replace("/");
   };
 
   const userName = user?.name || user?.email || "Seller";

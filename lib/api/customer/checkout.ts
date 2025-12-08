@@ -1,4 +1,3 @@
-import Item from "@/interfaces/items";
 import api from "../axios";
 
 export interface CheckoutPayload {
