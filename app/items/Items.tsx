@@ -124,25 +124,9 @@ const Items: FC<ItemsProps> = ({}) => {
   const handlePageChange = (newPage: number) => {
     if (newPage < 1 || newPage > totalPages) return;
     setFilters((prev) => ({ ...prev, offset: (newPage - 1) * prev.limit }));
-  };
-
-  const renderSkeletons = () =>
-    Array.from({ length: filters.limit }).map((_, idx) => (
-      <div
-        key={idx}
-        className="bg-white rounded-xl overflow-hidden shadow relative"
-      >
-        <Skeleton height={224} className="w-full h-56" />
-        <div className="p-3">
-          <Skeleton width={80} height={16} className="mb-2" />
-          <Skeleton height={16} className="mb-2" />
-          <Skeleton height={16} width={60} />
-        </div>
-      </div>
-    ));
-
+  }; 
   return (
-    <div className="p-4 bg-gray-50 sm:h-screen">
+    <div className="p-4 bg-gray-50 h-screen">
       {/* Category Header */}
       {loading ? (
         <div className="mb-6 bg-white p-6 rounded-lg shadow-md">

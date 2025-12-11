@@ -198,12 +198,12 @@ export default function ItemDetail({
                 Seller:{" "}
                 <Link
                   target="_blank"
-                  className="text-red-800"
+                  className=""
                   href={`/shops/${product?.shop?.slug}`}
                 >
-                  {product?.shop?.name}{" "}
-                  <span className="text-gray-500">from</span>{" "}
-                  {product?.shop?.country}
+                  <span className="text-red-800 text-xs truncate">
+                    Similar items from {product?.shop?.name}
+                  </span>
                 </Link>
               </p>
             </div>
