@@ -12,6 +12,7 @@ import Item from "@/interfaces/items";
 import { useRouter } from "next/navigation";
 import Skeleton from "react-loading-skeleton";
 import { formatAmount } from "@/utils/formatCurrency";
+import ProductGrid from "../items/components/ProductGrid";
 
 const LatestProducts: FC = () => {
   const [products, setProducts] = useState<Item[]>([]);
@@ -69,75 +70,12 @@ const LatestProducts: FC = () => {
           />
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6">
-          {loading
-            ? renderSkeletons()
-            : products.map((product) => {
-                // Calculate prices and discount per product
-                const salesPrice = parseFloat(product.sales_price);
-                const regularPrice = parseFloat(product.regular_price);
-                const discount =
-                  regularPrice > salesPrice
-                    ? Math.round(
-                        ((regularPrice - salesPrice) / regularPrice) * 100
-                      )
-                    : 0;
-
-                return (
-                  <div
-                    onClick={() => router.push(`/items/${product.slug}`)}
-                    key={product.id}
-                    className="bg-white rounded-xl overflow-hidden shadow relative group cursor-pointer"
-                  >
-                    {/* Product Image */}
-                    <div className="relative">
-                      <Image
-                        src={product.images?.[0] || "/placeholder.png"}
-                        alt={product.title}
-                        width={400}
-                        height={400}
-                        className="w-full h-56 object-cover"
-                      />
-
-                      {/* Discount Badge */}
-                      {discount > 0 && (
-                        <div className="absolute top-2 left-2 bg-yellow-400 text-red-800 font-bold text-xs px-2 py-1 rounded shadow">
-                          -{discount}%
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="p-3">
-                      {/* Ratings */}
-                      <div className="flex items-center gap-1 text-yellow-400 mb-1">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <span key={i}>
-                            {i < product.average_rating ? "★" : "☆"}
-                          </span>
-                        ))}
-                      </div>
-
-                      {/* Product Title */}
-                      <h3 className="text-sm font-semibold text-gray-900 mb-1 truncate">
-                        {product.title}
-                      </h3>
-
-                      {/* Price */}
-                      <p className="flex items-baseline gap-1">
-                        <span className="text-sm font-bold text-gray-900">
-                          {formatAmount(salesPrice)}
-                        </span>
-                        {discount > 0 && (
-                          <span className="text-[9px] line-through text-gray-400">
-                            {formatAmount(regularPrice)}
-                          </span>
-                        )}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
-        </div>
+        <ProductGrid
+          products={products}
+          loading={loading}
+          columns="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6"
+          onClickItem={(product) => router.push(`/items/${product.slug}`)}
+        />
       </div>
     </section>
   );
