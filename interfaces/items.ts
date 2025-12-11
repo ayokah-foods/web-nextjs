@@ -1,3 +1,5 @@
+import { Shop } from "./shop";
+
 export default interface Item {
   id: number;
   title: string;
@@ -31,21 +33,7 @@ export interface Category {
   description: string;
   image: string;
 }
-
-export interface Shop {
-  id: number;
-  name: string;
-  slug: string;
-  description: string | null;
-  logo: string | null;
-  banner: string | null;
-  address?: string | null;
-  city?: string | null;
-  state?: string | null;
-  country?: string | null;
-  phone?: string | null;
-}
-
+ 
 
 export interface Variation {
   id?: number;

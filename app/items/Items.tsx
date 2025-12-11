@@ -10,6 +10,7 @@ import { listItems } from "@/lib/api/items";
 import debounce from "lodash.debounce";
 import { formatAmount } from "@/utils/formatCurrency";
 import CubeIcon from "@heroicons/react/24/solid/CubeIcon";
+import ProductGrid from "./components/ProductGrid";
 
 interface ItemsProps {
   params: { slug: string };
@@ -141,7 +142,7 @@ const Items: FC<ItemsProps> = ({}) => {
     ));
 
   return (
-    <div className="p-4 bg-white">
+    <div className="p-4 bg-gray-50 sm:h-screen">
       {/* Category Header */}
       {loading ? (
         <div className="mb-6 bg-white p-6 rounded-lg shadow-md">
@@ -176,61 +177,13 @@ const Items: FC<ItemsProps> = ({}) => {
 
       {/* Product Grid */}
       <main className="col-span-12 lg:col-span-9">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-          {loading ? (
-            renderSkeletons()
-          ) : products.length > 0 ? (
-            products.map((product) => (
-              <div
-                onClick={() => router.push(`/items/${product.slug}`)}
-                key={product.id}
-                className="bg-white rounded-xl overflow-hidden shadow relative group cursor-pointer"
-              >
-                <div className="relative">
-                  <Image
-                    src={product.images[0] || "/placeholder.png"}
-                    alt={product.title}
-                    width={400}
-                    height={400}
-                    className="w-full h-56 object-cover"
-                  />
-                  <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition">
-                    <button className="bg-white rounded-full p-2 shadow hover:bg-orange-100">
-                      <ShoppingBagIcon className="w-5 h-5 text-black cursor-pointer" />
-                    </button>
-                  </div>
-                </div>
-
-                <div className="p-3">
-                  <div className="flex items-center gap-1 text-yellow-400 mb-1">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <span key={i}>
-                        {i < product.average_rating ? "★" : "☆"}
-                      </span>
-                    ))}
-                  </div>
-
-                  <h3 className="text-sm font-semibold text-gray-900 mb-1 line-clamp-1">
-                    {product.title}
-                  </h3>
-
-                  <p className="text-sm font-semibold text-gray-800">
-                    {formatAmount(product.sales_price)}
-                  </p>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="col-span-full text-center py-10 flex flex-col items-center justify-center gap-4 h-screen">
-              <CubeIcon className="w-16 h-16 text-gray-300 animate-pulse" />
-              <p className="text-gray-500 text-lg font-semibold">
-                No items available.
-              </p>
-            </div>
-          )}
-        </div>
-
-        {/* Pagination Controls */}
+        <ProductGrid
+          products={products}
+          loading={loading}
+          columns="grid-cols-2 sm:grid-cols-3 md:grid-cols-6"
+          onClickItem={(product) => router.push(`/items/${product.slug}`)}
+        />
+       
         {totalPages > 1 && (
           <div className="flex justify-center items-center gap-4 mt-6">
             <button
@@ -240,7 +193,7 @@ const Items: FC<ItemsProps> = ({}) => {
             >
               Previous
             </button>
-            <span className="text-yellow-800">
+            <span className="text-yellow-800 font-medium">
               Page {currentPage} of {totalPages}
             </span>
             <button
