@@ -1,30 +1,28 @@
 import api from "./axios";
 
-export async function listItems(
-  limit: number,
-  offset: number,
-  search?: string,
-  type?: string,
-  status?: string,
-  category?: string,
-  sort?: string,
-  max_price?: number,
-  availability?: string
-) {
+interface ListItemsParams {
+  limit: number;
+  offset: number;
+  search?: string;
+  type?: string;
+  status?: string;
+  category?: string;
+  direction?: "asc" | "desc";
+  availability?: string;
+}
+
+export async function listItems(params: ListItemsParams) {
+  // Remove undefined values automatically
+  const filteredParams = Object.fromEntries(
+    Object.entries(params).filter(
+      ([_, value]) => value !== undefined && value !== ""
+    )
+  );
+
   const response = await api.get("/items", {
-    params: {
-      limit,
-      offset,
-      ...(search ? { search } : {}),
-      ...(type ? { type } : {}),
-      ...(status ? { status } : {}),
-      // Only include category if no search
-      ...(!search && category ? { category } : {}),
-      ...(sort ? { sort } : {}),
-      ...(max_price ? { max_price } : {}),
-      ...(availability ? { availability } : {}),
-    },
+    params: filteredParams,
   });
+
   return response.data;
 }
 

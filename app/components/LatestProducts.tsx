@@ -17,29 +17,30 @@ const LatestProducts: FC = () => {
   const [products, setProducts] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-   useEffect(() => {
-     const fetchItems = async () => {
-       try {
-         setLoading(true);
-         const res = await listItems({
-           limit: 12,
-           offset: 0,
-           type: "products",
-           status: "active",
-           direction: "desc",
-         });
 
-         const allProducts = Array.isArray(res.data) ? res.data : [];
-         setProducts(allProducts);
-       } catch (error) {
-         console.error("Error fetching products:", error);
-       } finally {
-         setLoading(false);
-       }
-     };
+  useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        setLoading(true);
+        const res = await listItems({
+          limit: 12,
+          offset: 0,
+          type: "products",
+          status: "active",
+          direction: "asc", // or "desc"
+        });
 
-     fetchItems();
-   }, []);
+        const allProducts = Array.isArray(res.data) ? res.data : [];
+        setProducts(allProducts);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchItems();
+  }, []);
 
   const renderSkeletons = () =>
     Array.from({ length: 12 }).map((_, idx) => (
@@ -60,8 +61,8 @@ const LatestProducts: FC = () => {
     <section className="mb-4">
       <div className="max-w-full mx-auto px-4 md:px-6 lg:px-8 pb-8">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-sm md:text-xl font-bold text-orange-800">
-            Recommended products
+          <h2 className="text-xl md:text-xl font-bold text-orange-800">
+            Latest products
           </h2>
           <ArrowRightCircleIcon
             className="w-6 h-6 text-orange-800 cursor-pointer"

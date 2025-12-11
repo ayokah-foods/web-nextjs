@@ -1,27 +1,28 @@
 "use client";
 
-import { useEffect, useState, FC } from "react";
+import { useEffect, useState, FC, useMemo } from "react";
 import Image from "next/image";
-import { ShoppingBagIcon, HeartIcon } from "@heroicons/react/24/outline";
+import { ShoppingBagIcon } from "@heroicons/react/24/outline";
 import Product, { Category } from "@/interfaces/items";
 import { useRouter, useSearchParams } from "next/navigation";
 import Skeleton from "react-loading-skeleton";
 import { listItems } from "@/lib/api/items";
 import debounce from "lodash.debounce";
-import { useMemo } from "react";
 import { formatAmount } from "@/utils/formatCurrency";
+import CubeIcon from "@heroicons/react/24/solid/CubeIcon";
 
 interface ItemsProps {
   params: { slug: string };
 }
+
 interface ApiResponse {
   status: string;
   message: string;
   category_info: Category | null;
   data: Product[];
   total: number;
-  offset: string | number;
-  limit: string | number;
+  offset: number;
+  limit: number;
   stats: Record<string, number>;
 }
 
@@ -35,17 +36,28 @@ const Items: FC<ItemsProps> = ({}) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [categoryInfo, setCategoryInfo] = useState<Category | null>(null);
-  const [filters, setFilters] = useState({
-    limit: 12,
+  const [total, setTotal] = useState(0);
+
+  const [filters, setFilters] = useState<{
+    limit: number;
+    offset: number;
+    search: string;
+    type: string;
+    status: string;
+    category: string;
+    sort: "asc" | "desc";
+    availability?: string;
+    rating?: number;
+  }>({
+    limit: 15,
     offset: 0,
     search: "",
     type: queryType,
     status: "active",
     category: queryCategory,
-    sort: "latest",
-    max_price: undefined as number | undefined,
-    availability: undefined as string | undefined,
-    rating: undefined as number | undefined,
+    sort: "asc",
+    availability: undefined,
+    rating: undefined,
   });
 
   // Fetch products
@@ -54,20 +66,22 @@ const Items: FC<ItemsProps> = ({}) => {
       try {
         setLoading(true);
 
-        const res: ApiResponse = await listItems(
-          filters.limit,
-          filters.offset,
-          filters.search,
-          filters.type,
-          filters.status,
-          filters.category,
-          filters.sort,
-          filters.max_price,
-          filters.availability
-        );
+        const params = {
+          limit: filters.limit,
+          offset: filters.offset,
+          search: filters.search || undefined,
+          type: filters.type,
+          status: filters.status,
+          category: filters.category || undefined,
+          direction: filters.sort,
+          availability: filters.availability,
+        };
+
+        const res: ApiResponse = await listItems(params);
 
         setProducts(res.data || []);
         setCategoryInfo(res.category_info || null);
+        setTotal(res.total || 0);
       } catch (error) {
         console.error("Error fetching products:", error);
       } finally {
@@ -78,11 +92,13 @@ const Items: FC<ItemsProps> = ({}) => {
     fetchItems();
   }, [filters]);
 
+  // Update filters when query params change
   useEffect(() => {
     setFilters((prev) => ({
       ...prev,
       type: queryType,
       category: queryCategory,
+      offset: 0, // reset offset on filter change
     }));
   }, [queryType, queryCategory]);
 
@@ -90,7 +106,7 @@ const Items: FC<ItemsProps> = ({}) => {
   const debouncedSetSearch = useMemo(
     () =>
       debounce((value: string) => {
-        setFilters((prev) => ({ ...prev, search: value }));
+        setFilters((prev) => ({ ...prev, search: value, offset: 0 }));
       }, 500),
     []
   );
@@ -101,9 +117,16 @@ const Items: FC<ItemsProps> = ({}) => {
     };
   }, [debouncedSetSearch]);
 
-  // Skeleton UI while loading
+  const totalPages = Math.ceil(total / filters.limit);
+  const currentPage = Math.floor(filters.offset / filters.limit) + 1;
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage < 1 || newPage > totalPages) return;
+    setFilters((prev) => ({ ...prev, offset: (newPage - 1) * prev.limit }));
+  };
+
   const renderSkeletons = () =>
-    Array.from({ length: 12 }).map((_, idx) => (
+    Array.from({ length: filters.limit }).map((_, idx) => (
       <div
         key={idx}
         className="bg-white rounded-xl overflow-hidden shadow relative"
@@ -118,9 +141,9 @@ const Items: FC<ItemsProps> = ({}) => {
     ));
 
   return (
-    <div className="p-4 bg-white  h-full">
+    <div className="p-4 bg-white">
+      {/* Category Header */}
       {loading ? (
-        // Skeleton for the header
         <div className="mb-6 bg-white p-6 rounded-lg shadow-md">
           <Skeleton circle width={144} height={144} className="mb-4" />
           <Skeleton height={36} width={250} className="mb-2" />
@@ -128,7 +151,6 @@ const Items: FC<ItemsProps> = ({}) => {
         </div>
       ) : (
         categoryInfo && (
-          // The actual header content
           <div className="mb-6 bg-white p-6 rounded-lg shadow-md flex flex-col md:flex-row items-center gap-6">
             {categoryInfo.image && (
               <Image
@@ -151,6 +173,8 @@ const Items: FC<ItemsProps> = ({}) => {
           </div>
         )
       )}
+
+      {/* Product Grid */}
       <main className="col-span-12 lg:col-span-9">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
           {loading ? (
@@ -162,7 +186,6 @@ const Items: FC<ItemsProps> = ({}) => {
                 key={product.id}
                 className="bg-white rounded-xl overflow-hidden shadow relative group cursor-pointer"
               >
-                {/* Image */}
                 <div className="relative">
                   <Image
                     src={product.images[0] || "/placeholder.png"}
@@ -171,17 +194,13 @@ const Items: FC<ItemsProps> = ({}) => {
                     height={400}
                     className="w-full h-56 object-cover"
                   />
-                  <div className="absolute top-2 right-2 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition">
+                  <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition">
                     <button className="bg-white rounded-full p-2 shadow hover:bg-orange-100">
                       <ShoppingBagIcon className="w-5 h-5 text-black cursor-pointer" />
-                    </button>
-                    <button className="bg-white rounded-full p-2 shadow hover:bg-orange-100">
-                      <HeartIcon className="w-5 h-5 text-black cursor-pointer" />
                     </button>
                   </div>
                 </div>
 
-                {/* Info */}
                 <div className="p-3">
                   <div className="flex items-center gap-1 text-yellow-400 mb-1">
                     {Array.from({ length: 5 }).map((_, i) => (
@@ -202,11 +221,37 @@ const Items: FC<ItemsProps> = ({}) => {
               </div>
             ))
           ) : (
-            <div className="col-span-full text-center py-10">
-              <p className="text-gray-500 text-lg">No items available.</p>
+            <div className="col-span-full text-center py-10 flex flex-col items-center justify-center gap-4 h-screen">
+              <CubeIcon className="w-16 h-16 text-gray-300 animate-pulse" />
+              <p className="text-gray-500 text-lg font-semibold">
+                No items available.
+              </p>
             </div>
           )}
         </div>
+
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center gap-4 mt-6">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="btn btn-gray"
+            >
+              Previous
+            </button>
+            <span className="text-yellow-800">
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="btn btn-gray"
+            >
+              Next
+            </button>
+          </div>
+        )}
       </main>
     </div>
   );

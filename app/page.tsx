@@ -1,6 +1,6 @@
 import BannerCarousel from "./components/BannerCarousel";
 import CategorySection from "./components/CategorySection";
-import RecommendedProducts from "./components/RecommendedProducts";
+import LatestProducts from "./components/LatestProducts";
 import TodaysDeal from "./components/TodaysDeal";
 
 export default function Home() {
@@ -8,7 +8,7 @@ export default function Home() {
     <div className="bg-gray-50">
       <BannerCarousel />
       <CategorySection />
-      <RecommendedProducts />
+      <LatestProducts />
       <TodaysDeal />
     </div>
   );

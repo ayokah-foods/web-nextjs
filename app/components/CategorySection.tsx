@@ -54,27 +54,31 @@ const CategorySection: FC = () => {
               <Skeleton height={224} />
             </div>
           ))
-        : categories.map((cat) => (
-            <div
-              key={cat.id}
-              onClick={() => handleClick(cat.slug, "products")}
-              className="relative rounded-xl overflow-hidden group cursor-pointer border border-orange-100"
-            >
-              <Image
-                src={cat.image || "/placeholder.png"}
-                alt={cat.name}
-                width={400}
-                height={400}
-                loading="lazy"
-                className="w-full h-56 object-cover group-hover:scale-105 transition"
-              />
-              <div className="absolute bottom-3 left-3 right-3">
-                <div className="bg-orange-800 text-white text-center py-2 rounded-lg font-semibold text-sm md:text-base">
-                  {cat.name}
+        : categories.slice(0, 6).map(
+            (
+              cat // <-- slice here
+            ) => (
+              <div
+                key={cat.id}
+                onClick={() => handleClick(cat.slug, "products")}
+                className="relative rounded-xl overflow-hidden group cursor-pointer border border-orange-100"
+              >
+                <Image
+                  src={cat.image || "/placeholder.png"}
+                  alt={cat.name}
+                  width={400}
+                  height={400}
+                  loading="lazy"
+                  className="w-full h-56 object-cover group-hover:scale-105 transition"
+                />
+                <div className="absolute bottom-3 left-3 right-3">
+                  <div className="bg-orange-800 lg:text-sm text-white text-center py-2 rounded-lg font-semibold text-xs md:text-base truncate">
+                    {cat.name}
+                  </div>
                 </div>
               </div>
-            </div>
-          )),
+            )
+          ),
     [categories, loading, handleClick]
   );
 
@@ -96,13 +100,13 @@ const CategorySection: FC = () => {
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center">
-            <p className="text-3xl font-bold text-orange-800 text-center">
+            <p className="sm:text-2xl text-sm font-bold text-orange-800 text-center">
               {banner.type === "home_service_banner"
                 ? "Nearby Service Providers"
                 : "Essential Daily Needs"}
             </p>
-            <button className="mt-4 bg-orange-100 text-orange-800 px-6 py-2 rounded-full text-sm font-semibold flex items-center gap-2 hover:bg-orange-200 transition cursor-pointer">
-              <ShoppingBagIcon className="w-5 h-5" /> Shop Now
+            <button className="mt-4 bg-orange-100 text-orange-800 sm:px-6 sm:py-2 px-3 py-1 rounded-full text-xs sm:text-sm font-semibold flex items-center gap-2 hover:bg-orange-200 transition cursor-pointer">
+              <ShoppingBagIcon className="w-3 h-3 sm:w-5 sm:h-5" /> Shop Now
             </button>
           </div>
         </div>
@@ -113,11 +117,22 @@ const CategorySection: FC = () => {
   return (
     <section className="py-6">
       <div className="max-w-full mx-auto px-4 md:px-6 lg:px-8">
-        <h2 className="text-xl md:text-xl font-bold mb-4 ">Shop by Category</h2>
+        <h2 className="md:text-xl text-sm font-bold mb-4 ">Shop by Category</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {renderBanner}
           <div className="col-span-1 md:col-span-2 grid grid-cols-2 md:grid-cols-3 gap-6">
             {renderCategories}
+            {/* View All Button */}
+            {!loading && categories.length > 0 && (
+              <div className="flex items-center justify-center col-span-2 md:col-span-3 mt-2">
+                <button
+                  className="btn btn-gray w-full md:w-auto"
+                  onClick={() => router.push("/categories")}
+                >
+                  View All
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
