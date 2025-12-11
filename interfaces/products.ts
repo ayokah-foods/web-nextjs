@@ -1,4 +1,4 @@
-import { Shop } from "./orders";
+import { Shop } from "./shop";
 
 export interface ProductResponse {
   status: string;
