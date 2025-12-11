@@ -11,11 +11,13 @@ export async function generateMetadata({ params }: PageParams): Promise<Metadata
   try {
     const response = await getItemDetail(slug);
     const product = response.data.product;
-
+  const description =
+      product.description
+        ?.replace(/<\/?[^>]+(>|$)/g, "") // strip HTML
+        .slice(0, 155);
     return {
       title: `${product.title} | Ayokah Foods & Services`,
-      description:
-        product.meta_description || product.description?.slice(0, 155),
+      description: description,
 
       openGraph: {
         title: product.title,
@@ -60,6 +62,11 @@ export default async function ItemDetailPage({ params }: PageParams) {
     const response = await getItemDetail(slug);
 
     const product = response.data.product; 
+      const reviews = response.data.star_rating?.reviews ?? [];
+      const recommended = response.data.recommended ?? [];
+      const frequentlyBoughtTogether =
+        response.data.frequently_bought_together ?? [];
+      const otherViews = response.data.otherViews ?? [];
 
     const productSchema = {
       "@context": "https://schema.org",
@@ -92,6 +99,8 @@ export default async function ItemDetailPage({ params }: PageParams) {
             }
           : undefined,
     };
+    const star_rating = response.data.star_rating ?? { total: 0, reviews: [] };
+
 
     return (
       <>
@@ -103,7 +112,14 @@ export default async function ItemDetailPage({ params }: PageParams) {
           }}
         />
 
-        <ItemDetail product={product} />
+        <ItemDetail
+          product={product}
+          reviews={reviews}
+          star_rating={star_rating} // <-- add this line
+          recommended={recommended}
+          frequentlyBoughtTogether={frequentlyBoughtTogether}
+          otherViews={otherViews}
+        />
       </>
     );
   } catch  {
