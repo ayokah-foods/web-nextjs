@@ -1,17 +1,12 @@
 "use client";
 
 import { useEffect, useState, FC } from "react";
-import Image from "next/image";
-import {
-  ShoppingBagIcon,
-  HeartIcon,
+import { 
   ArrowRightCircleIcon,
 } from "@heroicons/react/24/outline";
 import { listItems } from "@/lib/api/items";
 import Item from "@/interfaces/items";
-import { useRouter } from "next/navigation";
-import Skeleton from "react-loading-skeleton";
-import { formatAmount } from "@/utils/formatCurrency";
+import { useRouter } from "next/navigation"; 
 import ProductGrid from "../items/components/ProductGrid";
 
 const LatestProducts: FC = () => {
@@ -41,24 +36,7 @@ const LatestProducts: FC = () => {
     };
 
     fetchItems();
-  }, []);
-
-
-  const renderSkeletons = () =>
-    Array.from({ length: 12 }).map((_, idx) => (
-      <div
-        key={idx}
-        className="bg-white rounded-xl overflow-hidden shadow relative"
-      >
-        <Skeleton height={224} className="w-full h-56" />
-        <div className="p-3">
-          <Skeleton width={80} height={16} className="mb-2" />
-          <Skeleton height={16} className="mb-2" />
-          <Skeleton height={16} width={60} />
-        </div>
-      </div>
-    ));
-
+  }, []); 
   return (
     <section className="mb-4">
       <div className="max-w-full mx-auto px-4 md:px-6 lg:px-8 pb-8">
