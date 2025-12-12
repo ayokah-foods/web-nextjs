@@ -104,7 +104,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex">
+    <div className="flex h-screen">
       {/* Left Column: Image */}
       <div className="relative hidden lg:block h-full w-1/2">
         <Image

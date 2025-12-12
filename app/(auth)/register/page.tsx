@@ -64,9 +64,9 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex">
+    <div className="flex ">
       {/* Left Column */}
-      <div className="relative hidden lg:block h-full w-1/2">
+      <div className="relative hidden lg:block min-h-screen w-1/2">
         <Image
           width={1200}
           height={1600}
