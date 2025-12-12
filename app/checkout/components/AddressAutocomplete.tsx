@@ -79,7 +79,7 @@ export default function AddressAutocomplete({ onSelectAddress }: Props) {
         value={value}
         disabled={!ready}
         onChange={(e) => setValue(e.target.value)}
-        placeholder="Enter your address"
+        placeholder="Start typing for autocomplete of your address"
         className="input"
       />
 
@@ -99,8 +99,3 @@ export default function AddressAutocomplete({ onSelectAddress }: Props) {
     </div>
   );
 }
-
-<Script
-  src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`}
-  strategy="beforeInteractive"
-/>;

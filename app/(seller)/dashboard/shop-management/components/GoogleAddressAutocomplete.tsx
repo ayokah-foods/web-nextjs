@@ -95,6 +95,10 @@ export default function GoogleAddressAutocomplete({
 
   return (
     <div className="relative">
+      <Script
+        src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`}
+        strategy="beforeInteractive"
+      />
       <input
         className="input w-full"
         value={value}
@@ -119,8 +123,3 @@ export default function GoogleAddressAutocomplete({
     </div>
   );
 }
-
-<Script
-  src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`}
-  strategy="beforeInteractive"
-/>;

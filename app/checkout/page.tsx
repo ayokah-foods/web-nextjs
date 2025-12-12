@@ -10,8 +10,11 @@ import toast from "react-hot-toast";
 import axios, { AxiosError } from "axios";
 import { ShippingRateResponse } from "@/interfaces/shippingRate";
 import { useAuthStore } from "@/store/useAuthStore";
+import Script from "next/script";
+
 
 export default function CheckoutPage() {
+
   const { cart, clearCart } = useCart();
   const { user } = useAuthStore(); // get logged-in user
 
@@ -144,6 +147,10 @@ export default function CheckoutPage() {
 
   return (
     <div className="bg-gray-50 py-8">
+      <Script
+        src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`}
+        strategy="beforeInteractive"
+      />
       <div className="px-4 lg:px-8 flex flex-col lg:flex-row gap-8">
         {/* Checkout Form */}
         <div className="flex-1">
