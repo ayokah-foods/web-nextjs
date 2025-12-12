@@ -38,9 +38,12 @@ export default function NavBar() {
       <div className="container mx-auto flex items-center justify-between px-2">
         <Menu as="div" className="relative">
           <MenuButton className="flex items-center gap-2 bg-yellow-700 text-white px-3 py-3 text-sm font-medium rounded-full hover:bg-yellow-600 active:scale-95 transition-all duration-200 shadow-md focus:outline-none cursor-pointer">
-            <Bars3Icon className="w-5 h-5 block lg:hidden" />
+            <Bars3Icon
+              aria-label="All categories"
+              className="w-5 h-5 block lg:hidden"
+            />
             <div className="hidden lg:flex items-center gap-2">
-              <Bars3Icon className="w-5 h-5" />
+              <Bars3Icon aria-label="All categories" className="w-5 h-5" />
               <span>All Categories</span>
             </div>
           </MenuButton>
@@ -118,11 +121,11 @@ function CategoryList() {
       })}
 
       {/* View All button */}
-      {data.categories.length > 15 && (
+      {data.categories.length > 10 && (
         <div className="flex justify-center mt-2">
           <Link
             href="/categories"
-            className="text-sm text-yellow-700 hover:underline flex items-center bg-yellow-50 p-3 rounded-md gap-1"
+            className="text-sm text-yellow-50 hover:underline flex items-center bg-yellow-600 p-3 rounded-md gap-1"
           >
             View All Categories
             <ChevronRightIcon className="w-4 h-4" />
@@ -152,7 +155,9 @@ function MobileNavLinks() {
           {
             label: "Become a Seller",
             href: "/seller-onboarding",
-            icon: <BuildingStorefrontIcon className="w-4 h-4 text-yellow-500" />,
+            icon: (
+              <BuildingStorefrontIcon className="w-4 h-4 text-yellow-500" />
+            ),
           },
         ]
       : []),
@@ -233,7 +238,9 @@ function DesktopNavLinks() {
               href={link.href}
               title={link.label}
               className={`flex items-center gap-1.5 transition-colors duration-200 ${
-                isActive ? "text-yellow-400" : "text-gray-100 hover:text-yellow-200"
+                isActive
+                  ? "text-yellow-400"
+                  : "text-gray-100 hover:text-yellow-200"
               }`}
             >
               <span className="text-yellow-300">{link.icon}</span>

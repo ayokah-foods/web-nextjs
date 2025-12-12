@@ -48,6 +48,11 @@ export default function BannerCarousel() {
     );
   }
 
+  function optimizeImage(url: string, width: number = 1600) {
+    return url.replace("/upload/", `/upload/f_auto,q_auto,w_${width}/`);
+  }
+
+
   return (
     <div className="relative w-full h-[200px] sm:h-[300px] md:h-[400px] lg:h-[500px] overflow-hidden">
       {/* Slides */}
@@ -61,11 +66,17 @@ export default function BannerCarousel() {
             className="w-full shrink-0 relative h-[200px] sm:h-[300px] md:h-[400px] lg:h-[500px]"
           >
             <Image
-              src={banner.banner}
+              src={optimizeImage(banner.banner, 1600)}
               alt={banner.type}
               fill
-              priority
+              sizes="(max-width: 640px) 100vw,
+         (max-width: 1024px) 100vw,
+         (max-width: 1280px) 100vw,
+         100vw"
+              priority={banner.id === banners[0].id}
               className="object-cover"
+              placeholder="blur"
+              blurDataURL="/placeholder.jpg"
             />
             {/* Optional overlay */}
             <div className="absolute inset-0 bg-black/20" />
@@ -78,7 +89,7 @@ export default function BannerCarousel() {
         onClick={prevSlide}
         className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white/70 hover:bg-white rounded-full shadow p-2"
       >
-        <ChevronLeftIcon className="w-3 h-3 text-gray-700" />
+        <ChevronLeftIcon aria-label="left" className="w-3 h-3 text-gray-700" />
       </button>
 
       {/* Right button */}
@@ -86,7 +97,7 @@ export default function BannerCarousel() {
         onClick={nextSlide}
         className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white/70 hover:bg-white rounded-full shadow p-2"
       >
-        <ChevronRightIcon className="w-3 h-3 text-gray-700" />
+        <ChevronRightIcon aria-label="right" className="w-3 h-3 text-gray-700" />
       </button>
 
       {/* Indicators */}
@@ -94,6 +105,7 @@ export default function BannerCarousel() {
         {banners.map((_, index) => (
           <button
             key={index}
+            aria-label="indicators"
             onClick={() => setCurrent(index)}
             className={`w-2 h-2 rounded-full ${
               index === current ? "bg-yellow-800" : "bg-gray-300"

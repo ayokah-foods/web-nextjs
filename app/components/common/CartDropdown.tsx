@@ -50,6 +50,7 @@ export default function CartDropdown() {
       button={
         <motion.div
           whileTap={{ scale: 0.95 }}
+          aria-label="Cart Items"
           className="relative flex items-center gap-2 bg-orange-200 text-orange-900 px-2 sm:px-4 py-2 rounded-full hover:bg-orange-200 transition cursor-pointer"
         >
           <div className="relative">

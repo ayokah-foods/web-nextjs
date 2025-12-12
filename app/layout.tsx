@@ -8,6 +8,7 @@ import Script from "next/script";
 import PublicLayoutElements from "./PublicLayoutElements";
 import FooterWrapper from "./FooterWrapper";
 import { WishlistProvider } from "@/context/WishlistContext";
+import "react-loading-skeleton/dist/skeleton.css";
 
 const instrumentSans = Instrument_Sans({
   subsets: ["latin"],
@@ -72,12 +73,15 @@ export default function RootLayout({
           <CartProvider>
             <WishlistProvider>
               <PublicLayoutElements />
-              {children}
+              {/* ✅ MAIN LANDMARK FIX */}
+              <main id="main-content" role="main" className="bg-gray-50 flex-1">
+                {children}
+              </main>
               <FooterWrapper />
             </WishlistProvider>
           </CartProvider>
         </Providers>
-    
+
         <Toaster />
       </body>
     </html>
