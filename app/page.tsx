@@ -8,8 +8,8 @@ export default function Home() {
     <div className="bg-gray-50">
       <BannerCarousel />
       <CategorySection />
-      <LatestProducts />
       <TodaysDeal />
+      <LatestProducts />
     </div>
   );
 }

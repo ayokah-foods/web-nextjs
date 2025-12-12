@@ -1,15 +1,12 @@
 "use client";
 
 import { useEffect, useState, FC, useMemo } from "react";
-import Image from "next/image";
-import { ShoppingBagIcon } from "@heroicons/react/24/outline";
+import Image from "next/image"; 
 import Product, { Category } from "@/interfaces/items";
 import { useRouter, useSearchParams } from "next/navigation";
 import Skeleton from "react-loading-skeleton";
 import { listItems } from "@/lib/api/items";
-import debounce from "lodash.debounce";
-import { formatAmount } from "@/utils/formatCurrency";
-import CubeIcon from "@heroicons/react/24/solid/CubeIcon";
+import debounce from "lodash.debounce"; 
 import ProductGrid from "./components/ProductGrid";
 
 interface ItemsProps {
@@ -50,7 +47,7 @@ const Items: FC<ItemsProps> = ({}) => {
     availability?: string;
     rating?: number;
   }>({
-    limit: 15,
+    limit: 20,
     offset: 0,
     search: "",
     type: queryType,
@@ -93,13 +90,12 @@ const Items: FC<ItemsProps> = ({}) => {
     fetchItems();
   }, [filters]);
 
-  // Update filters when query params change
   useEffect(() => {
     setFilters((prev) => ({
       ...prev,
       type: queryType,
       category: queryCategory,
-      offset: 0, // reset offset on filter change
+      offset: 0,
     }));
   }, [queryType, queryCategory]);
 
@@ -169,11 +165,11 @@ const Items: FC<ItemsProps> = ({}) => {
         />
        
         {totalPages > 1 && (
-          <div className="flex justify-center items-center gap-4 mt-6">
+          <div className="flex justify-center items-center gap-4 mt-12">
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className="btn btn-gray"
+              className="btn btn-gray w-1/7"
             >
               Previous
             </button>
@@ -183,7 +179,7 @@ const Items: FC<ItemsProps> = ({}) => {
             <button
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="btn btn-gray"
+              className="btn btn-gray w-1/7"
             >
               Next
             </button>

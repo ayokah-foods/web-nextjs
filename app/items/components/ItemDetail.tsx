@@ -20,6 +20,7 @@ interface ItemDetailProps {
   recommended: Item[];
   frequentlyBoughtTogether: Item[];
   otherViews: Item[];
+  customerAlsoViewed: Item[];
 }
 
 export default function ItemDetail({
@@ -29,6 +30,7 @@ export default function ItemDetail({
   recommended,
   frequentlyBoughtTogether,
   otherViews,
+  customerAlsoViewed,
 }: ItemDetailProps) {
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(
@@ -82,14 +84,15 @@ export default function ItemDetail({
         <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-10">
           {/* LEFT IMAGE SECTION */}
           <div className="flex gap-4 lg:col-span-1">
+            {/* SMALLER THUMBNAILS */}
             <div className="flex flex-col gap-3">
               {product.images?.map((img, i) => (
                 <Image
                   key={i}
                   src={img}
                   alt={`${product.title} ${i}`}
-                  width={80}
-                  height={80}
+                  width={30}
+                  height={30}
                   className={`rounded-md cursor-pointer border ${
                     selectedImage === img ? "border-red-800" : "border-gray-200"
                   }`}
@@ -98,13 +101,14 @@ export default function ItemDetail({
               ))}
             </div>
 
-            <div>
+            {/* BIGGER MAIN IMAGE */}
+            <div className="flex-1">
               <Image
                 src={selectedImage}
                 alt={product.title}
-                width={700}
-                height={700}
-                className="rounded-lg shadow-md w-full object-cover"
+                width={1100}
+                height={1100}
+                className="rounded-lg shadow-md w-full object-cover max-h-[550px]"
               />
             </div>
           </div>
@@ -208,6 +212,43 @@ export default function ItemDetail({
               </p>
             </div>
           </div>
+
+          {/* RIGHT-SIDE DESKTOP SECTION */}
+          <div className="hidden lg:flex flex-col gap-4 lg:col-span-1">
+            {otherViews && otherViews.length > 0 && (
+              <div className="bg-white p-4 rounded-lg shadow-sm border">
+                <h3 className="text-lg font-semibold mb-3">
+                  Customers Also Viewed
+                </h3>
+
+                <div className="flex flex-col gap-4">
+                  {otherViews.slice(0, 2).map((item) => (
+                    <Link
+                      key={item.id}
+                      href={`/items/${item.slug}`}
+                      className="flex items-start gap-3 hover:bg-gray-50 p-2 rounded-md transition"
+                    >
+                      <img
+                        src={item.images?.[0]}
+                        alt={item.title}
+                        className="w-20 h-20 object-cover rounded-md border"
+                      />
+
+                      <div className="flex flex-col">
+                        <p className="text-sm font-medium text-gray-800 line-clamp-2">
+                          {item.title}
+                        </p>
+
+                        <p className="text-xs text-red-700 font-semibold mt-1">
+                          {formatAmount(item.sales_price ?? item.regular_price)}
+                        </p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -218,7 +259,7 @@ export default function ItemDetail({
         star_rating={star_rating}
         recommended={recommended}
         frequentlyBoughtTogether={frequentlyBoughtTogether}
-        otherViews={otherViews}
+        customerAlsoViewed={customerAlsoViewed}
       />
     </>
   );

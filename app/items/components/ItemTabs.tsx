@@ -7,6 +7,7 @@ import parse from "html-react-parser";
 import ProductGrid from "./ProductGrid";
 import EmptyItem from "./EmptyItem";
 import { formatHumanReadableDate } from "@/utils/formatDate";
+import Item from "@/interfaces/items";
 
 interface ReviewUser {
   id: number;
@@ -48,9 +49,9 @@ interface ItemTabsProps {
   description: string;
   reviews: Review[];
   star_rating: StarRating;
-  recommended: any[];
-  frequentlyBoughtTogether: any[];
-  otherViews: any[];
+  recommended: Item[];
+  frequentlyBoughtTogether: Item[];
+  customerAlsoViewed: Item[];
 }
 
 export default function ItemTabs({
@@ -59,7 +60,7 @@ export default function ItemTabs({
   star_rating,
   recommended,
   frequentlyBoughtTogether,
-  otherViews,
+  customerAlsoViewed, 
 }: ItemTabsProps) {
   const [activeTab, setActiveTab] = useState<"description" | "reviews">(
     "description"
@@ -74,6 +75,10 @@ export default function ItemTabs({
       percentage: star_rating.total ? (count / star_rating.total) * 100 : 0,
     };
   });
+
+  const [showAllReviews, setShowAllReviews] = useState(false);
+
+  const visibleReviews = showAllReviews ? reviews : reviews.slice(0, 3);
 
   return (
     <div className="bg-gray-50">
@@ -172,83 +177,104 @@ export default function ItemTabs({
                 Customers who bought this item are yet to review.
               </p>
             ) : (
-              reviews.map((review) => (
-                <div key={review.id} className="border-b border-gray-200 pb-4">
-                  <div className="flex items-center gap-3">
-                    <Image
-                      src={review.user.profile_photo}
-                      alt={review.user.name}
-                      className="w-10 h-10 rounded-full"
-                      width={40}
-                      height={40}
-                    />
-                    <div>
-                      <p className="text-sm font-semibold">
-                        {review.user.name}
-                      </p>
-                      <div className="flex">
-                        {[...Array(5)].map((_, i) => (
-                          <StarIcon
-                            key={i}
-                            className={`w-4 h-4 ${
-                              i < review.rating
-                                ? "text-yellow-500"
-                                : "text-gray-300"
-                            }`}
-                          />
-                        ))}
+              <>
+                {visibleReviews.map((review) => (
+                  <div
+                    key={review.id}
+                    className="border-b border-gray-200 pb-4"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Image
+                        src={review.user.profile_photo}
+                        alt={review.user.name}
+                        className="w-10 h-10 rounded-full"
+                        width={40}
+                        height={40}
+                      />
+                      <div>
+                        <p className="text-sm font-semibold">
+                          {review.user.name}
+                        </p>
+                        <div className="flex">
+                          {[...Array(5)].map((_, i) => (
+                            <StarIcon
+                              key={i}
+                              className={`w-4 h-4 ${
+                                i < review.rating
+                                  ? "text-yellow-500"
+                                  : "text-gray-300"
+                              }`}
+                            />
+                          ))}
+                        </div>
                       </div>
+                      <span className="ml-auto text-xs text-gray-400">
+                        {formatHumanReadableDate(review.created_at)}
+                      </span>
                     </div>
-                    <span className="ml-auto text-xs text-gray-400">
-                      {formatHumanReadableDate(review.created_at)}
-                    </span>
+
+                    <p className="mt-2 text-gray-600 text-sm">
+                      {review.comment}
+                    </p>
+
+                    {review.images?.map((img, idx) => (
+                      <Image
+                        key={idx}
+                        src={img}
+                        alt={`Review ${review.id} image ${idx}`}
+                        width={100}
+                        height={100}
+                        className="rounded-md"
+                      />
+                    ))}
                   </div>
-                  <p className="mt-2 text-gray-600 text-sm">{review.comment}</p>
-                  {review.images?.map((img, idx) => (
-                    <Image
-                      key={idx}
-                      src={img}
-                      alt={`Review ${review.id} image ${idx}`}
-                      width={100}
-                      height={100}
-                      className="rounded-md"
-                    />
-                  ))}
-                </div>
-              ))
+                ))}
+
+                {/* Read More Button */}
+                {!showAllReviews && reviews.length > 3 && (
+                  <button
+                    onClick={() => setShowAllReviews(true)}
+                    className="btn btn-gray mx-auto block"
+                  >
+                    Read more reviews
+                  </button>
+                )}
+              </>
             )}
           </div>
         )}
       </div>
 
       {/* ------------------- RECOMMENDED / SIMILAR / MOST VIEWED ------------------- */}
-      <div className="mt-6 p-4">
-        <h2 className="text-xl font-semibold mb-4">Recommended</h2>
-        {recommended.length === 0 ? (
-          <EmptyItem />
+      <div className="mt-6 p-4 bg-gray-100">
+        <h2 className="text-xl font-semibold  mb-4">
+          Customer also viewed this{" "}
+        </h2>
+        {customerAlsoViewed.length === 0 ? (
+          <EmptyItem message="No customer also items" />
         ) : (
           <ProductGrid
-            products={recommended}
+            products={customerAlsoViewed}
             columns="grid-cols-2 sm:grid-cols-4"
           />
         )}
 
-        <h2 className="text-xl font-semibold mt-6 mb-4">Similar</h2>
+        <h2 className="text-xl font-semibold  mb-4">Similar Items</h2>
         {frequentlyBoughtTogether.length === 0 ? (
-          <EmptyItem />
+          <EmptyItem message="No similar items" />
         ) : (
           <ProductGrid
             products={frequentlyBoughtTogether}
             columns="grid-cols-2 sm:grid-cols-4"
           />
-        )}
+        )} 
 
-        <h2 className="text-xl font-semibold mt-6 mb-4">Most Viewed</h2>
-        {otherViews.length === 0 ? (
-          <EmptyItem />
+        <h2 className="text-xl font-semibold mb-4 mt-6">Recommended</h2>
+        {recommended.length === 0 ? (
+          <EmptyItem message="No recommended items" />
         ) : (
           <ProductGrid
-            products={otherViews}
+            products={recommended}
             columns="grid-cols-2 sm:grid-cols-4"
           />
         )}

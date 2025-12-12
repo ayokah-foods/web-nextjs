@@ -1,9 +1,10 @@
 import { Metadata } from "next";
 import ItemDetail from "../components/ItemDetail";
-import { getItemDetail } from "@/lib/api/items"; 
+import { getItemDetail } from "@/lib/api/items";
 
-
-export async function generateMetadata({ params }: PageParams): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageParams): Promise<Metadata> {
   // const { slug } = params;
   const awaitedParams = await params;
   const slug = awaitedParams.slug;
@@ -11,10 +12,9 @@ export async function generateMetadata({ params }: PageParams): Promise<Metadata
   try {
     const response = await getItemDetail(slug);
     const product = response.data.product;
-  const description =
-      product.description
-        ?.replace(/<\/?[^>]+(>|$)/g, "") // strip HTML
-        .slice(0, 155);
+    const description = product.description
+      ?.replace(/<\/?[^>]+(>|$)/g, "") // strip HTML
+      .slice(0, 155);
     return {
       title: `${product.title} | Ayokah Foods & Services`,
       description: description,
@@ -52,8 +52,6 @@ type PageParams = {
   };
 };
 
-
-
 export default async function ItemDetailPage({ params }: PageParams) {
   const awaitedParams = await params;
   const slug = awaitedParams.slug;
@@ -61,12 +59,13 @@ export default async function ItemDetailPage({ params }: PageParams) {
   try {
     const response = await getItemDetail(slug);
 
-    const product = response.data.product; 
-      const reviews = response.data.star_rating?.reviews ?? [];
-      const recommended = response.data.recommended ?? [];
-      const frequentlyBoughtTogether =
-        response.data.frequently_bought_together ?? [];
-      const otherViews = response.data.otherViews ?? [];
+    const product = response.data.product;
+    const reviews = response.data.star_rating?.reviews ?? [];
+    const recommended = response.data.recommended ?? [];
+    const frequentlyBoughtTogether =
+      response.data.frequently_bought_together ?? [];
+    const otherViews = response.data.otherViews ?? [];
+    const customerAlsoViewed = response.data.customerAlsoViewed ?? [];
 
     const productSchema = {
       "@context": "https://schema.org",
@@ -101,7 +100,6 @@ export default async function ItemDetailPage({ params }: PageParams) {
     };
     const star_rating = response.data.star_rating ?? { total: 0, reviews: [] };
 
-
     return (
       <>
         <script
@@ -119,10 +117,11 @@ export default async function ItemDetailPage({ params }: PageParams) {
           recommended={recommended}
           frequentlyBoughtTogether={frequentlyBoughtTogether}
           otherViews={otherViews}
+          customerAlsoViewed={customerAlsoViewed}
         />
       </>
     );
-  } catch  {
+  } catch {
     return (
       <div className="p-10 text-center text-red-500 font-medium">
         Failed to load product.

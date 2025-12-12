@@ -1,13 +1,8 @@
 "use client";
 
 import { useEffect, useState, FC } from "react";
-import Image from "next/image";
-import {
-  ShoppingBagIcon,
-  HeartIcon,
-  ArrowRightCircleIcon,
-} from "@heroicons/react/24/outline";
-import { listItems } from "@/lib/api/items";
+import { ArrowRightCircleIcon } from "@heroicons/react/24/outline";
+import { listRecommendedItems } from "@/lib/api/items";
 import Item from "@/interfaces/items";
 import { useRouter } from "next/navigation";
 import Skeleton from "react-loading-skeleton";
@@ -18,45 +13,23 @@ const LatestProducts: FC = () => {
   const [products, setProducts] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-   useEffect(() => {
-     const fetchItems = async () => {
-       try {
-         setLoading(true);
-         const res = await listItems({
-           limit: 12,
-           offset: 0,
-           type: "products",
-           status: "active",
-           direction: "desc",
-         });
 
-         const allProducts = Array.isArray(res.data) ? res.data : [];
-         setProducts(allProducts);
-       } catch (error) {
-         console.error("Error fetching products:", error);
-       } finally {
-         setLoading(false);
-       }
-     };
+  useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        setLoading(true);
+        const res = await listRecommendedItems();
+        setProducts(res.data);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-     fetchItems();
-   }, []);
-
-  const renderSkeletons = () =>
-    Array.from({ length: 12 }).map((_, idx) => (
-      <div
-        key={idx}
-        className="bg-white rounded-xl overflow-hidden shadow relative"
-      >
-        <Skeleton height={224} className="w-full h-56" />
-        <div className="p-3">
-          <Skeleton width={80} height={16} className="mb-2" />
-          <Skeleton height={16} className="mb-2" />
-          <Skeleton height={16} width={60} />
-        </div>
-      </div>
-    ));
-
+    fetchItems();
+  }, []);
+ 
   return (
     <section className="mb-4">
       <div className="max-w-full mx-auto px-4 md:px-6 lg:px-8 pb-8">
