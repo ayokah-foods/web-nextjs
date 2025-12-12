@@ -12,11 +12,13 @@ import Link from "next/link";
 import WishlistButton from "@/app/(customer)/account/wishlists/components/WishlistButton";
 import parse from "html-react-parser";
 import Item from "@/interfaces/items";
+import Zoom from "react-medium-image-zoom";
+import "react-medium-image-zoom/dist/styles.css";
 
 interface ItemDetailProps {
   product: Item;
   reviews: any[];
-  star_rating: StarRating; // <-- add this
+  star_rating: StarRating;
   recommended: Item[];
   frequentlyBoughtTogether: Item[];
   otherViews: Item[];
@@ -93,6 +95,7 @@ export default function ItemDetail({
                   alt={`${product.title} ${i}`}
                   width={30}
                   height={30}
+                  
                   className={`rounded-md cursor-pointer border ${
                     selectedImage === img ? "border-red-800" : "border-gray-200"
                   }`}
@@ -102,14 +105,14 @@ export default function ItemDetail({
             </div>
 
             {/* BIGGER MAIN IMAGE */}
-            <div className="flex-1">
-              <Image
-                src={selectedImage}
-                alt={product.title}
-                width={1100}
-                height={1100}
-                className="rounded-lg shadow-md w-full object-cover max-h-[550px]"
-              />
+            <div className="flex-1"> 
+              <Zoom>
+                <img 
+                  src={selectedImage}
+                  alt={product.title}
+                  className="rounded-lg shadow-md w-full object-cover max-h-[550px] cursor-zoom-in"
+                />
+              </Zoom>
             </div>
           </div>
 
@@ -228,14 +231,16 @@ export default function ItemDetail({
                       href={`/items/${item.slug}`}
                       className="flex items-start gap-3 hover:bg-gray-50 p-2 rounded-md transition"
                     >
-                      <img
-                        src={item.images?.[0]}
+                      <Image
+                        width={20}
+                        height={20}
+                        src={item.images?.[1] || "/placeholder.png"}
                         alt={item.title}
                         className="w-20 h-20 object-cover rounded-md border"
                       />
 
                       <div className="flex flex-col">
-                        <p className="text-sm font-medium text-gray-800 line-clamp-2">
+                        <p className="text-sm font-medium text-gray-800 truncate">
                           {item.title}
                         </p>
 

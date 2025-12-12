@@ -1,6 +1,23 @@
 @import "tailwindcss";
 @import "react-loading-skeleton/dist/skeleton.css";
 
+.iiZ__zoomed-image-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.iiZ__zoomed-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.iiZ__zoomed-image img {
+  display: block;
+  max-width: none;
+  max-height: none;
+}
 /* Light mode defaults */
 :root {
   --background: #ffffff;
