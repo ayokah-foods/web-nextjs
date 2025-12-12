@@ -27,7 +27,9 @@ export default function Footer() {
                 />
               </Link>
             </div>
-            <span className="text-sm truncate">{COMPANY_CONTACT_INFO.companyDescription}</span>
+            <span className="text-sm truncate">
+              {COMPANY_CONTACT_INFO.companyDescription}
+            </span>
           </div>
 
           {/* About */}
@@ -55,7 +57,6 @@ export default function Footer() {
         <div className="mt-8 flex gap-4 justify-end text-xl">
           <Link
             href="https://www.facebook.com/ayokah_foods"
-            target="_blank"
             rel="noopener noreferrer"
             className="hover:text-blue-600 transition duration-150 cursor-pointer"
             aria-label="Facebook link"
@@ -65,7 +66,6 @@ export default function Footer() {
 
           <Link
             href="https://www.twitter.com/ayokah_foods"
-            target="_blank"
             rel="noopener noreferrer"
             className="hover:text-gray-900 transition duration-150 cursor-pointer"
             aria-label="Twitter link"

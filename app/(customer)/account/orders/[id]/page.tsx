@@ -246,7 +246,6 @@ export default function OrderDetail() {
                 {orderMeta.tracking_url ? (
                   <a
                     href={orderMeta.tracking_url}
-                    target="_blank"
                     rel="noopener noreferrer"
                     className="text-red-600 underline truncate block max-w-full"
                     title={orderMeta.tracking_url}

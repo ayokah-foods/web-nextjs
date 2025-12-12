@@ -223,7 +223,6 @@ export default function Orders() {
                     {order.tracking_url ? (
                       <a
                         href={order.tracking_url}
-                        target="_blank"
                         className="text-blue-600 underline"
                       >
                         {order.tracking_number}

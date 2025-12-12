@@ -95,7 +95,6 @@ export default function ItemDetail({
                   alt={`${product.title} ${i}`}
                   width={30}
                   height={30}
-                  
                   className={`rounded-md cursor-pointer border ${
                     selectedImage === img ? "border-red-800" : "border-gray-200"
                   }`}
@@ -105,9 +104,9 @@ export default function ItemDetail({
             </div>
 
             {/* BIGGER MAIN IMAGE */}
-            <div className="flex-1"> 
+            <div className="flex-1">
               <Zoom>
-                <img 
+                <img
                   src={selectedImage}
                   alt={product.title}
                   className="rounded-lg shadow-md w-full object-cover max-h-[550px] cursor-zoom-in"
@@ -191,7 +190,6 @@ export default function ItemDetail({
               <p>
                 Category:{" "}
                 <Link
-                  target="_blank"
                   href={`/items?category=${product.category?.slug}&type=${product.type}`}
                   className="text-red-800"
                 >
@@ -203,11 +201,7 @@ export default function ItemDetail({
 
               <p>
                 Seller:{" "}
-                <Link
-                  target="_blank"
-                  className=""
-                  href={`/shops/${product?.shop?.slug}`}
-                >
+                <Link className="" href={`/shops/${product?.shop?.slug}`}>
                   <span className="text-red-800 text-xs truncate">
                     Similar items from {product?.shop?.name}
                   </span>
