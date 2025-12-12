@@ -80,7 +80,6 @@ export default function CommunicationSettingsPage() {
     const loadSettings = async () => {
       try {
         const settings = await getCommunicationSettings();
-        console.log("Fetched settings:", settings);
         setInitialSettings(settings);
 
         setOrderSettings({

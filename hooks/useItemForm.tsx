@@ -121,7 +121,6 @@ export function useItemForm(item: any) {
         setShopType(st);
 
         const { categories: cats } = await listCategories(100, 0, "", st);
-        console.log(cats);
         if (!mounted) return;
 
         const formatted = (cats ?? []).map((c: any) => ({

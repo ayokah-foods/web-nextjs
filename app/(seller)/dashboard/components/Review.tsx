@@ -68,7 +68,6 @@ export function RecentReviews() {
     async function fetchReviews() {
       try {
         const response = await listReviews(0, 3);
-        console.log(response);
         setReviews(response.data || []);
       } catch (err) {
         console.error(err);

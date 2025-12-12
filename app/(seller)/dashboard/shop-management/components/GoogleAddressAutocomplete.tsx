@@ -7,6 +7,7 @@ import usePlacesAutocomplete, {
 import GoogleAddress from "@/interfaces/googleAddress";
 import { ALLOWED_COUNTRIES } from "@/setting";
 import { getDialCode } from "@/lib/api/ip/countries";
+import Script from "next/script";
 
 type Address = {
   street_address: string;
@@ -16,13 +17,13 @@ type Address = {
   country: string;
   lat?: number;
   lng?: number;
-  dialCode?:string;
+  dialCode?: string;
 };
 
 type Props = {
   onSelect: (addr: Address) => void;
   placeholder?: string;
-  countryRestrictions?: string[]; 
+  countryRestrictions?: string[];
 };
 
 export default function GoogleAddressAutocomplete({
@@ -73,11 +74,9 @@ export default function GoogleAddressAutocomplete({
           components.country = comp.short_name ?? comp.long_name;
       });
 
-      console.log(results);
-
-       const dialCode = components.country
-         ? await getDialCode(components.country)
-         : "";
+      const dialCode = components.country
+        ? await getDialCode(components.country)
+        : "";
 
       onSelect({
         street_address: components.street ?? desc,
@@ -120,3 +119,8 @@ export default function GoogleAddressAutocomplete({
     </div>
   );
 }
+
+<Script
+  src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`}
+  strategy="beforeInteractive"
+/>;

@@ -76,7 +76,6 @@ const Overview: React.FC<OverviewProps> = ({ period }) => {
 
       try {
         const response = await getOverview(period);
-        console.log("here", response);
         setStats(response);
       } catch (err) {
         console.error("Failed to fetch stats:", err);

@@ -70,7 +70,6 @@ export default function StepSubscription({ onNext }: StepProps) {
     setIsRedirecting(true);
     try {
       const res = await subscriptionCheckout(priceId);
-      console.log("Checkout response:", res);
       if (res.url) {
         window.location.href = res.url;
       }

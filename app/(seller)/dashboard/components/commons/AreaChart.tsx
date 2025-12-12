@@ -64,7 +64,6 @@ const AreaChart = () => {
 
       // The API response is expected to be an object with a 'data' property that is an array.
       const raw = response?.data || [];
-        console.log(raw)
       if (
         response?.status === "success" &&
         Array.isArray(raw) &&
