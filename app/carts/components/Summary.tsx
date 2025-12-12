@@ -194,7 +194,7 @@ export default function OrderSummary({
                 className={`flex gap-4 items-center p-4 rounded-lg border cursor-pointer transition
                   ${
                     active
-                      ? "border-red-800 bg-blue-50 scale-[1.02]"
+                      ? "border-red-800 bg-yellow-50 scale-[1.02]"
                       : "border-gray-200 hover:border-gray-400 hover:scale-[1.01]"
                   }
                 `}

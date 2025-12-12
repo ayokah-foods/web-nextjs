@@ -30,7 +30,7 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status, type }) => {
           return "bg-red-100 text-red-600";
         case "refunded":
         case "refund":
-          return "bg-blue-100 text-blue-600";
+          return "bg-yellow-100 text-yellow-600";
         default:
           return "bg-gray-100 text-gray-600";
       }
@@ -47,7 +47,7 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status, type }) => {
       case "delivered":
         return "bg-green-100 text-green-600";
       case "returned":
-        return "bg-blue-100 text-blue-600";
+        return "bg-yellow-100 text-yellow-600";
       case "cancelled":
       case "declined":
       case "inactive":
