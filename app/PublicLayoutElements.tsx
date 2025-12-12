@@ -3,16 +3,24 @@
 import { useAuthStore } from "@/store/useAuthStore";
 import TopHeader from "./components/TopHeader";
 import NavBar from "./components/NavBar";
- 
+
 export default function PublicLayoutElements() {
   const { user, _hasHydrated } = useAuthStore();
-  if (!_hasHydrated) {
-    return null;
-  }
+ 
   const isVendorAuthenticated = user && user.role === "vendor";
   if (isVendorAuthenticated) {
     return null;
-  }
+  } 
+
+  if (!_hasHydrated) { 
+    return (
+      <div
+        className="w-full bg-orange-50"
+        style={{ height: "110px" }} 
+      > 
+      </div>
+    );
+  } 
 
   return (
     <>

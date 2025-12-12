@@ -6,6 +6,10 @@ import Image from "next/image";
 import { listBanners } from "@/lib/api/banners";
 import { Banner } from "@/interfaces/banners";
 
+export function optimizeImage(url: string, width: number = 1600) {
+  return url.replace("/upload/", `/upload/f_auto,q_auto,w_${width}/`);
+}
+
 export default function BannerCarousel() {
   const [current, setCurrent] = useState(0);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -48,11 +52,6 @@ export default function BannerCarousel() {
     );
   }
 
-  function optimizeImage(url: string, width: number = 1600) {
-    return url.replace("/upload/", `/upload/f_auto,q_auto,w_${width}/`);
-  }
-
-
   return (
     <div className="relative w-full h-[200px] sm:h-[300px] md:h-[400px] lg:h-[500px] overflow-hidden">
       {/* Slides */}
@@ -76,7 +75,7 @@ export default function BannerCarousel() {
               priority={banner.id === banners[0].id}
               className="object-cover"
               placeholder="blur"
-              blurDataURL="/placeholder.jpg"
+              blurDataURL="/placeholder.png"
             />
             {/* Optional overlay */}
             <div className="absolute inset-0 bg-black/20" />
@@ -97,7 +96,10 @@ export default function BannerCarousel() {
         onClick={nextSlide}
         className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white/70 hover:bg-white rounded-full shadow p-2"
       >
-        <ChevronRightIcon aria-label="right" className="w-3 h-3 text-gray-700" />
+        <ChevronRightIcon
+          aria-label="right"
+          className="w-3 h-3 text-gray-700"
+        />
       </button>
 
       {/* Indicators */}

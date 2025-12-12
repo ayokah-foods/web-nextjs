@@ -9,6 +9,7 @@ import { ShoppingBagIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Skeleton from "react-loading-skeleton";
+import { optimizeImage } from "./BannerCarousel";
 
 const CategorySection: FC = () => {
   const router = useRouter();
@@ -56,7 +57,7 @@ const CategorySection: FC = () => {
           ))
         : categories.slice(0, 6).map(
             (
-              cat // <-- slice here
+              cat
             ) => (
               <div
                 key={cat.id}
@@ -90,14 +91,19 @@ const CategorySection: FC = () => {
         <div
           className="relative bg-white rounded-2xl overflow-hidden cursor-pointer"
           onClick={() => router.push(`/items?type=products`)}
-        >
+        > 
           <Image
-            src={banner.banner}
-            alt={banner.type || "Banner"}
-            width={600}
-            height={800}
+            src={optimizeImage(banner.banner, 1600)}
+            alt={banner.type}
+            fill 
+            sizes="(max-width: 640px) 100vw,
+                   (max-width: 1024px) 100vw,
+                   (max-width: 1280px) 100vw,
+                   100vw"
             priority
             className="w-full h-full object-cover"
+            placeholder="blur"
+            blurDataURL="/placeholder.png"
           />
           <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center">
             <p className="sm:text-2xl text-sm font-bold text-orange-800 text-center">
@@ -105,7 +111,7 @@ const CategorySection: FC = () => {
                 ? "Nearby Service Providers"
                 : "Essential Daily Needs"}
             </p>
-            <button className="mt-4 bg-orange-100 text-orange-800 sm:px-6 sm:py-2 px-3 py-1 rounded-full text-xs sm:text-sm font-semibold flex items-center gap-2 hover:bg-orange-200 transition cursor-pointer">
+            <button aria-label="Shop now" className="mt-4 bg-orange-100 text-orange-800 sm:px-6 sm:py-2 px-3 py-1 rounded-full text-xs sm:text-sm font-semibold flex items-center gap-2 hover:bg-orange-200 transition cursor-pointer">
               <ShoppingBagIcon className="w-3 h-3 sm:w-5 sm:h-5" /> Shop Now
             </button>
           </div>
@@ -128,6 +134,7 @@ const CategorySection: FC = () => {
                 <button
                   className="btn btn-gray w-full md:w-auto"
                   onClick={() => router.push("/categories")}
+                  aria-label="View all"
                 >
                   View All
                 </button>
