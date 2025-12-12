@@ -8,7 +8,7 @@ interface SearchResultsListProps {
   loading: boolean;
   results: Item[];
   isTouched: boolean;
-  onItemClick?: () => void; // Optional: To close modal on item click
+  onItemClick?: () => void;
 }
 
 export default function SearchResultsList({
@@ -20,7 +20,7 @@ export default function SearchResultsList({
   if (loading) {
     return (
       <div className="p-4 flex justify-center items-center">
-        <ClipLoader size={24} color="#F97316" /> {/* Use your theme color */}
+        <ClipLoader size={24} color="#F97316" />
       </div>
     );
   }
@@ -49,6 +49,5 @@ export default function SearchResultsList({
     );
   }
 
-  // Render nothing if not loading, no results, and not touched (e.g., initial state)
   return null;
 }
