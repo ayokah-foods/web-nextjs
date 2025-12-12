@@ -122,7 +122,7 @@ const Items: FC<ItemsProps> = ({}) => {
     setFilters((prev) => ({ ...prev, offset: (newPage - 1) * prev.limit }));
   }; 
   return (
-    <div className="p-4 bg-gray-50 h-screen">
+    <div className="p-4 bg-gray-50 ">
       {/* Category Header */}
       {loading ? (
         <div className="mb-6 bg-white p-6 rounded-lg shadow-md">
