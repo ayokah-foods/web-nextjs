@@ -60,7 +60,7 @@ export default function ItemTabs({
   star_rating,
   recommended,
   frequentlyBoughtTogether,
-  customerAlsoViewed, 
+  customerAlsoViewed,
 }: ItemTabsProps) {
   const [activeTab, setActiveTab] = useState<"description" | "reviews">(
     "description"
@@ -79,6 +79,7 @@ export default function ItemTabs({
   const [showAllReviews, setShowAllReviews] = useState(false);
 
   const visibleReviews = showAllReviews ? reviews : reviews.slice(0, 3);
+  const [showFullDescription, setShowFullDescription] = useState(false);
 
   return (
     <div className="bg-gray-50">
@@ -111,7 +112,17 @@ export default function ItemTabs({
         {/* DESCRIPTION */}
         {activeTab === "description" && (
           <div className="prose max-w-none text-gray-700">
-            {parse(description)}
+            <div className={showFullDescription ? "" : "line-clamp-5"}>
+              {parse(description)}
+            </div>
+
+            {/* Toggle Button */}
+            <button
+              onClick={() => setShowFullDescription(!showFullDescription)}
+              className="mt-2 text-red-800 font-medium text-sm"
+            >
+              {showFullDescription ? "Show less" : "Read more"}
+            </button>
           </div>
         )}
 
@@ -213,20 +224,28 @@ export default function ItemTabs({
                       </span>
                     </div>
 
-                    <p className="mt-2 text-gray-600 text-sm">
-                      {review.comment}
-                    </p>
+                    <div className="mt-2 flex flex-col sm:flex-row gap-4">
+                      {/* Comment */}
+                      <p className="text-gray-600 text-sm flex-1">
+                        {review.comment}
+                      </p>
 
-                    {review.images?.map((img, idx) => (
-                      <Image
-                        key={idx}
-                        src={img}
-                        alt={`Review ${review.id} image ${idx}`}
-                        width={100}
-                        height={100}
-                        className="rounded-md"
-                      />
-                    ))}
+                      {/* Review Images */}
+                      {review.images?.length > 0 && (
+                        <div className="flex gap-2 flex-wrap">
+                          {review.images.map((img, idx) => (
+                            <Image
+                              key={idx}
+                              src={img}
+                              alt={`Review ${review.id} image ${idx}`}
+                              width={60} // reduced size
+                              height={60} // reduced size
+                              className="rounded-md object-cover"
+                            />
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 ))}
 
@@ -267,7 +286,7 @@ export default function ItemTabs({
             products={frequentlyBoughtTogether}
             columns="grid-cols-2 sm:grid-cols-4"
           />
-        )} 
+        )}
 
         <h2 className="text-xl font-semibold mb-4 mt-6">Recommended</h2>
         {recommended.length === 0 ? (
