@@ -8,6 +8,7 @@ import Skeleton from "react-loading-skeleton";
 import Product from "@/interfaces/items";
 import { CubeIcon } from "@heroicons/react/20/solid";
 import EmptyItem from "./EmptyItem";
+import { optimizeImage } from "@/app/components/BannerCarousel";
 
 interface ProductGridProps {
   products: Product[];
@@ -64,11 +65,17 @@ const ProductGrid: FC<ProductGridProps> = ({
                 {/* Product Image */}
                 <div className="relative">
                   <Image
-                    src={product.images?.[0] || "/placeholder.png"}
+                    src={optimizeImage(
+                      product.images?.[0] || "/placeholder.png",
+                      400
+                    )}
                     alt={product.title}
                     width={400}
                     height={400}
                     className="w-full h-56 object-cover"
+                    placeholder="blur"
+                    blurDataURL="/placeholder.png"
+                    quality={70}
                   />
 
                   {discount > 0 && (

@@ -19,7 +19,7 @@ export default function TopHeader() {
             width={150}
             height={40}
             priority
-            unoptimized
+            quality={70}
           />
         </Link>
       </div>

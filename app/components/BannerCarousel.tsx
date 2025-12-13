@@ -7,7 +7,7 @@ import { listBanners } from "@/lib/api/banners";
 import { Banner } from "@/interfaces/banners";
 
 export function optimizeImage(url: string, width: number = 1600) {
-  return url.replace("/upload/", `/upload/f_auto,q_auto,w_${width}/`);
+  return url.replace("/upload/", `/upload/f_auto,q_auto:good,w_${width}/`);
 }
 
 export default function BannerCarousel() {
@@ -69,13 +69,14 @@ export default function BannerCarousel() {
               alt={banner.type}
               fill
               sizes="(max-width: 640px) 100vw,
-         (max-width: 1024px) 100vw,
-         (max-width: 1280px) 100vw,
-         100vw"
+                    (max-width: 1024px) 100vw,
+                    (max-width: 1280px) 100vw,
+                    100vw"
               priority={banner.id === banners[0].id}
               className="object-cover"
               placeholder="blur"
               blurDataURL="/placeholder.png"
+              quality={70}
             />
             {/* Optional overlay */}
             <div className="absolute inset-0 bg-black/20" />
