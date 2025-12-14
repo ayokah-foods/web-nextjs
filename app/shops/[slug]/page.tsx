@@ -1,16 +1,10 @@
 "use client";
 
 import { useEffect, useState, useMemo, FC } from "react";
-import Image from "next/image";
-import {
-  ShoppingBagIcon,
-  HeartIcon,
-  CubeIcon,
-} from "@heroicons/react/24/outline";
+import Image from "next/image"; 
 import { useParams, useRouter } from "next/navigation";
 import Skeleton from "react-loading-skeleton";
-import debounce from "lodash.debounce";
-import { formatAmount } from "@/utils/formatCurrency";
+import debounce from "lodash.debounce"; 
 import { listShopItems } from "@/lib/api/shops";
 import Product from "@/interfaces/items";
 import { Shop } from "@/interfaces/shop";
