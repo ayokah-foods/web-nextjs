@@ -8,9 +8,7 @@ export default function Home() {
       <HeroBanner />
       <CategorySection type="products" />
       {/* <CategorySection type="services" /> */}
-      <RecommendedItems type="products" />
-      {/* <RecommendedItems type="services" />  */}
-      
+      <RecommendedItems type="products" />      
     </div>
   );
 }
