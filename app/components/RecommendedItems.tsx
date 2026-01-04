@@ -21,10 +21,10 @@ const RecommendedItems: FC<RecommendedItemsProps> = ({ type }) => {
       try {
         setLoading(true);
         const res = await listItems({
-          limit: 20,
+          limit: 25,
           offset: 0,
           search: '',
-          type: 'services'
+          type: type
         });
         setProducts(res.data);
       } catch (error) {
