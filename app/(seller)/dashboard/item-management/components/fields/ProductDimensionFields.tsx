@@ -29,6 +29,9 @@ export default function ProductDimensionFields(props: any) {
             onChange={(e) => setWeight(e.target.value)}
             className="input"
             placeholder="e.g. 0.5"
+            type="number"
+            step="0.01"
+            min="0"
           />
         </div>
         <div>
@@ -65,6 +68,9 @@ export default function ProductDimensionFields(props: any) {
             onChange={(e) => setLengthVal(e.target.value)}
             className="input"
             placeholder="Length"
+            type="number"
+            step="0.01"
+            min="0"
           />
         </div>
         <div>
@@ -76,6 +82,9 @@ export default function ProductDimensionFields(props: any) {
             onChange={(e) => setWidthVal(e.target.value)}
             className="input"
             placeholder="Width"
+            type="number"
+            step="0.01"
+            min="0"
           />
         </div>
         <div>
@@ -87,6 +96,9 @@ export default function ProductDimensionFields(props: any) {
             onChange={(e) => setHeightVal(e.target.value)}
             className="input"
             placeholder="Height"
+            type="number"
+            step="0.01"
+            min="0"
           />
         </div>
       </div>

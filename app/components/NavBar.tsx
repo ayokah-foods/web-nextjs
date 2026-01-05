@@ -109,11 +109,11 @@ function MobileNavLinks() {
       href: "/items?type=products",
       icon: <CubeIcon className="w-4 h-4" />,
     },
-    {
-      label: "Services",
-      href: "/items?type=services",
-      icon: <HiOutlineBriefcase className="w-4 h-4" />,
-    },
+    // {
+    //   label: "Services",
+    //   href: "/items?type=services",
+    //   icon: <HiOutlineBriefcase className="w-4 h-4" />,
+    // },
     {
       label: "Need Help?",
       href: "/contact-us",
@@ -180,11 +180,11 @@ function DesktopNavLinks() {
       href: "/items?type=products",
       icon: <CubeIcon className="w-4 h-4" />,
     },
-    {
-      label: "Book Services",
-      href: "/items?type=services",
-      icon: <GiftIcon className="w-4 h-4" />,
-    },
+    // {
+    //   label: "Book Services",
+    //   href: "/items?type=services",
+    //   icon: <GiftIcon className="w-4 h-4" />,
+    // },
     {
       label: "Our Story",
       href: "/about-us",

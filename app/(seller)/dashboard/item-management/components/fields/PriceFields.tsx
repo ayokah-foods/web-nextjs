@@ -21,6 +21,9 @@ export default function PriceFields(props: any) {
           onChange={(e) => setSalesPrice(e.target.value)}
           className="input"
           placeholder="0.00"
+          type="number"
+          step="0.01"
+          min="0"
         />
       </div>
       <div>
@@ -32,6 +35,9 @@ export default function PriceFields(props: any) {
           onChange={(e) => setRegularPrice(e.target.value)}
           className="input"
           placeholder="0.00"
+          type="number"
+          step="0.01"
+          min="0"
         />
       </div>
       {shopType === "products" && (
@@ -44,6 +50,7 @@ export default function PriceFields(props: any) {
             onChange={(e) => setQuantity(e.target.value)}
             className="input"
             placeholder="0"
+            type="number" 
           />
         </div>
       )}

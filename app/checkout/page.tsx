@@ -327,7 +327,6 @@ export default function CheckoutPage() {
                   className="input w-full border border-gray-300 p-2 rounded"
                   placeholder="Enter coupon code"
                 />
-                {error && <p className="text-red-500 text-sm">{error}</p>}
                 <div className="flex gap-2">
                   <button
                     onClick={() => setShowCouponModal(false)}
