@@ -142,37 +142,40 @@ export default async function ItemDetailPage({ params }: PageParams) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
         />
         <nav className="text-sm text-gray-500 my-4" aria-label="Breadcrumb">
-          <ol className="list-none ml-4 inline-flex">
-            <li className="flex items-center">
+          <ol className="ml-4 flex items-center gap-2 min-w-0">
+            {/* Home */}
+            <li className="flex items-center shrink-0">
               <Link
                 href="/"
                 className="text-hub-primary hover:text-hub-secondary"
               >
                 Home
               </Link>
-              <span className="mx-2">
-                <IoChevronForward />
-              </span>
+              <IoChevronForward className="mx-2 shrink-0" />
             </li>
+
+            {/* Category */}
             <li className="flex items-center min-w-0">
               <Link
                 href={`/items?category=${product.category.slug}`}
-                className="text-hub-primary hover:text-hub-secondary truncate"
+                className="text-hub-primary hover:text-hub-secondary truncate max-w-35"
               >
                 {product.category.name}
               </Link>
-              <span className="mx-2">
-                <IoChevronForward />
-              </span>
+              <IoChevronForward className="mx-2 shrink-0" />
             </li>
+
+            {/* Product title */}
             <li
-              className="text-gray-700 font-semibold truncate"
+              className="text-gray-700 font-semibold truncate min-w-0 flex-1"
               aria-current="page"
+              title={product.title}
             >
               {product.title}
             </li>
           </ol>
         </nav>
+
         <ItemDetail
           product={product}
           reviews={reviews}

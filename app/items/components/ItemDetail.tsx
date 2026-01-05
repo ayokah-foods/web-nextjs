@@ -33,6 +33,7 @@ export default function ItemDetail({
   recommended,
   frequentlyBoughtTogether,
   otherViews,
+  customerAlsoViewed,
 }: ItemDetailProps) {
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(
@@ -52,7 +53,7 @@ export default function ItemDetail({
       ? `${window.location.origin}/items/${product.slug}`
       : "";
 
-  const shareText = `${product.title} - Check this out`;
+  const shareText = `${product.title} - Buy from Ayokah here -`;
 
   const handleShare = async () => {
     if (navigator.share) {

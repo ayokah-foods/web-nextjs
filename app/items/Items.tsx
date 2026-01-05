@@ -213,7 +213,7 @@ const Items: FC<ItemsProps> = ({}) => {
               <button
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="btn btn-gray w-1/7"
+                className="btn btn-gray w-full"
               >
                 Previous
               </button>
@@ -223,7 +223,7 @@ const Items: FC<ItemsProps> = ({}) => {
               <button
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="btn btn-gray w-1/7"
+                className="btn btn-gray w-full"
               >
                 Next
               </button>
@@ -231,7 +231,7 @@ const Items: FC<ItemsProps> = ({}) => {
           )}
         </main>
       </div>
-      <RequestLocation />
+      {/* <RequestLocation /> */}
     </>
   );
 };
