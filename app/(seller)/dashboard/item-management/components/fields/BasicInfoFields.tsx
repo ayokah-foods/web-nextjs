@@ -112,6 +112,7 @@ export default function BasicInfoFields({
           <span className="text-gray-400 text-xs">
             (Press Enter or Comma to add)
           </span>
+          <span className="text-red-500">*</span>
         </label>
 
         <div className="flex flex-wrap items-center gap-2 input">

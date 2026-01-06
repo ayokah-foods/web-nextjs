@@ -22,7 +22,7 @@ export default function ProductDimensionFields(props: any) {
       <div className="grid grid-cols-3 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Weight
+            Weight <span className="text-red-500">*</span>
           </label>
           <input
             value={weight}
@@ -36,7 +36,7 @@ export default function ProductDimensionFields(props: any) {
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Weight Unit
+            Weight Unit <span className="text-red-500">*</span>
           </label>
           <SelectDropdown
             options={DIMENSION_OPTIONS as any}
@@ -47,7 +47,7 @@ export default function ProductDimensionFields(props: any) {
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Size Unit
+            Size Unit <span className="text-red-500">*</span>
           </label>
           <SelectDropdown
             options={SIZE_UNIT_OPTIONS as any}
@@ -61,7 +61,7 @@ export default function ProductDimensionFields(props: any) {
       <div className="grid grid-cols-3 gap-4 mt-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Length
+            Length <span className="text-red-500">*</span>
           </label>
           <input
             value={lengthVal}
@@ -75,7 +75,7 @@ export default function ProductDimensionFields(props: any) {
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Width
+            Width <span className="text-red-500">*</span>
           </label>
           <input
             value={widthVal}
@@ -89,7 +89,7 @@ export default function ProductDimensionFields(props: any) {
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Height
+            Height <span className="text-red-500">*</span>
           </label>
           <input
             value={heightVal}
