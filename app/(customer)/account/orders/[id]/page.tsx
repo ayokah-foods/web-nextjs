@@ -190,7 +190,7 @@ export default function OrderDetail() {
           Order Details - #{orderMeta.id}
         </h1>
 
-      
+
       </div>
 
       <CustomerSummary customer={customer} address={address} />
@@ -226,7 +226,7 @@ export default function OrderDetail() {
                 {orderMeta.tracking_url ? (
                   <a
                     href={orderMeta.tracking_url}
-                    rel="noopener noreferrer"
+                    rel="noopener"
                     className="text-red-600 underline truncate block max-w-full"
                     title={orderMeta.tracking_url}
                   >
@@ -267,11 +267,10 @@ export default function OrderDetail() {
               <p className="font-medium text-gray-600 w-1/2">Payment Status:</p>
               {/* Using the payment_status from the Order object for accuracy */}
               <p
-                className={`font-semibold w-1/2 text-right ${
-                  orderMeta.payment_status === "completed"
+                className={`font-semibold w-1/2 text-right ${orderMeta.payment_status === "completed"
                     ? "text-green-700"
                     : "text-red-700"
-                }`}
+                  }`}
               >
                 {orderMeta.payment_status.toUpperCase()}
               </p>

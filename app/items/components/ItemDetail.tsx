@@ -92,9 +92,8 @@ export default function ItemDetail({
                   alt={`${product.title} ${i}`}
                   width={30}
                   height={30}
-                  className={`rounded-md cursor-pointer border ${
-                    selectedImage === img ? "border-red-800" : "border-gray-200"
-                  }`}
+                  className={`rounded-md cursor-pointer border ${selectedImage === img ? "border-red-800" : "border-gray-200"
+                    }`}
                   onClick={() => setSelectedImage(img)}
                 />
               ))}
@@ -128,12 +127,11 @@ export default function ItemDetail({
                   {i < product.average_rating ? <StarFilled /> : <StarEmpty />}
                 </span>
               ))}
-              
+
               {product.type === "products" && (
                 <span
-                  className={`text-white text-[8px] font-semibold px-2 py-1 rounded-full ${
-                    getStockStatus(product.quantity).bgClass
-                  }`}
+                  className={`text-white text-[8px] font-semibold px-2 py-1 rounded-full ${getStockStatus(product.quantity).bgClass
+                    }`}
                 >
                   {getStockStatus(product.quantity).text}
                 </span>
@@ -200,11 +198,10 @@ export default function ItemDetail({
                       <button
                         key={variant.id}
                         onClick={() => setSelectedVariation(variant)}
-                        className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium transition-all border cursor-pointer ${
-                          isSelected
+                        className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium transition-all border cursor-pointer ${isSelected
                             ? "border-hub-primary bg-hub-primary/10 text-hub-primary ring-2 ring-hub-primary/20"
                             : "border-gray-200 bg-gray-50 text-gray-800 hover:border-gray-400"
-                        }`}
+                          }`}
                       >
                         {variant.color?.name && (
                           <span className="flex items-center gap-1">
@@ -266,7 +263,7 @@ export default function ItemDetail({
               <Link
                 href={facebookShareUrl}
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener"
                 aria-label="Share on Facebook"
                 className="p-2 rounded-full hover:bg-blue-50 transition"
               >
@@ -277,7 +274,7 @@ export default function ItemDetail({
               <Link
                 href={whatsappShareUrl}
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener"
                 aria-label="Share on WhatsApp"
                 className="p-2 rounded-full hover:bg-green-50 transition"
               >

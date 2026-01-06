@@ -60,7 +60,7 @@ export default function Footer() {
         <div className="mt-8 flex gap-4 justify-end text-xl">
           <Link
             href="https://www.facebook.com/ayokahfoods"
-            rel="noopener noreferrer"
+            rel="noopener"
             className="hover:text-hub-secondary transition duration-150 cursor-pointer"
             aria-label="Facebook link"
           >
@@ -69,7 +69,7 @@ export default function Footer() {
 
           <Link
             href="https://www.twitter.com/ayokahfoods"
-            rel="noopener noreferrer"
+            rel="noopener"
             className="hover:text-gray-900 transition duration-150 cursor-pointer"
             aria-label="Twitter link"
           >
@@ -77,7 +77,7 @@ export default function Footer() {
           </Link>
           <Link
             href="https://www.linkedin.com/ayokah-foods-services"
-            rel="noopener noreferrer"
+            rel="noopener"
             className="hover:text-gray-900 transition duration-150 cursor-pointer"
             aria-label="Twitter link"
           >
@@ -88,9 +88,8 @@ export default function Footer() {
             href="#"
             onClick={(e) => {
               e.preventDefault();
-              window.location.href = `mailto:${
-                "ayokahfoods" + "@" + "gmail.com/"
-              }`;
+              window.location.href = `mailto:${"ayokahfoods" + "@" + "gmail.com/"
+                }`;
             }}
             className="hover:text-red-500 transition duration-150 cursor-pointer"
             aria-label="Email link"

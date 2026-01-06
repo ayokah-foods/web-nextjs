@@ -4,7 +4,7 @@ import React from "react";
 import { FaWhatsapp } from "react-icons/fa";
 
 const WhatsAppFloat = () => {
-  const phoneNumber = "447389199608"; 
+  const phoneNumber = "447389199608";
   const message = "Hello! I'd like to inquire about your items.";
 
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
@@ -15,7 +15,7 @@ const WhatsAppFloat = () => {
     <a
       href={whatsappUrl}
       target="_blank"
-      rel="noopener noreferrer"
+      rel="noopener"
       className="fixed bottom-15 right-6 z-50 flex items-center justify-center 
                  w-14 h-14 bg-[#25D366] text-white rounded-full shadow-lg 
                  hover:bg-[#128C7E] transition-all duration-300 hover:scale-110 

@@ -224,6 +224,8 @@ const ItemsTable: React.FC<ProductTableProps> = ({ limit, offset, status }) => {
           return (
             <div className="flex items-center space-x-2 min-w-0">
               <Link
+              target="_blank"
+                rel="noopener"
                 href={`https://ayokah.co.uk/items/${slug}`}
                 className="flex items-center space-x-2 min-w-0 group"
               >
