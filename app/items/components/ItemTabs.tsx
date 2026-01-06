@@ -381,7 +381,7 @@ export default function ItemTabs({
       <div className="mt-6 p-4 bg-gray-100">
        
 
-        <h2 className="text-xs sm:text-sm font-semibold mb-4 mt-8">
+        <h2 className="text-xs sm:text-sm font-semibold mb-2">
           Recommended for you
         </h2>
         {customerAlsoViewed.length === 0 ? (
@@ -392,8 +392,8 @@ export default function ItemTabs({
             columns="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4"
           />
         )}
-        
-        <h2 className="text-xs sm:text-sm font-semibold mb-4">
+
+        <h2 className="text-xs sm:text-sm font-semibold mt-8 mb-2">
           Frequently bought together
         </h2>
         {frequentlyBoughtTogether.length === 0 ? (

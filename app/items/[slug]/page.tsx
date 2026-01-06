@@ -73,7 +73,7 @@ export default async function ItemDetailPage({ params }: PageParams) {
     const frequentlyBoughtTogether =
       response.data.frequently_bought_together ?? [];
     const otherViews = response.data.otherViews ?? [];
-    const customerAlsoViewed = response.data.customerAlsoViewed ?? [];
+    const customerAlsoViewed = response.data.customer_also_viewed ?? [];
 
     const star_rating = response.data.star_rating ?? { total: 0, reviews: [] };
 
