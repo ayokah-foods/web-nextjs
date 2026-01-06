@@ -23,7 +23,7 @@ export default function AccountSidebar() {
       );
     } finally {
       clearAuth();
-      router.replace("/login");
+      router.replace("/");
       toast.success("Logged out successfully");
     }
   };
