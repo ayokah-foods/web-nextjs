@@ -26,6 +26,7 @@ import Drawer from "../../components/commons/Drawer";
 import SelectDropdown from "../../components/commons/Fields/SelectDropdown";
 import TanStackTable from "../../components/commons/TanStackTable";
 import { ProductVariation } from "./ProductVariation";
+import Link from "next/link";
 
 interface ProductTableProps {
   limit: number;
@@ -217,27 +218,35 @@ const ItemsTable: React.FC<ProductTableProps> = ({ limit, offset, status }) => {
         cell: ({ row }) => {
           const image = row.original.images?.[0];
           const title = row.original.title;
+          const slug = row.original.slug;
           const category = row.original.category?.name;
 
           return (
             <div className="flex items-center space-x-2 min-w-0">
-              <Image
-                src={image || "/placeholder.png"}
-                alt={title}
-                width={40}
-                height={40}
-                className="w-10 h-10 object-cover rounded shrink-0"
-              />
-              <div className="flex flex-col min-w-0">
-                <span className="font-medium text-gray-800 truncate block max-w-30 sm:max-w-50">
-                  {title}
-                </span>
-                {category && (
-                  <span className="text-xs text-gray-500 truncate block max-w-25 sm:max-w-37.5">
-                    {category}
+              <Link
+                href={`https://ayokah.co.uk/items/${slug}`}
+                className="flex items-center space-x-2 min-w-0 group"
+              >
+                <Image
+                  src={image || "/placeholder.png"}
+                  alt={title}
+                  width={40}
+                  height={40}
+                  className="w-10 h-10 object-cover rounded shrink-0"
+                />
+
+                <div className="flex flex-col min-w-0">
+                  <span className="font-medium text-gray-800 truncate block max-w-30 sm:max-w-50 group-hover:underline">
+                    {title}
                   </span>
-                )}
-              </div>
+
+                  {category && (
+                    <span className="text-xs text-gray-500 truncate block max-w-25 sm:max-w-37.5">
+                      {category}
+                    </span>
+                  )}
+                </div>
+              </Link>
             </div>
           );
         },
