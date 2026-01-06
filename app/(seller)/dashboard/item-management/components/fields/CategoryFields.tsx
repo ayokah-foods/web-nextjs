@@ -38,7 +38,7 @@ export default function CategoryFields(props: any) {
           </div>
         ) : (
           <p className="mt-2 text-xs text-gray-500 italic">
-            No subcategories available
+            No category selected
           </p>
         ))}
     </>

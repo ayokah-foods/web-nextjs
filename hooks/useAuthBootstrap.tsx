@@ -21,9 +21,8 @@ export function useAuthBootstrap() {
         if (userData) {
           setAuth(token, userData);
         } else {
-          clearAuth();
-          router.replace("/"); }
           throw new Error("Invalid user data");
+        }
       } catch (err) {
         console.error("Session expired or invalid token:", err);
         clearAuth();
