@@ -332,6 +332,7 @@ export default function ItemDetail({
         star_rating={star_rating}
         recommended={recommended}
         frequentlyBoughtTogether={frequentlyBoughtTogether}
+        customerAlsoViewed={customerAlsoViewed}
       />
     </>
   );

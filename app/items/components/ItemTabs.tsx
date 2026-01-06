@@ -57,6 +57,7 @@ interface ItemTabsProps {
   star_rating: StarRating;
   recommended: Item[];
   frequentlyBoughtTogether: Item[];
+  customerAlsoViewed: Item[];
 }
 
 export default function ItemTabs({
@@ -66,6 +67,7 @@ export default function ItemTabs({
   star_rating,
   recommended,
   frequentlyBoughtTogether,
+  customerAlsoViewed,
 }: ItemTabsProps) {
   const [activeTab, setActiveTab] = useState<
     "description" | "reviews" | "service_details"
@@ -377,6 +379,20 @@ export default function ItemTabs({
 
       {/* ------------------- RECOMMENDED / SIMILAR / MOST VIEWED ------------------- */}
       <div className="mt-6 p-4 bg-gray-100">
+       
+
+        <h2 className="text-xs sm:text-sm font-semibold mb-4 mt-8">
+          Recommended for you
+        </h2>
+        {customerAlsoViewed.length === 0 ? (
+          <EmptyItem message="No recommended items" />
+        ) : (
+          <ProductGrid
+            products={customerAlsoViewed}
+            columns="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4"
+          />
+        )}
+        
         <h2 className="text-xs sm:text-sm font-semibold mb-4">
           Frequently bought together
         </h2>
@@ -385,18 +401,6 @@ export default function ItemTabs({
         ) : (
           <ProductGrid
             products={frequentlyBoughtTogether}
-            columns="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4"
-          />
-        )}
-
-        <h2 className="text-xs sm:text-sm font-semibold mb-4 mt-8">
-          Recommended for you
-        </h2>
-        {recommended.length === 0 ? (
-          <EmptyItem message="No recommended items" />
-        ) : (
-          <ProductGrid
-            products={recommended}
             columns="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4"
           />
         )}
